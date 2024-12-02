@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.ivoa.net/xml/VOTable/v1.3"
+  xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.3 http://www.ivoa.net/xml/VOTable/v1.3">
+ <DESCRIPTION>
+   VizieR Astronomical Server vizier.cds.unistra.fr
+    Date: 2024-11-04T10:02:17 [V7.4.1]
+   Explanations and Statistics of UCDs:			See LINK below
+   In case of problem, please report to:	cds-question@unistra.fr
+ </DESCRIPTION>
+<!-- VOTable description at http://www.ivoa.net/Documents/latest/VOT.html -->
+<INFO name="service_protocol" value="ASU">  IVOID of the protocol through which the data was retrieved</INFO>
+<INFO name="request_date" value="2024-11-04T10:02:17">  Query execution date</INFO>
+<INFO name="request" value="https://vizier.cds.unistra.fr/viz-bin/votable?-oc.form=dec&amp;-out.max=unlimited&amp;-order=I&amp;-c.eq=J2000&amp;-c.r=  2&amp;-c.u=arcmin&amp;-c.geom=r&amp;-out.src=J/A+A/671/A149/tablea&amp;-source=J/A+A/671/A149/tablea&amp;-out=SpType&amp;-out=Class&amp;-out=Mx&amp;-out=Per&amp;-out=e_Per&amp;-out=PerSpin&amp;-out=e_PerSpin&amp;-out=RV&amp;-out=e_RV&amp;-out=Dist&amp;-out=e_Dist&amp;-out=GaiaDR3&amp;">  Full request URL (POST)</INFO>
+<INFO name="contact" value="cds-question@unistra.fr">  Email or URL to contact publisher</INFO>
+<INFO name="server_software" value="7.4.1">  Software version</INFO>
+<INFO name="publisher" value="CDS">  Data centre that produced the VOTable</INFO>
+
+<!--
+Execution Reports
+ -->
+
+<RESOURCE ID="yCat_36710149" name="J/A+A/671/A149">
+  <DESCRIPTION>HMXBs in the Galaxy catalogue (Fortin+, 2023)</DESCRIPTION>  <INFO name="ivoid" value="ivo://cds.vizier/j/a+a/671/a149">    IVOID of underlying data collection  </INFO>
+  <INFO name="creator" value="Fortin F.">    First author or institution  </INFO>
+  <INFO name="cites" value="bibcode:2023A&amp;A...671A.149F">    Article or Data origin sources  </INFO>
+  <INFO name="editor" value="Astronomy and Astrophysics">    Editor name (article)  </INFO>
+  <INFO name="original_date" value="2023">    Year of the article publication  </INFO>
+  <INFO name="reference_url" value="https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/671/A149">    Dataset landing page  </INFO>
+  <INFO name="citation" value="doi:10.26093/cds/vizier.36710149">    Dataset identifier that can be used for citation  </INFO>
+  <INFO name="publication_date" value="2023-10-10">    Date of first publication in the data centre  </INFO>
+  <INFO name="rights_uri" value="https://cds.unistra.fr/vizier-org/licences_vizier.html">    Licence URI  </INFO>
+
+  <COOSYS ID="J2000" system="eq_FK5" equinox="J2000"/>
+  <TABLE ID="J_A_A_671_A149_tablea" name="J/A+A/671/A149/tablea">
+    <DESCRIPTION>Catalogue of HMXBs in the Galaxy</DESCRIPTION>
+    <!-- Definitions of GROUPs and FIELDs -->
+
+<!-- +++No column could be found to attach a LINK in table: J/A+A/671/A149/tablea -->
+    <FIELD name="SpType" ucd="src.spType" datatype="char" arraysize="13*"><!-- ucd="SPECT_TYPE_MK" -->
+      <DESCRIPTION>Companion star spectral type</DESCRIPTION>
+    </FIELD>
+    <FIELD name="Class" ucd="src.class" datatype="char" arraysize="12*"><!-- ucd="CLASS_OBJECT" -->
+      <DESCRIPTION>HMXB class (1)</DESCRIPTION>
+      <LINK href="http://vizier.cds.unistra.fr/viz-bin/VizieR?-6N&amp;-info=XML&amp;-out.add=.&amp;&amp;lt;&amp;quot;Note&amp;quot;&amp;catid=36710149&amp;notid=1&amp;-out.emph=${Class}"/>
+    </FIELD>
+    <FIELD name="Mx" ucd="phys.mass" datatype="float" width="6" precision="2" unit="solMass"><!-- ucd="PHYS_MASS_MISC" -->
+      <DESCRIPTION>? Mass of the compact object</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="Per" ucd="time.period" datatype="double" width="14" precision="6" unit="d"><!-- ucd="TIME_PERIOD" -->
+      <DESCRIPTION>? Orbital period</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="e_Per" ucd="stat.error" datatype="float" width="8" precision="E1" unit="d"><!-- ucd="ERROR" -->
+      <DESCRIPTION>? Error on orbital period</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="PerSpin" ucd="time.period" datatype="double" width="15" precision="8" unit="s"><!-- ucd="TIME_PERIOD" -->
+      <DESCRIPTION>? Spin period of the compact object</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="e_PerSpin" ucd="stat.error" datatype="float" width="8" precision="E1" unit="s"><!-- ucd="ERROR" -->
+      <DESCRIPTION>? Error on the spin period</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="RV" ucd="phys.veloc;pos.heliocentric" datatype="double" width="8" precision="3" unit="km/s"><!-- ucd="VELOC_HC" -->
+      <DESCRIPTION>? Systemic radial velocity</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="e_RV" ucd="stat.error" datatype="float" width="7" precision="3" unit="km/s"><!-- ucd="ERROR" -->
+      <DESCRIPTION>? Error on RV</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="Dist" ucd="pos.distance" datatype="double" width="8" precision="1" unit="pc"><!-- ucd="PHYS_DISTANCE_TRUE" -->
+      <DESCRIPTION>? Distance to the source inferred from Gaia EDR3 parallax (Bailer-Jones et al., 2021, Cat. I/352)</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="e_Dist" ucd="stat.error" datatype="float" width="7" precision="1" unit="pc"><!-- ucd="ERROR" -->
+      <DESCRIPTION>[]? Lower bound of the error on distance</DESCRIPTION>
+      <VALUES null="NaN" />
+    </FIELD>
+    <FIELD name="GaiaDR3" ucd="meta.id" datatype="long" width="19"><!-- ucd="ID_ALTERNATIVE" -->
+      <DESCRIPTION>? Identifier in Gaia DR3</DESCRIPTION>
+      <VALUES null="-9223372036854775808" />
+    </FIELD>
+<DATA><TABLEDATA>
+<TR><TD>BN0.7 Ib</TD><TD>sg</TD><TD></TD><TD>+15.664900</TD><TD>1.4e-03</TD><TD>674.00000000</TD><TD></TD><TD>-80.000</TD><TD>3.000</TD><TD>3401.0</TD><TD>-171.0</TD><TD>427234969757165952</TD></TR>
+<TR><TD>B0.5IVpe</TD><TD>Be</TD><TD></TD><TD>+203.371000</TD><TD>8.9e-02</TD><TD></TD><TD></TD><TD>-0.018</TD><TD>0.075</TD><TD></TD><TD></TD><TD>426558460884582016</TD></TR>
+<TR><TD>B2</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2592.0</TD><TD>-140.0</TD><TD>414196617287885312</TD></TR>
+<TR><TD>B1Iae</TD><TD>sg</TD><TD></TD><TD>+11.598300</TD><TD>6.0e-04</TD><TD>10008.00000000</TD><TD>3.6e+01</TD><TD>-31.000</TD><TD>5.000</TD><TD>4475.0</TD><TD>-183.0</TD><TD>524924310153249920</TD></TR>
+<TR><TD>B0.2Ve</TD><TD>Be</TD><TD></TD><TD>+24.317400</TD><TD>4.0e-04</TD><TD>3.60000000</TD><TD></TD><TD></TD><TD></TD><TD>5787.0</TD><TD>-453.0</TD><TD>524677469790488960</TD></TR>
+<TR><TD>B1Ve</TD><TD>Be</TD><TD></TD><TD>+159.000000</TD><TD>2.0e+00</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>5816.0</TD><TD>-407.0</TD><TD>519352324516039680</TD></TR>
+<TR><TD>B1IIIe</TD><TD>Be</TD><TD></TD><TD>+330.000000</TD><TD></TD><TD>1407.40000000</TD><TD>3.0e+00</TD><TD></TD><TD></TD><TD>2751.0</TD><TD>-138.0</TD><TD>511220031584305536</TD></TR>
+<TR><TD>B2IVe+</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>469.20000000</TD><TD></TD><TD></TD><TD></TD><TD>6048.0</TD><TD>-472.0</TD><TD>518990967445248256</TD></TR>
+<TR><TD>B0Ve</TD><TD>$\gamma$\,Be</TD><TD></TD><TD>+26.496000</TD><TD>2.8e-03</TD><TD></TD><TD></TD><TD>-41.410</TD><TD>0.600</TD><TD>2504.0</TD><TD>-67.0</TD><TD>465645515129855872</TD></TR>
+<TR><TD>O9.5V</TD><TD>Be</TD><TD></TD><TD>+28.300000</TD><TD>2.0e-01</TD><TD>9.86610000</TD><TD>3.0e-04</TD><TD></TD><TD></TD><TD>5189.0</TD><TD>-314.0</TD><TD>465628193526364416</TD></TR>
+<TR><TD>O8.5Ve</TD><TD>Be</TD><TD></TD><TD>+36.500000</TD><TD>2.9e-01</TD><TD>4.40000000</TD><TD></TD><TD></TD><TD></TD><TD>5584.0</TD><TD>-506.0</TD><TD>444752973131169664</TD></TR>
+<TR><TD>B1Ve</TD><TD>Be</TD><TD></TD><TD>+250.300000</TD><TD>6.0e-01</TD><TD>837.67120000</TD><TD>3.0e-04</TD><TD>1.000</TD><TD>0.900</TD><TD>595.0</TD><TD>-13.0</TD><TD>168450545792009600</TD></TR>
+<TR><TD>B0/2I[e]</TD><TD>sgB[e]</TD><TD></TD><TD>+19.410000</TD><TD>2.0e-02</TD><TD></TD><TD></TD><TD>-51.000</TD><TD>2.000</TD><TD>4094.0</TD><TD>-206.0</TD><TD>276644757710014976</TD></TR>
+<TR><TD>B0.2Ve</TD><TD>Be</TD><TD></TD><TD>+150.000000</TD><TD></TD><TD>202.50000000</TD><TD>5.0e-01</TD><TD></TD><TD></TD><TD>2444.0</TD><TD>-77.0</TD><TD>252878401557369088</TD></TR>
+<TR><TD>B0III-IVe</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>-20.500</TD><TD>4.400</TD><TD>1317.0</TD><TD>-52.0</TD><TD>184497471323752064</TD></TR>
+<TR><TD>O9.5III-Ve</TD><TD>Be</TD><TD></TD><TD>+110.300000</TD><TD>3.0e-01</TD><TD>103.40000000</TD><TD>2.0e-02</TD><TD>-30.000</TD><TD>4.000</TD><TD>1793.0</TD><TD>-71.0</TD><TD>441207615229815040</TD></TR>
+<TR><TD>B5ne</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1600.0</TD><TD>-73.0</TD><TD>431561565357225088</TD></TR>
+<TR><TD>B0.5Ve</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>373.22600000</TD><TD>1.3e-02</TD><TD>18.900</TD><TD>4.100</TD><TD>5989.0</TD><TD>-603.0</TD><TD>423526544838563328</TD></TR>
+<TR><TD>B0pe</TD><TD>$\gamma$\,Be</TD><TD>1.40</TD><TD>+317.300000</TD><TD>7.0e-01</TD><TD></TD><TD></TD><TD>36.900</TD><TD>0.800</TD><TD>1772.0</TD><TD>-86.0</TD><TD>131822364779745536</TD></TR>
+<TR><TD>B2V-B1IIIe</TD><TD>Be</TD><TD></TD><TD>+11.200000</TD><TD>5.0e-01</TD><TD>0.03400000</TD><TD></TD><TD></TD><TD></TD><TD>6290.0</TD><TD>-492.0</TD><TD>131755947406031104</TD></TR>
+<TR><TD>O9.7Ve</TD><TD>Be</TD><TD></TD><TD>+101.200000</TD><TD></TD><TD>160.40000000</TD><TD>4.0e-01</TD><TD></TD><TD></TD><TD>218.0</TD><TD>-2.0</TD><TD>52677284433717504</TD></TR>
+<TR><TD>O5Ve</TD><TD>Be</TD><TD></TD><TD>+34.548000</TD><TD>1.0e-02</TD><TD>103.14400000</TD><TD>1.0e-03</TD><TD></TD><TD></TD><TD>7869.0</TD><TD>-1082.0</TD><TD>5613494119551805184</TD></TR>
+<TR><TD>O6-8</TD><TD></TD><TD></TD><TD>+260.000000</TD><TD></TD><TD>307.80000000</TD><TD>4.0e-02</TD><TD></TD><TD></TD><TD>3356.0</TD><TD>-154.0</TD><TD>5597252305589385984</TD></TR>
+<TR><TD>B0.2IVe</TD><TD>Be</TD><TD></TD><TD>+80.390000</TD><TD>3.0e+00</TD><TD>31.90800000</TD><TD>9.0e-03</TD><TD></TD><TD></TD><TD>6659.0</TD><TD>-422.0</TD><TD>5548261400354128768</TD></TR>
+<TR><TD>OBV</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>5124.0</TD><TD>-228.0</TD><TD>5541793213959987968</TD></TR>
+<TR><TD>B0-2 III-Ve</TD><TD>Be</TD><TD></TD><TD>+105.800000</TD><TD>4.0e-01</TD><TD>12.32030000</TD><TD>1.5e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O8.5Ib-II(f)p</TD><TD>SFXT</TD><TD></TD><TD>+9.543600</TD><TD>2.0e-04</TD><TD></TD><TD></TD><TD>15.300</TD><TD>0.500</TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0.5Iae-1b</TD><TD>sg</TD><TD>2.12</TD><TD>+8.963020</TD><TD>4.5e-04</TD><TD>283.00000000</TD><TD></TD><TD>-3.200</TD><TD>0.900</TD><TD>1960.0</TD><TD>-52.0</TD><TD>5620657678322625920</TD></TR>
+<TR><TD>B0e</TD><TD>Be</TD><TD></TD><TD>+247.800000</TD><TD>4.0e-01</TD><TD>93.58700000</TD><TD>5.0e-03</TD><TD></TD><TD></TD><TD>3536.0</TD><TD>-152.0</TD><TD>5258414192353423360</TD></TR>
+<TR><TD>sgB[e]</TD><TD>sgB[e]</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>4474.0</TD><TD>-1171.0</TD><TD>5259009543533179648</TD></TR>
+<TR><TD>O6V</TD><TD>$\gamma$\,Be</TD><TD>1.40</TD><TD>+16.550700</TD><TD>4.0e-04</TD><TD></TD><TD></TD><TD>55.300</TD><TD>13.100</TD><TD>4324.0</TD><TD>-204.0</TD><TD>5255509901121774976</TD></TR>
+<TR><TD>B0III-Ve</TD><TD>Be</TD><TD></TD><TD>+60.900000</TD><TD></TD><TD>860.00000000</TD><TD>2.0e+00</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O7V(f)n</TD><TD>Be</TD><TD>6.20</TD><TD>+5.283880</TD><TD>4.6e-04</TD><TD></TD><TD></TD><TD>-27.500</TD><TD>0.020</TD><TD>3131.0</TD><TD>-253.0</TD><TD>5337747731560719616</TD></TR>
+<TR><TD>O9.5III-Ve</TD><TD>Be</TD><TD></TD><TD>+24.000000</TD><TD></TD><TD>405.30000000</TD><TD>6.0e-01</TD><TD></TD><TD></TD><TD>2899.0</TD><TD>-76.0</TD><TD>5336957010898124160</TD></TR>
+<TR><TD>O6-7 II-III</TD><TD>sg</TD><TD>1.34</TD><TD>+2.033000</TD><TD>2.9e-02</TD><TD>4.80188000</TD><TD>8.5e-05</TD><TD>32.000</TD><TD>13.000</TD><TD>6784.0</TD><TD>-572.0</TD><TD>5337498593446516480</TD></TR>
+<TR><TD>B1Ia</TD><TD>SFXT</TD><TD></TD><TD>+164.600000</TD><TD>1.0e-01</TD><TD>186.78000000</TD><TD>3.0e-02</TD><TD></TD><TD></TD><TD>7175.0</TD><TD>-563.0</TD><TD>5339047221168787712</TD></TR>
+<TR><TD>B0IIIe</TD><TD>Be</TD><TD></TD><TD>+120.830000</TD><TD>3.4e-01</TD><TD></TD><TD></TD><TD>-22.000</TD><TD>7.400</TD><TD>1731.0</TD><TD>-111.0</TD><TD>5333660129603575808</TD></TR>
+<TR><TD>B0.5Ve</TD><TD>Be</TD><TD></TD><TD>+52.460000</TD><TD>6.0e-02</TD><TD>161.76000000</TD><TD>1.0e-02</TD><TD></TD><TD></TD><TD>7863.0</TD><TD>-1217.0</TD><TD>5335021664274920576</TD></TR>
+<TR><TD>B2Iae</TD><TD>sg</TD><TD>1.70</TD><TD>+14.365000</TD><TD>2.0e-03</TD><TD>298.00000000</TD><TD>4.0e+00</TD><TD>-13.000</TD><TD>3.000</TD><TD>8097.0</TD><TD>-566.0</TD><TD>5334851450481641088</TD></TR>
+<TR><TD>B1III-Ve</TD><TD>Be</TD><TD></TD><TD>+187.500000</TD><TD></TD><TD>292.27400000</TD><TD>1.0e-03</TD><TD>-17.000</TD><TD>7.400</TD><TD>2063.0</TD><TD>-87.0</TD><TD>5334823859608495104</TD></TR>
+<TR><TD>B2V</TD><TD>Be</TD><TD></TD><TD>+6.700000</TD><TD>5.0e-04</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3352.0</TD><TD>-161.0</TD><TD>6053076566300433920</TD></TR>
+<TR><TD>B1.5Iaeq</TD><TD>sg</TD><TD></TD><TD>+41.498000</TD><TD>2.0e-03</TD><TD>680.00000000</TD><TD></TD><TD>4.100</TD><TD>2.400</TD><TD>3604.0</TD><TD>-195.0</TD><TD>6054569565614460800</TD></TR>
+<TR><TD></TD><TD>SFXT?</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>191.00000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0.5IVpe</TD><TD>Be</TD><TD></TD><TD>+226.000000</TD><TD>6.0e+00</TD><TD>14200.00000000</TD><TD>1.4e+03</TD><TD>22.000</TD><TD>7.000</TD><TD>439.0</TD><TD>-15.0</TD><TD>6055103928246312960</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B2Vne</TD><TD>Be</TD><TD></TD><TD>+132.500000</TD><TD></TD><TD>272.00000000</TD><TD></TD><TD></TD><TD></TD><TD>1856.0</TD><TD>-45.0</TD><TD>5863533199843070208</TD></TR>
+<TR><TD>B0-6Ve</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>700.00000000</TD><TD></TD><TD></TD><TD></TD><TD>5952.0</TD><TD>-1339.0</TD><TD>5862285700835092352</TD></TR>
+<TR><TD>O9.5Ve</TD><TD>$\gamma$\,Be</TD><TD></TD><TD>+1236.724526</TD><TD>6.0e-06</TD><TD>0.04776000</TD><TD></TD><TD>0.000</TD><TD>1.000</TD><TD>2170.0</TD><TD>-58.0</TD><TD>5862299960127967488</TD></TR>
+<TR><TD>B0-6Ve</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3469.0</TD><TD>-901.0</TD><TD>5862260304669853056</TD></TR>
+<TR><TD>Be?</TD><TD>Be?</TD><TD></TD><TD>+1.129167</TD><TD>0.0e+00</TD><TD>172.84000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0Ve</TD><TD>Be</TD><TD></TD><TD>+90.000000</TD><TD></TD><TD>1500.00000000</TD><TD>1.0e+02</TD><TD></TD><TD></TD><TD>1597.0</TD><TD>-65.0</TD><TD>5864664975280537728</TD></TR>
+<TR><TD>O6 III</TD><TD>$\gamma$</TD><TD></TD><TD>+13.713500</TD><TD>1.9e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>+14.700000</TD><TD>4.0e-01</TD><TD>503.00000000</TD><TD>1.0e+01</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B1e</TD><TD>Be</TD><TD></TD><TD>+42.120000</TD><TD></TD><TD>17.64000000</TD><TD></TD><TD></TD><TD></TD><TD>7428.0</TD><TD>-1811.0</TD><TD>5854175187710795136</TD></TR>
+<TR><TD>BV-IIIe</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2551.0</TD><TD>-565.0</TD><TD>5878377736381364608</TD></TR>
+<TR><TD>O-BVe</TD><TD>Be</TD><TD></TD><TD>+49.630000</TD><TD>5.0e-02</TD><TD>33.41900000</TD><TD>1.0e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B5-A0 I</TD><TD>sg</TD><TD></TD><TD>+16.680000</TD><TD>1.5e-01</TD><TD></TD><TD></TD><TD>26.000</TD><TD>3.000</TD><TD>7469.0</TD><TD>-2103.0</TD><TD>5883218164517055488</TD></TR>
+<TR><TD>B0.2Ia</TD><TD>sg</TD><TD>1.18</TD><TD>+3.728310</TD><TD>2.0e-05</TD><TD>526.42000000</TD><TD>7.0e-02</TD><TD>-158.000</TD><TD>11.000</TD><TD>5614.0</TD><TD>-434.0</TD><TD>5886085557746480000</TD></TR>
+<TR><TD>Be?</TD><TD>Be?</TD><TD></TD><TD>+75.560000</TD><TD>2.5e-01</TD><TD>27.12156000</TD><TD>5.9e-04</TD><TD></TD><TD></TD><TD>5388.0</TD><TD>-1925.0</TD><TD>5882543820303309696</TD></TR>
+<TR><TD>B2IIIn</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1327.0</TD><TD>-35.0</TD><TD>5884544931471259136</TD></TR>
+<TR><TD>B1-2 V</TD><TD>Be</TD><TD></TD><TD>+30.600000</TD><TD>2.2e+00</TD><TD>9.28215500</TD><TD>3.0e-06</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>5884711610544522112</TD></TR>
+<TR><TD>ON9.7Iab</TD><TD>SFXT?</TD><TD></TD><TD>+16.000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2642.0</TD><TD>-258.0</TD><TD>5935509395659726592</TD></TR>
+<TR><TD>B1Ia</TD><TD>sg</TD><TD></TD><TD>+9.726000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>8582.0</TD><TD>-1718.0</TD><TD>5934776158877214848</TD></TR>
+<TR><TD>B0Ve</TD><TD>Be</TD><TD></TD><TD>+132.890000</TD><TD>3.0e-02</TD><TD>15.34657700</TD><TD>1.0e-06</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>OBI</TD><TD>sg</TD><TD></TD><TD>+287.600000</TD><TD>1.7e+00</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>sgB[e]</TD><TD>sgB[e]</TD><TD></TD><TD>+80.090000</TD><TD>1.2e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>6663.0</TD><TD>-2034.0</TD><TD>5940777877435137024</TD></TR>
+<TR><TD>O8I</TD><TD>sg</TD><TD></TD><TD>+8.960000</TD><TD>1.0e-02</TD><TD>1309.00000000</TD><TD>4.0e+01</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O8Iafpe</TD><TD>SFXT</TD><TD></TD><TD>+10.068000</TD><TD>2.0e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2131.0</TD><TD>-1012.0</TD><TD>5941324334694123008</TD></TR>
+<TR><TD>OB III</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>13138.0</TD><TD>-3256.0</TD><TD>5940576971716473344</TD></TR>
+<TR><TD></TD><TD>SFXT?</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>4224.0</TD><TD>-1799.0</TD><TD>5940285090050544512</TD></TR>
+<TR><TD>BIV-V</TD><TD>Be</TD><TD></TD><TD>+4.237850</TD><TD>1.2e-05</TD><TD>908.79000000</TD><TD>1.0e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>BN0.5Ia</TD><TD>SFXT?</TD><TD></TD><TD>+3.753000</TD><TD>4.0e-03</TD><TD>1246.00000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O9.5Ia</TD><TD>SFXT</TD><TD></TD><TD>+30.240000</TD><TD></TD><TD>228.00000000</TD><TD></TD><TD></TD><TD></TD><TD>2912.0</TD><TD>-148.0</TD><TD>5943246345430928512</TD></TR>
+<TR><TD>O9.5Iab</TD><TD>SFXT</TD><TD></TD><TD>+3.319400</TD><TD>1.0e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0.5Ib</TD><TD>sg</TD><TD></TD><TD>+6.782800</TD><TD>4.0e-04</TD><TD>1093.10360000</TD><TD>4.0e-04</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>Be?</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>714.50000000</TD><TD>3.0e-01</TD><TD></TD><TD></TD><TD>3282.0</TD><TD>-1153.0</TD><TD>5966358530819164544</TD></TR>
+<TR><TD>B0.5IVe</TD><TD>Be</TD><TD></TD><TD>+44.030000</TD><TD>3.0e-02</TD><TD>54.22000000</TD><TD>3.0e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>Ofpe/WN9</TD><TD>WR</TD><TD>1.42</TD><TD>+10.448120</TD><TD>1.3e-04</TD><TD>37.03322000</TD><TD>1.4e-04</TD><TD>-57.200</TD><TD>3.000</TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O6Iafcp</TD><TD>sg</TD><TD>1.96</TD><TD>+3.411660</TD><TD>4.0e-06</TD><TD></TD><TD></TD><TD>-60.000</TD><TD>10.000</TD><TD>1499.0</TD><TD>-57.0</TD><TD>5976382915813535232</TD></TR>
+<TR><TD></TD><TD>sgB[e]/SFXT?</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>5972298848613586048</TD></TR>
+<TR><TD>sg?</TD><TD>sg?</TD><TD></TD><TD>+99.100000</TD><TD>4.0e-01</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0-1Ia</TD><TD>sg</TD><TD>1.91</TD><TD>+9.740300</TD><TD>4.0e-04</TD><TD>414.80000000</TD><TD>5.0e-01</TD><TD>-6.500</TD><TD>3.800</TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O9Iab</TD><TD>SFXT</TD><TD></TD><TD>+8.447000</TD><TD>2.0e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3826.0</TD><TD>-1769.0</TD><TD>4054559284753424000</TD></TR>
+<TR><TD></TD><TD>SFXT?</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O8Iab(f)</TD><TD>SFXT</TD><TD></TD><TD>+51.470000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1929.0</TD><TD>-165.0</TD><TD>4056922105185686784</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2271.0</TD><TD>-995.0</TD><TD>4057023702632783744</TD></TR>
+<TR><TD>O9I/GIII-I</TD><TD>sg</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD></TD><TD></TD><TD>5.00</TD><TD>+12.610000</TD><TD>6.0e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0.5V-IIIe</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>3245.00000000</TD><TD>3.5e+02</TD><TD></TD><TD></TD><TD>1207.0</TD><TD>-29.0</TD><TD>4060784345959549184</TD></TR>
+<TR><TD>B1-3V</TD><TD>Be</TD><TD></TD><TD>+185.500000</TD><TD>1.1e+00</TD><TD>66.09000000</TD><TD>7.0e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B3V</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>220.38000000</TD><TD>2.0e-01</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>Be?</TD><TD>Be?</TD><TD></TD><TD>+29.806000</TD><TD>1.0e-03</TD><TD>4.45349000</TD><TD>2.0e-05</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>sg?</TD><TD>SFXT?</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O9Ib</TD><TD>SFXT</TD><TD>1.40</TD><TD>+12.172000</TD><TD>7.0e-03</TD><TD>71.49000000</TD><TD>2.0e-02</TD><TD>-46.800</TD><TD>4.000</TD><TD>2425.0</TD><TD>-134.0</TD><TD>4063908810076415872</TD></TR>
+<TR><TD>AV</TD><TD>IMXB?</TD><TD></TD><TD>+18.450000</TD><TD>1.0e-01</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>4630.0</TD><TD>-1998.0</TD><TD>4064178675797466624</TD></TR>
+<TR><TD>B1Ib</TD><TD>sg</TD><TD>1.50</TD><TD>+4.569600</TD><TD>9.0e-04</TD><TD>139.61200000</TD><TD>6.0e-03</TD><TD>51.700</TD><TD>2.400</TD><TD>8526.0</TD><TD>-2438.0</TD><TD>4070968778561141760</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0-2e</TD><TD>Be</TD><TD></TD><TD>+151.100000</TD><TD>5.0e-01</TD><TD>143.68630000</TD><TD>2.0e-04</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0Iab</TD><TD>SFXT</TD><TD></TD><TD>+30.000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2791.0</TD><TD>-762.0</TD><TD>4097365235226829312</TD></TR>
+<TR><TD>B9III</TD><TD></TD><TD>10.20</TD><TD>+2.817000</TD><TD>2.0e-03</TD><TD></TD><TD></TD><TD>72.700</TD><TD>3.300</TD><TD>4738.0</TD><TD>-601.0</TD><TD>4053096388919082368</TD></TR>
+<TR><TD>B0-2 IV-Ve</TD><TD>Be</TD><TD></TD><TD>+54.000000</TD><TD>4.0e-01</TD><TD>152.26000000</TD><TD>4.0e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0V-O9I</TD><TD>Be/sg</TD><TD></TD><TD>+5.424600</TD><TD>4.0e-04</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>4209.0</TD><TD>-1286.0</TD><TD>4152643113595580416</TD></TR>
+<TR><TD>Be?</TD><TD>Be?</TD><TD></TD><TD>+72.440000</TD><TD>3.0e-01</TD><TD>56.46800000</TD><TD>3.0e-04</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>120.00000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3775.0</TD><TD>-2274.0</TD><TD>4154264171696059520</TD></TR>
+<TR><TD>ON6.5V(f)</TD><TD>$\gamma$\,Be</TD><TD></TD><TD>+3.906070</TD><TD>8.0e-05</TD><TD></TD><TD></TD><TD>17.300</TD><TD>0.500</TD><TD>1898.0</TD><TD>-54.0</TD><TD>4104196427943626624</TD></TR>
+<TR><TD></TD><TD>SFXT?</TD><TD></TD><TD>+244.200000</TD><TD>2.0e-01</TD><TD>7.84708900</TD><TD>1.5e-05</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0.5Ve</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1021.0</TD><TD>-144.0</TD><TD>4155000844481174656</TD></TR>
+<TR><TD>B0 Ve</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1996.0</TD><TD>-115.0</TD><TD>4155023796790984064</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.07049821</TD><TD>3.0e-05</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>4252969319080954496</TD></TR>
+<TR><TD>B1Ib</TD><TD>SFXT</TD><TD></TD><TD>+6.453000</TD><TD>1.6e-03</TD><TD>4.73940000</TD><TD>8.0e-04</TD><TD>74.400</TD><TD>2.100</TD><TD>2828.0</TD><TD>-129.0</TD><TD>4256502088596680960</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O9.5I</TD><TD>SFXT</TD><TD></TD><TD>+4.739830</TD><TD>2.8e-04</TD><TD></TD><TD></TD><TD>61.000</TD><TD>1.400</TD><TD>5436.0</TD><TD>-641.0</TD><TD>4258160560148155648</TD></TR>
+<TR><TD>B0-2IV-Ve</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>29.47640000</TD><TD>8.0e-04</TD><TD></TD><TD></TD><TD>5097.0</TD><TD>-1904.0</TD><TD>4278536022438800640</TD></TR>
+<TR><TD>OBI?</TD><TD>SFXT</TD><TD></TD><TD>+2.137800</TD><TD></TD><TD>997.00000000</TD><TD>1.0e+00</TD><TD></TD><TD></TD><TD>6784.0</TD><TD>-2839.0</TD><TD>4259088994647732864</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>OBI?</TD><TD>sg?</TD><TD></TD><TD>+242.180000</TD><TD>1.0e-02</TD><TD>94.71710000</TD><TD>3.0e-04</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0.5Ia</TD><TD>SFXT</TD><TD></TD><TD>+18.545000</TD><TD>3.0e-03</TD><TD>21.05260000</TD><TD>5.0e-04</TD><TD></TD><TD></TD><TD>2722.0</TD><TD>-761.0</TD><TD>4258428501693172736</TD></TR>
+<TR><TD>B0Iaep</TD><TD>sg</TD><TD></TD><TD>+6.067000</TD><TD>4.0e-03</TD><TD>361.10000000</TD><TD>4.0e-01</TD><TD></TD><TD></TD><TD>7731.0</TD><TD>-735.0</TD><TD>4255891924062617088</TD></TR>
+<TR><TD>K-M?</TD><TD></TD><TD></TD><TD>+81.000000</TD><TD></TD><TD>218.39300000</TD><TD>2.0e-03</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B0-2Ve</TD><TD>Be</TD><TD></TD><TD>+37.970000</TD><TD>9.0e-02</TD><TD>9.79156000</TD><TD>1.0e-05</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>B8-9 IV</TD><TD>Be</TD><TD></TD><TD>+22.582700</TD><TD>2.0e-04</TD><TD>2.76100000</TD><TD>1.0e-03</TD><TD></TD><TD></TD><TD>5575.0</TD><TD>-1787.0</TD><TD>4268774695647764352</TD></TR>
+<TR><TD>Be?</TD><TD>Be?</TD><TD></TD><TD>+81.400000</TD><TD>1.0e-01</TD><TD>89.17000000</TD><TD>2.0e-02</TD><TD></TD><TD></TD><TD>6370.0</TD><TD>-1965.0</TD><TD>4310649153642824320</TD></TR>
+<TR><TD>O9.5Iab</TD><TD>sg</TD><TD></TD><TD>+8.375300</TD><TD>3.0e-04</TD><TD>437.50000000</TD><TD>0.0e+00</TD><TD></TD><TD></TD><TD>5351.0</TD><TD>-858.0</TD><TD>4309225217336729088</TD></TR>
+<TR><TD>BI</TD><TD>sg</TD><TD></TD><TD></TD><TD></TD><TD>36200.00000000</TD><TD>1.1e+02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O7.5-9.5If</TD><TD>sg</TD><TD></TD><TD>+4.400700</TD><TD>9.0e-04</TD><TD>603.60000000</TD><TD>1.0e-01</TD><TD></TD><TD></TD><TD>4965.0</TD><TD>-2092.0</TD><TD>4306419980916246656</TD></TR>
+<TR><TD>sgB[e]</TD><TD>sgB[e]</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3582.0</TD><TD>-1600.0</TD><TD>4512788387794112640</TD></TR>
+<TR><TD>A7Ib</TD><TD>sg</TD><TD>4.20</TD><TD>+13.080000</TD><TD>0.0e+00</TD><TD></TD><TD></TD><TD>69.000</TD><TD>4.700</TD><TD>7290.0</TD><TD>-857.0</TD><TD>4293406612283985024</TD></TR>
+<TR><TD>B1Iab</TD><TD>sg</TD><TD></TD><TD>+13.558000</TD><TD>4.0e-03</TD><TD>5937.00000000</TD><TD>0.0e+00</TD><TD></TD><TD></TD><TD>4020.0</TD><TD>-1681.0</TD><TD>4309253392325650176</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>+22.250000</TD><TD>5.0e-02</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1101.0</TD><TD>-242.0</TD><TD>4309736077923798912</TD></TR>
+<TR><TD>B1Ve</TD><TD>Be</TD><TD></TD><TD>+117.200000</TD><TD>2.0e-01</TD><TD>12.44000000</TD><TD></TD><TD></TD><TD></TD><TD>3189.0</TD><TD>-1241.0</TD><TD>4323316622779495680</TD></TR>
+<TR><TD>OB</TD><TD></TD><TD></TD><TD>+166.500000</TD><TD>5.0e-01</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>9057.0</TD><TD>-2317.0</TD><TD>2021785421455305344</TD></TR>
+<TR><TD>B0-1IV-Ve</TD><TD>Be</TD><TD></TD><TD>+172.700000</TD><TD>6.0e-01</TD><TD>15.78801000</TD><TD>4.0e-05</TD><TD></TD><TD></TD><TD>13139.0</TD><TD>-2332.0</TD><TD>2028089540103670144</TD></TR>
+<TR><TD>B0Ve</TD><TD>Be</TD><TD></TD><TD>+40.415000</TD><TD>7.0e-03</TD><TD>18.70000000</TD><TD></TD><TD></TD><TD></TD><TD>15126.0</TD><TD>-2634.0</TD><TD>2031939548802102656</TD></TR>
+<TR><TD>BIa</TD><TD>SFXT</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>5991.0</TD><TD>-874.0</TD><TD>2026914849346539008</TD></TR>
+<TR><TD>MI</TD><TD>sg</TD><TD></TD><TD>+1296.637500</TD><TD></TD><TD>18612.00000000</TD><TD></TD><TD></TD><TD></TD><TD>3432.0</TD><TD>-249.0</TD><TD>2034031438383765760</TD></TR>
+<TR><TD>O9.7Iabpvar</TD><TD>sg</TD><TD>21.20</TD><TD>+5.599800</TD><TD>1.0e-04</TD><TD></TD><TD></TD><TD>-7.000</TD><TD>5.000</TD><TD>2146.0</TD><TD>-53.0</TD><TD>2059383668236814720</TD></TR>
+<TR><TD>BV-III</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>889.70000000</TD><TD>4.7e+00</TD><TD></TD><TD></TD><TD>8356.0</TD><TD>-1199.0</TD><TD>2033989790047905024</TD></TR>
+<TR><TD>Be?</TD><TD>Be?</TD><TD></TD><TD></TD><TD></TD><TD>36.00000000</TD><TD></TD><TD></TD><TD></TD><TD>767.0</TD><TD>-107.0</TD><TD>2081690658900784896</TD></TR>
+<TR><TD>B0.5V-IIIe</TD><TD>Be</TD><TD></TD><TD>+46.020000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2293.0</TD><TD>-85.0</TD><TD>2083644392294059520</TD></TR>
+<TR><TD>B0Ve</TD><TD>Be</TD><TD></TD><TD>+46.021400</TD><TD>5.0e-04</TD><TD>41.30600000</TD><TD>3.0e-03</TD><TD></TD><TD></TD><TD>2410.0</TD><TD>-391.0</TD><TD>2063791369815322752</TD></TR>
+<TR><TD>WN4/5-6/7</TD><TD>WR</TD><TD>7.20</TD><TD>+0.199685</TD><TD>3.0e-08</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>O9.5-B0IV-Ve</TD><TD>Be</TD><TD></TD><TD>+55.000000</TD><TD></TD><TD>195.25000000</TD><TD>2.0e-02</TD><TD></TD><TD></TD><TD>8861.0</TD><TD>-927.0</TD><TD>2065653598916388352</TD></TR>
+<TR><TD>B0Ve</TD><TD>Be</TD><TD></TD><TD>+12.665360</TD><TD>8.8e-04</TD><TD>358.61000000</TD><TD>3.0e-02</TD><TD></TD><TD></TD><TD>6218.0</TD><TD>-448.0</TD><TD>2162805896614571904</TD></TR>
+<TR><TD>B3V</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD>322.70000000</TD><TD>6.0e-01</TD><TD></TD><TD></TD><TD>8300.0</TD><TD>-805.0</TD><TD>1978365123143522176</TD></TR>
+<TR><TD>B1-B2Ve</TD><TD>Be</TD><TD></TD><TD>+20.850000</TD><TD>5.0e-02</TD><TD>65.35080000</TD><TD>1.4e-04</TD><TD></TD><TD></TD><TD>7446.0</TD><TD>-492.0</TD><TD>2178178409188167296</TD></TR>
+<TR><TD>Be</TD><TD>Be</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>-16.800</TD><TD>2.500</TD><TD>1116.0</TD><TD>-16.0</TD><TD>1979911002134040960</TD></TR>
+<TR><TD>O9.5Vep</TD><TD>Be</TD><TD></TD><TD>+9.558000</TD><TD>4.0e-02</TD><TD>392.00000000</TD><TD></TD><TD>-54.500</TD><TD>1.000</TD><TD>3104.0</TD><TD>-135.0</TD><TD>2005653524280214400</TD></TR>
+<TR><TD>B0Ve</TD><TD>Be</TD><TD></TD><TD>+262.000000</TD><TD>5.0e+00</TD><TD>1247.20000000</TD><TD>7.0e-01</TD><TD></TD><TD></TD><TD>7387.0</TD><TD>-675.0</TD><TD>2201091578667140352</TD></TR>
+<TR><TD>B1.5-B2IIIe</TD><TD>Be</TD><TD></TD><TD>+60.370000</TD><TD>4.0e-02</TD><TD></TD><TD></TD><TD>-14.100</TD><TD>2.100</TD><TD>1984.0</TD><TD>-76.0</TD><TD>1982359580155628160</TD></TR>
+<TR><TD>BIII</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>46.75300000</TD><TD>3.0e-03</TD><TD></TD><TD></TD><TD>9748.0</TD><TD>-1166.0</TD><TD>2207277877757956352</TD></TR>
+</TABLEDATA></DATA>
+</TABLE>
+<INFO name="matches" value="152">matching records</INFO>
+
+<INFO name="Warning" value="No center provided++++"/>
+</RESOURCE>
+</VOTABLE>

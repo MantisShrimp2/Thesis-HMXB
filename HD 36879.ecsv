@@ -1,0 +1,231 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - name: source_id
+#   datatype: int64
+#   description: Unique source identifier (unique within a particular Data Release)
+#   meta: !!omap
+#   - {ucd: meta.id}
+# - name: ra
+#   unit: deg
+#   datatype: float64
+#   description: Right ascension
+#   meta: !!omap
+#   - {ucd: pos.eq.ra;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C1'}
+#   - {CoosysSystem: ICRS}
+#   - {CoosysEpoch: J2016.0}
+# - name: ra_error
+#   unit: mas
+#   datatype: float32
+#   description: Standard error of right ascension
+#   meta: !!omap
+#   - {ucd: stat.error;pos.eq.ra}
+#   - {utype: 'stc:AstroCoords.Position3D.Error3.C1'}
+# - name: dec
+#   unit: deg
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
+#   - {CoosysSystem: ICRS}
+#   - {CoosysEpoch: J2016.0}
+# - name: dec_error
+#   unit: mas
+#   datatype: float32
+#   description: Standard error of declination
+#   meta: !!omap
+#   - {ucd: stat.error;pos.eq.dec}
+#   - {utype: 'stc:AstroCoords.Position3D.Error3.C2'}
+# - name: pmra
+#   unit: mas / yr
+#   datatype: float64
+#   description: Proper motion in right ascension direction
+#   meta: !!omap
+#   - {ucd: pos.pm;pos.eq.ra}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Value3.C1'}
+# - name: pmra_error
+#   unit: mas / yr
+#   datatype: float32
+#   description: Standard error of proper motion in right ascension direction
+#   meta: !!omap
+#   - {ucd: stat.error;pos.pm;pos.eq.ra}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Error3.C1'}
+# - name: parallax_over_error
+#   datatype: float32
+#   description: Parallax divided by its standard error
+#   meta: !!omap
+#   - {ucd: stat.snr;pos.parallax.trig}
+# - name: pmdec
+#   unit: mas / yr
+#   datatype: float64
+#   description: Proper motion in declination direction
+#   meta: !!omap
+#   - {ucd: pos.pm;pos.eq.dec}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Value3.C2'}
+# - name: pmdec_error
+#   unit: mas / yr
+#   datatype: float32
+#   description: Standard error of proper motion in declination direction
+#   meta: !!omap
+#   - {ucd: stat.error;pos.pm;pos.eq.dec}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Error3.C2'}
+# - name: parallax
+#   unit: mas
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: parallax_error
+#   unit: mas
+#   datatype: float32
+#   description: Standard error of parallax
+#   meta: !!omap
+#   - {ucd: stat.error;pos.parallax.trig}
+# - name: radial_velocity
+#   unit: km / s
+#   datatype: float32
+#   description: Radial velocity
+#   meta: !!omap
+#   - {ucd: spect.dopplerVeloc.opt;em.opt.I}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Value3.C3'}
+# - name: radial_velocity_error
+#   unit: km / s
+#   datatype: float32
+#   description: Radial velocity error
+#   meta: !!omap
+#   - {ucd: stat.error;spect.dopplerVeloc.opt;em.opt.I}
+#   - {utype: 'stc:AstroCoords.Velocity3D.Error3.C3'}
+# - name: phot_g_mean_mag
+#   unit: mag
+#   datatype: float32
+#   description: G-band mean magnitude
+#   meta: !!omap
+#   - {ucd: phot.mag;em.opt}
+# - name: l
+#   unit: deg
+#   datatype: float64
+#   description: Galactic longitude
+#   meta: !!omap
+#   - {ucd: pos.galactic.lon}
+#   - {utype: 'stc:AstroCoords.Position2D.Value2.C1'}
+# - name: b
+#   unit: deg
+#   datatype: float64
+#   description: Galactic latitude
+#   meta: !!omap
+#   - {ucd: pos.galactic.lat}
+#   - {utype: 'stc:AstroCoords.Position2D.Value2.C2'}
+# - name: phot_bp_mean_mag
+#   unit: mag
+#   datatype: float32
+#   description: Integrated BP mean magnitude
+#   meta: !!omap
+#   - {ucd: phot.mag;em.opt.B}
+# - name: phot_rp_mean_mag
+#   unit: mag
+#   datatype: float32
+#   description: Integrated RP mean magnitude
+#   meta: !!omap
+#   - {ucd: phot.mag;em.opt.R}
+# - name: bp_rp
+#   unit: mag
+#   datatype: float32
+#   description: BP - RP colour
+#   meta: !!omap
+#   - {ucd: phot.color;em.opt.B;em.opt.R}
+# - name: distance
+#   unit: kpc
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: pm_l_poleski
+#   unit: mas / yr
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
+#   - {CoosysSystem: ICRS}
+#   - {CoosysEpoch: J2016.0}
+# - name: pm_b_poleski
+#   unit: mas / yr
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
+#   - {CoosysSystem: ICRS}
+#   - {CoosysEpoch: J2016.0}
+# - name: galactic distance
+#   unit: kpc
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - {name: circular velocity, unit: km / s, datatype: float64}
+# - {name: LSR velocity, unit: km / s, datatype: float64}
+# - name: mu_l_sol
+#   unit: mas / yr
+#   datatype: float64
+#   description: Galactic longitude
+#   meta: !!omap
+#   - {ucd: pos.galactic.lon}
+#   - {utype: 'stc:AstroCoords.Position2D.Value2.C1'}
+# - name: mu_b_sol
+#   unit: mas / yr
+#   datatype: float64
+#   description: Galactic longitude
+#   meta: !!omap
+#   - {ucd: pos.galactic.lon}
+#   - {utype: 'stc:AstroCoords.Position2D.Value2.C1'}
+# - name: mu_l_rot
+#   unit: mas / yr
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: mu_b_rot
+#   unit: mas / yr
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: Peculiar Velocity
+#   unit: km / s
+#   datatype: float64
+#   description: Parallax
+#   meta: !!omap
+#   - {ucd: pos.parallax.trig}
+# - name: peculiar_mu_l
+#   unit: mas / yr
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
+#   - {CoosysSystem: ICRS}
+#   - {CoosysEpoch: J2016.0}
+# - name: peculiar_mu_b
+#   unit: mas / yr
+#   datatype: float64
+#   description: Declination
+#   meta: !!omap
+#   - {ucd: pos.eq.dec;meta.main}
+#   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
+#   - {CoosysSystem: ICRS}
+#   - {CoosysEpoch: J2016.0}
+# meta: !!omap
+# - {name: votable}
+# - {QUERY_STATUS: OK}
+# - {QUERY: 'SELECT  source_id, ra, ra_error, dec, dec_error, pmra, pmra_error,parallax_over_error, pmdec, pmdec_error, parallax, parallax_error,  radial_velocity,
+#     radial_velocity_error, phot_g_mean_mag, l,b,phot_bp_mean_mag,phot_rp_mean_mag, bp_rp FROM gaiadr3.gaia_source WHERE source_id IN
+#     (3402983608883878016)'}
+# - {JOBID: 1730727768688O}
+# - {JOBNAME: HD 36 879}
+# - {RELEASE: Gaia DR3}
+# schema: astropy-2.0
+source_id ra ra_error dec dec_error pmra pmra_error parallax_over_error pmdec pmdec_error parallax parallax_error radial_velocity radial_velocity_error phot_g_mean_mag l b phot_bp_mean_mag phot_rp_mean_mag bp_rp distance pm_l_poleski pm_b_poleski "galactic distance" "circular velocity" "LSR velocity" mu_l_sol mu_b_sol mu_l_rot mu_b_rot "Peculiar Velocity" peculiar_mu_l peculiar_mu_b
+3402983608883878016 83.91883273030244 0.025106044 21.403216892388098 0.018456262 -5.776275982999248 0.032617416 17.74445 -8.674329760453169 0.018755654 0.5456454172073251 0.030750202 nan nan 7.496802 185.2194746127933 -5.886356704932575 7.5702705 7.292832 0.27743864 1.8326920165812315 4.264996458243135 -9.508899317798617 10.316802645383326 224.95220991995055 -16.577217662912354 1.4459742272109077 -0.7286825185029623 -0.033955068693427924 0.04160834980306812 80.54272807316016 2.8529772997256555 -8.821825149098723

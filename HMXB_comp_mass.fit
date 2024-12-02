@@ -1,0 +1,170 @@
+SIMPLE  =                    T / Standard FITS Format                           BITPIX  =                    8 / Character data                                 NAXIS   =                    0 / No Image --- just extension(s)                 EXTEND  =                    T / There are standard extensions                  ORIGIN  = 'xml2fits_v1.95'     / Converted from XML-Astrores to FITS                                     e-mail: question@simbad.u-strasbg.fr                   LONGSTRN= 'OGIP 1.0'           / Long string convention (&/CONTINUE) may be usedDATE    = '2024-11-28'         / Written on 2024-11-28:11:55:44 (GMT)                                        by: www-data@vizier.astro.unistra.fr                        **********************************************************                          EXCERPT from catalogues stored in VizieR (CDS)                                             with the following conditions:                                   **********************************************************                                                                                                      VizieR Astronomical Server vizier.cds.unistra.fr                                Date: 2024-11-28T11:55:44 [V7.4.1]                                              In case of problem, please report to: cds-question@unistra.fr                                                                                          INFO    = 'service_protocol=ASU' / IVOID of the protocol through which the data                                  was retrieved #                                INFO    = 'request_date=2024-11-28T11:55:44' / Query execution date #           INFO    = 'request=https://vizier.cds.unistra.fr/viz-bin/asu-fits?-oc.form=dec&'CONTINUE  '&-out.max=unlimited&#out.form=FITS (ascii) Table&-order=I&-c.eq=J20&'CONTINUE  '00&-c.r=  2&-c.u=arcmin&-c.geom=r&-out.src=J/A+A/677/A134/hmxbcat&-&'CONTINUE  'source=J/A+A/677/A134/hmxbcat&-out=GaiaDR3&-out=Mass&-out=b_Mass&-o&'CONTINUE  'ut=B_Mass&'         / Full request URL (POST) #                      INFO    = 'contact=cds-question@unistra.fr' / Email or URL to contact publisher                                  #                                              INFO    = 'server_software=7.4.1' / Software version #                          INFO    = 'publisher=CDS'      / Data centre that produced the VOTable #        INFO    = 'ivoid=ivo://cds.vizier/j/a+a/677/a134' / IVOID of underlying data                                     collection #                                                                                                                   INFO    = 'creator=Neumann M.' / First author or institution #                                                                                                  INFO    = 'cites=bibcode:2023A&A...677A.134N' / Article or Data origin sources #                                                                                INFO    = 'editor=Astronomy and Astrophysics' / Editor name (article) #                                                                                         INFO    = 'original_date=2023' / Year of the article publication #                                                                                              INFO    = 'reference_url=https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/677/A&'CONTINUE  '134     '           / Dataset landing page #                                                                                                         INFO    = 'citation=doi:10.26093/cds/vizier.36770134' / Dataset identifier that                                  can be used for citation #                                                                                                     INFO    = 'publication_date=2023-10-18' / Date of first publication in the data                                  centre #                                                                                                                       INFO    = 'rights_uri=https://cds.unistra.fr/vizier-org/licences_vizier.html' /                                  Licence URI #                                                                                                                                                                                                  END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             XTENSION= 'TABLE   '           / Ascii Table Extension (TAB and NEWLINE sep)    BITPIX  =                    8 / Character data                                 NAXIS   =                    2 / Simple 2-D matrix                              NAXIS1  =                   39 / Number of bytes per record                     NAXIS2  =                  169 / Number of records                              PCOUNT  =                    0 / Get rid of random parameters                   GCOUNT  =                    1 / Only one group (isn't it obvious?)             TFIELDS =                    4 / Number of data fields (columns)                CDS-CAT = 'J/A+A/677/A134'     / Catalogue designation in CDS nomenclature               Galactic High Mass X-ray Binary catalogue (Neumann+, 2023)             EXTNAME = 'J_A_A_677_A134_hmxbcat' / Identification of the table                CDS-NAME= 'J/A+A/677/A134/hmxbcat' / Table name in METAtab                               Galactic High Mass X-ray Binary Catalogue                              TBCOL1  =                    2 / UCD=meta.id long: ............ offset=1        TFORM1  = 'I19     '           / Fortran Format                                 TTYPE1  = 'GaiaDR3 '           / ? Source identifier in Gaia DR3                TBCOL2  =                   22 / UCD=phys.mass;stat.mean float: offset=21       TFORM2  = 'F5.2    '           / Fortran Format                                 TTYPE2  = 'Mass    '           / ? Mean Mass of the compact object              TUNIT2  = 'solMass '           / solar mass                                     TBCOL3  =                   28 / UCD=phys.mass;stat.min float: offset=27        TFORM3  = 'F5.2    '           / Fortran Format                                 TTYPE3  = 'b_Mass  '           / ? Lower limit of the compact object mass       TUNIT3  = 'solMass '           / solar mass                                     TBCOL4  =                   34 / UCD=phys.mass;stat.max float: offset=33        TFORM4  = 'F5.2    '           / Fortran Format                                 TTYPE4  = 'b_mass_lc'          / ? Upper limit of the compact object mass       TUNIT4  = 'solMass '           / solar mass                                     END                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+ 427234969757165952	     	     	     
+ 426558460884582016	     	     	     
+ 414196617287885312	     	     	     
+ 524924310153249920	     	     	     
+ 524677469790488960	     	     	     
+ 519352324516039680	     	     	     
+ 511220031584305536	     	     	     
+                   	     	     	     
+ 518990967445248256	     	     	     
+ 465645515129855872	     	     	     
+ 465628193526364416	     	     	     
+ 444752973131169664	     	     	     
+ 168450545792009600	     	     	     
+ 276644757710014976	     	     	     
+ 252878401557369088	     	     	     
+ 184497471323752064	     	     	     
+3441207615229815040	     	     	     
+3431561565357225088	     	     	     
+3423526544838563328	     	     	     
+3131822364779745536	     	     	     
+3131755947406031104	     	     	     
+3052677318793446016	     	     	     
+2935943990338336000	     	     	     
+5613494119551805184	     	     	     
+5489434710755238400	     	     	     
+                   	     	     	     
+5597252305589385984	     	     	     
+5548261400354128768	     	     	     
+5541793213959987968	     	     	     
+5523448274762133632	     	     	     
+5522306019626566528	     	     	     
+5620657678322625920	     	 1.70	 2.10
+5311384333263075840	     	     	     
+5258414192353423360	     	     	     
+5259009543533179648	     	     	     
+5255509901121774976	     	     	     
+5352018121173519488	     	     	     
+5337747731560719616	 6.20	 5.50	 7.10
+5336957010898124160	     	     	     
+5337498593446516480	 1.57	 1.41	 1.73
+5339047221168787712	     	     	     
+5333660129603575808	     	     	     
+5335021664274920576	     	     	     
+5334851450481641088	     	     	     
+5334823859608495104	     	     	     
+6053076566300433920	     	     	     
+6054569565614460800	     	     	     
+6054778507172454912	     	     	     
+5837600152935767680	     	     	     
+                   	     	     	     
+6055103928246312960	     	     	     
+5862928537183584768	     	     	     
+                   	     	     	     
+6060547335455660032	     	     	     
+5863533199843070208	     	     	     
+5862285700835092352	     	     	     
+5862299960127967488	     	     	     
+                   	     	     	     
+                   	     	     	     
+5864664975280537728	     	     	     
+                   	     	     	     
+                   	     	     	     
+                   	     	     	     
+5854175187680510336	     	     	     
+5878377736381364608	     	     	     
+                   	     	     	     
+5883218164517055488	     	     	     
+5886085557746480000	 1.02	 0.85	 1.19
+5882543824607819776	     	     	     
+5884544931471259136	     	     	     
+                   	     	     	     
+5935509395659726592	     	     	     
+5934776158877214848	     	     	     
+5933976985766949376	     	     	     
+                   	     	     	     
+5940777877435137024	     	     	     
+                   	     	     	     
+                   	     	     	     
+5940576971716473344	     	     	     
+5940285090075838848	     	     	     
+                   	     	     	     
+5943166184173519744	     	     	     
+5943246345430928512	     	     	     
+                   	     	     	     
+                   	     	     	     
+5966213219190201856	     	     	     
+                   	 1.74	 1.44	 2.04
+5976382915813535232	 1.96	 1.77	 2.15
+                   	     	     	     
+                   	     	     	     
+5980409632300781056	     	     	     
+                   	 1.91	 1.46	 2.36
+4054559284753424000	     	     	     
+                   	     	     	     
+4056922105185686784	     	     	     
+                   	     	     	     
+4040960662373474176	     	     	     
+                   	 4.70	     	     
+4060784345959549184	     	     	     
+                   	     	     	     
+                   	     	     	     
+                   	     	     	     
+                   	     	     	     
+4063908810076415872	     	     	     
+4070770243676311936	     	     	     
+4070968778561141760	 1.57	 1.32	 1.82
+4146789141900648576	     	     	     
+                   	     	     	     
+                   	     	     	     
+                   	     	     	     
+4097365235226829312	     	     	     
+                   	     	     	     
+4152643113595580416	     	     	     
+                   	     	     	     
+                   	     	     	     
+                   	     	     	     
+4104196427943626624	     	     	     
+                   	     	     	     
+                   	     	     	     
+4155000844481174656	     	     	     
+4155023796790984064	     	     	     
+4156747212545110400	     	     	     
+4253473896214500096	     	     	     
+4256500538116700160	     	     	     
+                   	     	     	     
+                   	     	     	     
+4258160560148155648	     	     	     
+4278536022438800640	     	     	     
+4259088994635370752	     	     	     
+                   	     	     	     
+                   	     	     	     
+4258428501693172736	     	     	     
+4255891924062617088	 1.41	 1.17	 1.65
+                   	     	     	     
+                   	     	     	     
+4310118570535453696	     	     	     
+4268774695647764352	     	     	     
+4310649153642824320	     	     	     
+4309225217336733824	     	     	     
+                   	     	     	     
+4306419980916246656	     	     	     
+4512787627579740032	     	     	     
+4293406612283985024	 4.20	 3.80	 4.60
+4309253392325650176	     	     	     
+                   	     	     	     
+4323316622779495680	     	     	     
+                   	     	     	     
+2021785421455305344	     	     	     
+2028089540103670144	     	     	     
+2031939548802102656	     	     	     
+2026914849346539008	     	     	     
+2034031438383765760	     	     	     
+2059383668236814720	21.20	19.00	23.40
+2033989790047905024	     	     	     
+                   	     	     	     
+2083644392294059520	     	     	     
+2067835682818358400	     	     	     
+2063791369815322752	     	     	     
+                   	 7.20	     	     
+2070085317968809216	     	     	     
+2065653598916388352	     	     	     
+2162805896614571904	     	     	     
+1978365123143522176	     	     	     
+2178178409188167296	     	     	     
+1979911002134040960	     	     	     
+2005653524280214400	     	     	     
+2201091578667140352	     	     	     
+1982359580155628160	     	     	     
+2207277877757956352	     	     	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
