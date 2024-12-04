@@ -77,7 +77,8 @@ class GalacticTraceback:
         - max_steps (int): Maximum number of steps for tracing.
 
         Returns:
-        - path (list of tuples): List of (l, b) pairs representing the path.
+        - path  3 lists, for longitiude, latitiude and height. 
+        Each path is for one star
         """
 
  
@@ -89,23 +90,27 @@ class GalacticTraceback:
         mu_l = float(row['pm_l_poleski'][0])
         mu_b = float(row['pm_b_poleski'][0])
         dist = float(row['distance'][0])
-        # l = 121.22
-        # b = -1.46
-        # mu_l = -1.8178140519374264
-        # mu_b = -0.4422414945716403
-        # dist = 3.677948996847052
+
         mu_l_deg_per_year = mu_l/ 3.6e6
         mu_b_deg_per_year = mu_b / 3.6e6
         #initalize path
         long_path, lat_path, z_path = [l],[b],[dist*np.sin(np.radians(b))]
         
-        max_steps = int(1e5)
+        
+        #limit time stepsto 3 million years
+        max_steps = int(3e6/1000)
+        
+        #add ticks to the lines every 1 million years
+        ticks = []
+        
     # Trace back in time using Euler's method
         current_l = l
         current_b = b
+        current_time= 0
         for _ in range(max_steps-1):
             # Update coordinates using Euler method
             #fixed timestep
+            current_time += time_step
             current_l -= mu_l_deg_per_year * time_step  # Adjust longitude
             current_b -= mu_b_deg_per_year * time_step #adjust latitiude
             # Adjust latituded
@@ -119,14 +124,16 @@ class GalacticTraceback:
             long_path.append(current_l)
             lat_path.append(current_b)
             z_path.append(current_z)
-            
-        # Stop if b crosses zero 
-            if current_b * lat_path[0] < 0:
-                break
+            # Add tick position at each 1 Myr
+            if current_time % 1e6 == 0:
+                ticks.append((current_l, current_b))
+        # Stop if b crosses zero -optional
+            # if current_b * lat_path[0] < 0:
+            #     break
     #add to table
     #self.table['Galactic Path'] = traced_paths
         
-        return long_path, lat_path, z_path
+        return long_path, lat_path, z_path, ticks
 
     def plot_trace(self,savefig=False):
         #parllax mask
@@ -144,22 +151,33 @@ class GalacticTraceback:
                 l_naught = data['l']
                 b_naught = data['b']
                 arrow_pml, arrow_pmb = data['pm_l_poleski'], data['pm_b_poleski']
-                long_path, lat_path, z_path = self.trace_linear_path(ids, time_step=1000)
+                long_path, lat_path, z_path,ticks = self.trace_linear_path(ids, time_step=1000)
                 N = len(long_path)
                 #plot path and color plot by specrtral type
                 sp_type = data['Mod_SpType'][0] #dumb
                 path_color = sp_type if sp_type in self.color_map else 'xkcd:grey'
-                plt.scatter(long_path[1:N], lat_path[1:N],s=3,color=path_color)
-                
+                plt.scatter(long_path[1:N], z_path[1:N],s=3,color=path_color)
+                #plt.scatter(long_path[1:N], lat_path[1:N],s=2,color=path_color,alpha=0.7)
                 #plot star current position
-                plt.scatter(l_naught,b_naught,color='xkcd:black')
+                
+                #plt.scatter(l_naught,b_naught,color='xkcd:black',s=50)
+                plt.scatter(l_naught,z_naught,color='xkcd:black')
                 #plot pm vectors
-                plt.quiver(l_naught,b_naught, arrow_pml,arrow_pmb,color='xkcd:grey',angles='uv',width=0.002)
+                arrow_pmz = data['distance']*np.sin(np.radians(arrow_pmb))*1000
+                #two arrows for b or z
+                #plt.quiver(l_naught,b_naught, -arrow_pml,arrow_pmb,color='xkcd:grey',angles='uv',width=0.002)
+                plt.quiver(l_naught,z_naught, -arrow_pml,arrow_pmb,color='xkcd:grey',angles='uv',width=0.002)
+               
+                for tick_l, tick_b in ticks:
+                    tick_z = data['distance']*np.sin(np.radians(tick_b))*1000
+                    
+                    plt.scatter(tick_l, tick_z, color='xkcd:yellow', s=20)
             except Exception as e:
                 print(f'{e}')
         
         plt.xlabel('Galactic Longitude (deg)')
-        plt.ylabel('Galactic Latitude (deg)')
+        plt.gca().invert_xaxis() # resverse the x-axis, standrd to show longitude
+        plt.ylabel('height (pc)')
         plt.title('Traceback Paths in Galactic Coordinates')
        # plt.legend()
         plt.grid(True)
@@ -174,5 +192,5 @@ class GalacticTraceback:
 test_table = ascii.read('/home/karan/Documents/UvA/Thesis/HMXB_practice_analysis.csv',format='csv')
 mydir = os.path.dirname(os.path.realpath(__file__))
 if __name__ == "__main__":
-    GalacticTraceback(test_table).plot_trace(savefig=True)
+    GalacticTraceback(test_table).plot_trace(savefig=False)
 
