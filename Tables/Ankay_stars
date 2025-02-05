@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.2 http://www.ivoa.net/xml/VOTable/v1.2" version="1.2">
+<DEFINITIONS>
+<COOSYS ID="COOSYS" equinox="2000" epoch="J2000" system="ICRS"/>
+</DEFINITIONS>
+<RESOURCE name="Simbad query" type="results">
+<TABLE ID="simbad" name="simbad query"><DESCRIPTION>... query string ...</DESCRIPTION>
+<FIELD ID="TYPED_ID" name="TYPED_ID" datatype="char" width="50" ucd="meta.id" arraysize="*">
+<DESCRIPTION>Raw identifier as typed in the query</DESCRIPTION>
+</FIELD>
+<FIELD ID="MATCHING_ID" name="MATCHING_ID" datatype="char" width="50" ucd="meta.id" arraysize="*">
+<DESCRIPTION>Raw identifier as found in the database</DESCRIPTION>
+</FIELD>
+<FIELD ID="ANG_DIST" name="ANG_DIST" datatype="float" precision="4" width="8" ucd="pos.posAng" unit="arcsec">
+<DESCRIPTION>Angular distance from the center</DESCRIPTION>
+</FIELD>
+<FIELD ID="MAIN_ID" name="MAIN_ID" datatype="char" width="22" ucd="meta.id;meta.main" arraysize="*">
+<DESCRIPTION>Main identifier for an object</DESCRIPTION>
+<LINK value="${MAIN_ID}" href="http://simbad.u-strasbg.fr/simbad/sim-id?Ident=${MAIN_ID}&amp;NbIdent=1"/>
+</FIELD>
+<FIELD ID="OTYPE_S" name="OTYPE_S" datatype="char" width="8" ucd="src.class" arraysize="*">
+<DESCRIPTION>Object type</DESCRIPTION>
+<LINK href="http://simbad.u-strasbg.fr/simbad/sim-display?data=otypes"/>
+</FIELD>
+<FIELD ID="RA_d" name="RA_d" datatype="double" precision="8" width="11" ucd="pos.eq.ra;meta.main" unit="deg">
+<DESCRIPTION>Right ascension</DESCRIPTION>
+</FIELD>
+<FIELD ID="DEC_d" name="DEC_d" datatype="double" precision="8" width="12" ucd="pos.eq.dec;meta.main" unit="deg">
+<DESCRIPTION>Declination</DESCRIPTION>
+</FIELD>
+<FIELD ID="COO_ERR_MAJA_d" name="COO_ERR_MAJA_d" datatype="float" precision="3" width="6" ucd="phys.angSize.smajAxis;pos.errorEllipse;pos.eq" unit="mas">
+<DESCRIPTION>Coordinate error major axis</DESCRIPTION>
+</FIELD>
+<FIELD ID="COO_ERR_MINA_d" name="COO_ERR_MINA_d" datatype="float" precision="3" width="6" ucd="phys.angSize.sminAxis;pos.errorEllipse;pos.eq" unit="mas">
+<DESCRIPTION>Coordinate error minor axis</DESCRIPTION>
+</FIELD>
+<FIELD ID="COO_ERR_ANGLE_d" name="COO_ERR_ANGLE_d" datatype="short" width="3" ucd="pos.posAng;pos.errorEllipse;pos.eq" unit="deg">
+<DESCRIPTION>Coordinate error angle</DESCRIPTION>
+</FIELD>
+<FIELD ID="PMRA" name="PMRA" datatype="double" precision="3" width="9" ucd="pos.pm;pos.eq.ra" unit="mas.yr-1">
+<DESCRIPTION>Proper motion in RA</DESCRIPTION>
+</FIELD>
+<FIELD ID="PMDEC" name="PMDEC" datatype="double" precision="3" width="9" ucd="pos.pm;pos.eq.dec" unit="mas.yr-1">
+<DESCRIPTION>Proper motion in DEC</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_ERR_MAJA" name="PM_ERR_MAJA" datatype="float" precision="3" width="5" ucd="phys.angSize.smajAxis;pos.errorEllipse;pos.pm" unit="mas.yr-1">
+<DESCRIPTION>Proper motion error major axis</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_ERR_MINA" name="PM_ERR_MINA" datatype="float" precision="3" width="5" ucd="phys.angSize.sminAxis;pos.errorEllipse;pos.pm" unit="mas.yr-1">
+<DESCRIPTION>Proper motion error minor axis</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_ERR_ANGLE" name="PM_ERR_ANGLE" datatype="short" width="3" ucd="pos.posAng;pos.errorEllipse;pos.pm" unit="deg">
+<DESCRIPTION>Proper motion error angle</DESCRIPTION>
+</FIELD>
+<FIELD ID="PLX_VALUE" name="PLX_VALUE" datatype="double" precision="3" width="9" ucd="pos.parallax.trig" unit="mas">
+<DESCRIPTION>Parallax</DESCRIPTION>
+</FIELD>
+<FIELD ID="RV_VALUE" name="RV_VALUE" datatype="double" precision="3" ucd="spect.dopplerVeloc.opt" unit="km.s-1">
+<DESCRIPTION>Radial velocity</DESCRIPTION>
+</FIELD>
+<FIELD ID="Z_VALUE" name="Z_VALUE" datatype="double" precision="7" ucd="src.redshift">
+<DESCRIPTION>Redshift</DESCRIPTION>
+</FIELD>
+<FIELD ID="VLSR" name="VLSR" datatype="double" precision="7" ucd="phys.veloc;pos.lsr;stat.mean" unit="km.s-1">
+<DESCRIPTION>vlsr</DESCRIPTION>
+</FIELD>
+<FIELD ID="GALDIM_MAJAXIS" name="GALDIM_MAJAXIS" datatype="float" width="4" ucd="phys.angSize.smajAxis" unit="arcmin">
+<DESCRIPTION>Angular size major axis</DESCRIPTION>
+</FIELD>
+<FIELD ID="GALDIM_MINAXIS" name="GALDIM_MINAXIS" datatype="float" width="4" ucd="phys.angSize.sminAxis" unit="arcmin">
+<DESCRIPTION>Angular size minor axis</DESCRIPTION>
+</FIELD>
+<FIELD ID="GALDIM_ANGLE" name="GALDIM_ANGLE" datatype="short" width="3" ucd="pos.posAng" unit="deg">
+<DESCRIPTION>Galaxy ellipse angle</DESCRIPTION>
+</FIELD>
+<FIELD ID="SP_TYPE" name="SP_TYPE" datatype="char" width="6" ucd="src.spType" arraysize="*">
+<DESCRIPTION>MK spectral type</DESCRIPTION>
+</FIELD>
+<FIELD ID="MORPH_TYPE" name="MORPH_TYPE" datatype="char" width="20" ucd="src.morph.type" arraysize="*">
+<DESCRIPTION>Morphological type</DESCRIPTION>
+</FIELD>
+<FIELD ID="NB_REF" name="NB_REF" datatype="int" width="4" ucd="meta.bib;meta.number">
+<DESCRIPTION>number of references</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_U" name="FILTER_NAME_U" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_U" name="FLUX_U" datatype="float" ucd="phot.mag;em.opt.U" unit="mag">
+<DESCRIPTION>Magnitude U</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_U" name="FLUX_ERROR_U" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_U" name="FLUX_SYSTEM_U" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_U" name="FLUX_BIBCODE_U" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_U" name="FLUX_VAR_U" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_U" name="FLUX_MULT_U" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_U" name="FLUX_QUAL_U" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_U" name="FLUX_UNIT_U" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_B" name="FILTER_NAME_B" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_B" name="FLUX_B" datatype="float" ucd="phot.mag;em.opt.B" unit="mag">
+<DESCRIPTION>Magnitude B</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_B" name="FLUX_ERROR_B" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_B" name="FLUX_SYSTEM_B" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_B" name="FLUX_BIBCODE_B" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_B" name="FLUX_VAR_B" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_B" name="FLUX_MULT_B" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_B" name="FLUX_QUAL_B" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_B" name="FLUX_UNIT_B" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_V" name="FILTER_NAME_V" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_V" name="FLUX_V" datatype="float" ucd="phot.mag;em.opt.V" unit="mag">
+<DESCRIPTION>Magnitude V</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_V" name="FLUX_ERROR_V" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_V" name="FLUX_SYSTEM_V" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_V" name="FLUX_BIBCODE_V" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_V" name="FLUX_VAR_V" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_V" name="FLUX_MULT_V" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_V" name="FLUX_QUAL_V" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_V" name="FLUX_UNIT_V" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_G" name="FILTER_NAME_G" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_G" name="FLUX_G" datatype="float" ucd="phot.mag;em.opt.G" unit="mag">
+<DESCRIPTION>Magnitude Gaia G</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_G" name="FLUX_ERROR_G" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_G" name="FLUX_SYSTEM_G" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_G" name="FLUX_BIBCODE_G" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_G" name="FLUX_VAR_G" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_G" name="FLUX_MULT_G" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_G" name="FLUX_QUAL_G" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_G" name="FLUX_UNIT_G" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_R" name="FILTER_NAME_R" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_R" name="FLUX_R" datatype="float" ucd="phot.mag;em.opt.R" unit="mag">
+<DESCRIPTION>Magnitude R</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_R" name="FLUX_ERROR_R" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_R" name="FLUX_SYSTEM_R" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_R" name="FLUX_BIBCODE_R" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_R" name="FLUX_VAR_R" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_R" name="FLUX_MULT_R" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_R" name="FLUX_QUAL_R" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_R" name="FLUX_UNIT_R" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_I" name="FILTER_NAME_I" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_I" name="FLUX_I" datatype="float" ucd="phot.mag;em.opt.I" unit="mag">
+<DESCRIPTION>Magnitude I</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_I" name="FLUX_ERROR_I" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_I" name="FLUX_SYSTEM_I" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_I" name="FLUX_BIBCODE_I" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_I" name="FLUX_VAR_I" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_I" name="FLUX_MULT_I" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_I" name="FLUX_QUAL_I" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_I" name="FLUX_UNIT_I" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_J" name="FILTER_NAME_J" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_J" name="FLUX_J" datatype="float" ucd="phot.mag;em.IR.J" unit="mag">
+<DESCRIPTION>Magnitude J</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_J" name="FLUX_ERROR_J" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_J" name="FLUX_SYSTEM_J" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_J" name="FLUX_BIBCODE_J" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_J" name="FLUX_VAR_J" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_J" name="FLUX_MULT_J" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_J" name="FLUX_QUAL_J" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_J" name="FLUX_UNIT_J" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_H" name="FILTER_NAME_H" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_H" name="FLUX_H" datatype="float" ucd="phot.mag;em.IR.H" unit="mag">
+<DESCRIPTION>Magnitude H</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_H" name="FLUX_ERROR_H" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_H" name="FLUX_SYSTEM_H" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_H" name="FLUX_BIBCODE_H" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_H" name="FLUX_VAR_H" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_H" name="FLUX_MULT_H" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_H" name="FLUX_QUAL_H" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_H" name="FLUX_UNIT_H" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_K" name="FILTER_NAME_K" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_K" name="FLUX_K" datatype="float" ucd="phot.mag;em.IR.K" unit="mag">
+<DESCRIPTION>Magnitude K</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_K" name="FLUX_ERROR_K" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_K" name="FLUX_SYSTEM_K" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_K" name="FLUX_BIBCODE_K" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_K" name="FLUX_VAR_K" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_K" name="FLUX_MULT_K" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_K" name="FLUX_QUAL_K" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_K" name="FLUX_UNIT_K" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_u" name="FILTER_NAME_u" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_u" name="FLUX_u" datatype="float" ucd="phot.mag;em.opt.U" unit="mag">
+<DESCRIPTION>Magnitude SDSS u</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_u" name="FLUX_ERROR_u" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_u" name="FLUX_SYSTEM_u" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_u" name="FLUX_BIBCODE_u" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_u" name="FLUX_VAR_u" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_u" name="FLUX_MULT_u" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_u" name="FLUX_QUAL_u" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_u" name="FLUX_UNIT_u" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_g" name="FILTER_NAME_g" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_g" name="FLUX_g" datatype="float" ucd="phot.mag;em.opt.B" unit="mag">
+<DESCRIPTION>Magnitude SDSS g</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_g" name="FLUX_ERROR_g" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_g" name="FLUX_SYSTEM_g" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_g" name="FLUX_BIBCODE_g" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_g" name="FLUX_VAR_g" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_g" name="FLUX_MULT_g" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_g" name="FLUX_QUAL_g" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_g" name="FLUX_UNIT_g" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_r" name="FILTER_NAME_r" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_r" name="FLUX_r" datatype="float" ucd="phot.mag;em.opt.R" unit="mag">
+<DESCRIPTION>Magnitude SDSS r</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_r" name="FLUX_ERROR_r" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_r" name="FLUX_SYSTEM_r" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_r" name="FLUX_BIBCODE_r" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_r" name="FLUX_VAR_r" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_r" name="FLUX_MULT_r" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_r" name="FLUX_QUAL_r" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_r" name="FLUX_UNIT_r" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_i" name="FILTER_NAME_i" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_i" name="FLUX_i" datatype="float" ucd="phot.mag;em.opt.I" unit="mag">
+<DESCRIPTION>Magnitude SDSS i</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_i" name="FLUX_ERROR_i" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_i" name="FLUX_SYSTEM_i" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_i" name="FLUX_BIBCODE_i" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_i" name="FLUX_VAR_i" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_i" name="FLUX_MULT_i" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_i" name="FLUX_QUAL_i" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_i" name="FLUX_UNIT_i" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="FILTER_NAME_z" name="FILTER_NAME_z" datatype="char" width="8" ucd="instr.filter" arraysize="*">
+<DESCRIPTION>flux filter name</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_z" name="FLUX_z" datatype="float" ucd="phot.mag;em.opt.I" unit="mag">
+<DESCRIPTION>Magnitude SDSS z</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_ERROR_z" name="FLUX_ERROR_z" datatype="float" precision="3" ucd="stat.error;phot.mag">
+<DESCRIPTION>flux error</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_SYSTEM_z" name="FLUX_SYSTEM_z" datatype="char" ucd="instr.precision;phot.flux" arraysize="*">
+<DESCRIPTION>flux system A=AB V=Vega</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_BIBCODE_z" name="FLUX_BIBCODE_z" datatype="char" width="19" ucd="meta.bib.bibcode;phot.flux" arraysize="*">
+<DESCRIPTION>flux reference</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_VAR_z" name="FLUX_VAR_z" datatype="char" width="1" ucd="meta.code;src.var;phot.flux">
+<DESCRIPTION>flux variability flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_MULT_z" name="FLUX_MULT_z" datatype="char" width="1" ucd="meta.code.multip;phot.flux" arraysize="*">
+<DESCRIPTION>flux multiplicity flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_QUAL_z" name="FLUX_QUAL_z" datatype="char" width="1" ucd="meta.code.qual;phot.flux">
+<DESCRIPTION>flux quality flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="FLUX_UNIT_z" name="FLUX_UNIT_z" datatype="char" width="3" ucd="meta.unit;phot.flux">
+<DESCRIPTION>flux unit</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_diameter" name="Diameter:diameter" datatype="double" precision="2" width="8" ucd="PHYS.ANGSIZE">
+<DESCRIPTION>Diameter value</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_Q" name="Diameter:Q" datatype="char" width="1" ucd="META.CODE.QUAL" arraysize="1">
+<DESCRIPTION>Quality code (':' for uncertain)</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_unit" name="Diameter:unit" datatype="char" width="4" ucd="META.UNIT" arraysize="4">
+<DESCRIPTION>Unit (mas or km)</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_error" name="Diameter:error" datatype="double" precision="2" width="8" ucd="STAT.ERROR">
+<DESCRIPTION>Error on the diameter value</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_filter" name="Diameter:filter" datatype="char" width="8" ucd="INSTR.FILTER" arraysize="8">
+<DESCRIPTION>filter or wavelength</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_method" name="Diameter:method" datatype="char" width="8" ucd="INSTR.SETUP" arraysize="8">
+<DESCRIPTION>calculation method (see 2001A&amp;A...367..521P)</DESCRIPTION>
+</FIELD>
+<FIELD ID="Diameter_bibcode" name="Diameter:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_distance" name="Distance:distance" datatype="double" precision="4" width="10" ucd="POS.DISTANCE">
+<DESCRIPTION>Distance value</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_Q" name="Distance:Q" datatype="char" width="1" ucd="META.CODE.QUAL" arraysize="1">
+<DESCRIPTION>Quality</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_unit" name="Distance:unit" datatype="char" width="4" ucd="META.UNIT" arraysize="4">
+<DESCRIPTION>Unit (pc,kpc or Mpc)</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_merr" name="Distance:merr" datatype="double" precision="4" width="9" ucd="STAT.ERROR">
+<DESCRIPTION>minus error</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_perr" name="Distance:perr" datatype="double" precision="4" width="9" ucd="STAT.ERROR">
+<DESCRIPTION>plus error</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_method" name="Distance:method" datatype="char" width="8" ucd="INSTR.SETUP" arraysize="8">
+<DESCRIPTION>distance calculation method</DESCRIPTION>
+</FIELD>
+<FIELD ID="Distance_bibcode" name="Distance:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_Teff" name="Fe_H:Teff" datatype="int" width="6" ucd="PHYS.TEMPERATURE.EFFECTIVE" unit="unit-degK">
+<DESCRIPTION>Effective Temperature</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_log_g" name="Fe_H:log_g" datatype="float" precision="4" width="6" ucd="PHYS.GRAVITY" unit="cm/s**2">
+<DESCRIPTION>Decimal logarithm of the surface gravity</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_Fe_H" name="Fe_H:Fe_H" datatype="float" precision="4" width="7" ucd="PHYS.ABUND.FE">
+<DESCRIPTION>Metallicity index relative to the Sun, in a log scale</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_flag" name="Fe_H:flag" datatype="char" width="1" ucd="META.CODE.ERROR" arraysize="1">
+<DESCRIPTION>Flag on the [Fe/H] value to express the calculation method (which can be S/M/C/T/D)</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_CompStar" name="Fe_H:CompStar" datatype="char" width="9" ucd="META.ID" arraysize="*">
+<DESCRIPTION>Designates the comparison star from which the [Fe/H] value was obtained</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_CatNo" name="Fe_H:CatNo" datatype="char" width="5" ucd="META.ID;META.MAIN" arraysize="5">
+<DESCRIPTION>Star in the Cayrel et al. (1997A&amp;AS..124..299C) compilation</DESCRIPTION>
+</FIELD>
+<FIELD ID="Fe_H_bibcode" name="Fe_H:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="Herschel_ObsId" name="Herschel:ObsId" datatype="char" width="10" ucd="META.ID;META.MAIN" arraysize="10">
+<DESCRIPTION>Observation identifier</DESCRIPTION>
+</FIELD>
+<FIELD ID="Herschel_alpha" name="Herschel:alpha" datatype="char" width="11" ucd="POS.EQ.RA;META.MAIN" arraysize="11" unit="h:m:s">
+<DESCRIPTION>Right ascension</DESCRIPTION>
+</FIELD>
+<FIELD ID="Herschel_delta" name="Herschel:delta" datatype="char" width="11" ucd="POS.EQ.DEC;META.MAIN" arraysize="11" unit="d:m:s">
+<DESCRIPTION>Declination</DESCRIPTION>
+</FIELD>
+<FIELD ID="PLX_plx" name="PLX:plx" datatype="float" precision="6" width="11" ucd="POS.PARALLAX.TRIG" unit="mas">
+<DESCRIPTION>Parallax</DESCRIPTION>
+</FIELD>
+<FIELD ID="PLX_me" name="PLX:me" datatype="float" precision="6" width="11" ucd="STAT.ERROR" unit="mas">
+<DESCRIPTION>sigma{plx}</DESCRIPTION>
+</FIELD>
+<FIELD ID="PLX_R" name="PLX:R" datatype="char" width="2" ucd="META.ID;INSTR.OBSTY" arraysize="2">
+<DESCRIPTION>Observatory code</DESCRIPTION>
+</FIELD>
+<FIELD ID="PLX_bibcode" name="PLX:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_pmra" name="PM:pmra" datatype="float" precision="3" width="9" ucd="POS.PM;POS.EQ.RA" unit="mas.yr-1">
+<DESCRIPTION>Proper motion R.A.</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_me_pmra" name="PM:me_pmra" datatype="float" precision="3" width="9" ucd="STAT.ERROR" unit="mas.yr-1">
+<DESCRIPTION>sigma{pm-ra}</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_pmde" name="PM:pmde" datatype="float" precision="3" width="9" ucd="POS.PM;POS.EQ.DEC" unit="mas.yr-1">
+<DESCRIPTION>Proper motion DEC.</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_me_pmde" name="PM:me_pmde" datatype="float" precision="3" width="9" ucd="STAT.ERROR" unit="mas.yr-1">
+<DESCRIPTION>sigma{pm-de}</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_system" name="PM:system" datatype="char" width="4" ucd="POS.FRAME" arraysize="4">
+<DESCRIPTION>coordinates system designation</DESCRIPTION>
+</FIELD>
+<FIELD ID="PM_bibcode" name="PM:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="ROT_upVsini" name="ROT:upVsini" datatype="char" width="1" ucd="META.CODE" arraysize="1">
+<DESCRIPTION>Flag for upper value of Vsini ('&lt;')</DESCRIPTION>
+</FIELD>
+<FIELD ID="ROT_Vsini" name="ROT:Vsini" datatype="float" precision="3" width="7" ucd="PHYS.VELOC.ROTAT" unit="km.s-1">
+<DESCRIPTION>V sini</DESCRIPTION>
+</FIELD>
+<FIELD ID="ROT_err" name="ROT:err" datatype="float" precision="3" width="7" ucd="STAT.ERROR">
+<DESCRIPTION>error of Vsini</DESCRIPTION>
+</FIELD>
+<FIELD ID="ROT_mes" name="ROT:mes" datatype="int" width="3" ucd="META.NUMBER">
+<DESCRIPTION>Number of measurements</DESCRIPTION>
+</FIELD>
+<FIELD ID="ROT_qual" name="ROT:qual" datatype="char" width="1" ucd="CODE.QUAL" arraysize="1">
+<DESCRIPTION>Quality</DESCRIPTION>
+</FIELD>
+<FIELD ID="ROT_bibcode" name="ROT:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__vartyp" name="V*:vartyp" datatype="char" width="16" ucd="META.CODE;SRC.VAR" arraysize="16">
+<DESCRIPTION>Type of variability</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__Lomax" name="V*:Lomax" datatype="char" width="1" ucd="META.CODE.ERROR" arraysize="1">
+<DESCRIPTION>Upper limit flag for maximum brightness</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__max" name="V*:max" datatype="float" precision="6" width="10" ucd="PHOT.MAG" unit="mag">
+<DESCRIPTION>Maximum of brightness</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__R_max" name="V*:R_max" datatype="char" width="1" ucd="META.CODE.ERROR" arraysize="1">
+<DESCRIPTION>Uncertainty flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__band" name="V*:band" datatype="char" width="8" ucd="META.ID;PHOT" arraysize="8">
+<DESCRIPTION>Band</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__Upmin" name="V*:Upmin" datatype="char" width="1" ucd="META.CODE" arraysize="1">
+<DESCRIPTION>Lower limit flag for Vmin</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__min" name="V*:min" datatype="float" precision="6" width="10" ucd="PHOT.MAG" unit="mag">
+<DESCRIPTION>Minimum of brightness</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__R_min" name="V*:R_min" datatype="char" width="1" ucd="META.CODE.ERROR" arraysize="1">
+<DESCRIPTION>Uncertainty flag for Vmin</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__UpPeriod" name="V*:UpPeriod" datatype="char" width="1" ucd="META.CODE" arraysize="1">
+<DESCRIPTION>Lower limit flag for the period</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__period" name="V*:period" datatype="double" precision="6" width="12" ucd="TIME.PERIOD" unit="day">
+<DESCRIPTION>Period</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__R_period" name="V*:R_period" datatype="char" width="2" ucd="META.CODE.ERROR" arraysize="2">
+<DESCRIPTION>Uncertainty flag on period (:+)</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__epoch" name="V*:epoch" datatype="double" precision="4" width="13" ucd="TIME.EPOCH" unit="day">
+<DESCRIPTION>Epoch of maximum or minimum light, according to:
+maximum light for pulsating variables (excluding RV Tau stars), α CVn stars, novae
+minimum light for eclipsing and ellipsoidal variables RV Tau stars</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__R_epoch" name="V*:R_epoch" datatype="char" width="1" ucd="META.CODE.ERROR" arraysize="1">
+<DESCRIPTION>Uncertainty on epoch (:)</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__D_rt" name="V*:D_rt" datatype="float" precision="1" width="4" ucd="TIME.INTERVAL">
+<DESCRIPTION>Duration of eclipse for Algol type stars; Raising time for all other variable types</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__R_D_rt" name="V*:R_D_rt" datatype="char" width="1" ucd="META.CODE.ERROR" arraysize="1">
+<DESCRIPTION>Uncertainty flag on raising time</DESCRIPTION>
+</FIELD>
+<FIELD ID="V__bibcode" name="V*:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_type" name="velocities:type" datatype="char" width="3" ucd="META.CODE;SPECT.DOPPLERVELOC" arraysize="3">
+<DESCRIPTION>velocity type (v, z or cz)</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Value" name="velocities:Value" datatype="double" precision="6" width="11" ucd="SPECT.DOPPLERVELOC">
+<DESCRIPTION>Velocity</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_R" name="velocities:R" datatype="char" width="1" ucd="META.NOTE" arraysize="1">
+<DESCRIPTION>colon is uncertain question mark is questionable</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_me" name="velocities:me" datatype="double" precision="5" width="8" ucd="STAT.ERROR">
+<DESCRIPTION>sigma(Value)</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Acc" name="velocities:Acc" datatype="char" width="1" ucd="META.CODE.QUAL" arraysize="1">
+<DESCRIPTION>Measurement accuracy (A-E~)</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Nmes" name="velocities:Nmes" datatype="int" width="4" ucd="META.NUMBER">
+<DESCRIPTION>Number of measurements</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_nat" name="velocities:nat" datatype="char" width="2" ucd="META.CODE;SPECT.DOPPLERVELOC" arraysize="2">
+<DESCRIPTION>nature of the measurement</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Q" name="velocities:Q" datatype="char" width="1" ucd="META.CODE.QUAL" arraysize="1">
+<DESCRIPTION>Quality (A-E?)</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_dom" name="velocities:dom" datatype="char" width="4" ucd="EM.WL.CENTRAL;SPECT.DOPPLERVELOC" arraysize="4">
+<DESCRIPTION>Wavelength domain (Rad,mm,IR,Opt,UV,XRay,Gam)</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_res" name="velocities:res" datatype="float" precision="4" width="10" ucd="SPECT.RESOLUTION">
+<DESCRIPTION>Resolution</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_d" name="velocities:d" datatype="char" width="1" ucd="META.CODE" arraysize="1">
+<DESCRIPTION>D</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Date" name="velocities:Date" datatype="double" precision="3" width="10" ucd="TIME.EPOCH">
+<DESCRIPTION>Observation date</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Rem" name="velocities:Rem" datatype="char" width="20" ucd="META.NOTE" arraysize="*">
+<DESCRIPTION>Remarks</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_Origin" name="velocities:Origin" datatype="char" width="2" ucd="META.NOTE" arraysize="2">
+<DESCRIPTION>Origin of the radial velocity</DESCRIPTION>
+</FIELD>
+<FIELD ID="velocities_bibcode" name="velocities:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="ISO_TDT" name="ISO:TDT" datatype="char" width="8" ucd="META.ID;META.MAIN" arraysize="8">
+<DESCRIPTION>Observation identifier</DESCRIPTION>
+</FIELD>
+<FIELD ID="ISO_alpha" name="ISO:alpha" datatype="double" precision="4" width="8" ucd="POS.EQ.RA;META.MAIN" unit="deg">
+<DESCRIPTION>Right ascension</DESCRIPTION>
+</FIELD>
+<FIELD ID="ISO_delta" name="ISO:delta" datatype="double" precision="4" width="8" ucd="POS.EQ.DEC;META.MAIN" unit="deg">
+<DESCRIPTION>Declination</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_Homogenized_Name" name="IUE:Homogenized_Name" datatype="char" width="16" ucd="META.ID;META.MAIN" arraysize="*">
+<DESCRIPTION>Homogenized Name</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_ComplID" name="IUE:ComplID" datatype="char" width="12" ucd="META.ID" arraysize="*">
+<DESCRIPTION>Complementary Identifier</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_PROG" name="IUE:PROG" datatype="char" width="5" ucd="META.ID;OBS" arraysize="5">
+<DESCRIPTION>Observing Program Identification</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_CL" name="IUE:CL" datatype="int" width="2" ucd="SRC.CLASS">
+<DESCRIPTION>IUE class code</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_D" name="IUE:D" datatype="char" width="1" ucd="META.CODE" arraysize="1">
+<DESCRIPTION>Dispersion code</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_CAM" name="IUE:CAM" datatype="char" width="3" ucd="META.ID;INSTR" arraysize="3">
+<DESCRIPTION>Camera id</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_IMAGE" name="IUE:IMAGE" datatype="int" width="5" ucd="OBS.IMAGE">
+<DESCRIPTION>Image number</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_A" name="IUE:A" datatype="char" width="1" ucd="INSTR.FOV" arraysize="1">
+<DESCRIPTION>Aperture designation code</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_FES" name="IUE:FES" datatype="int" width="5" ucd="PHOT.COUNT;EM.OPT">
+<DESCRIPTION>FES count</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_MD" name="IUE:MD" datatype="char" width="2" ucd="META.CODE" arraysize="2">
+<DESCRIPTION>FES mode</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_ObsDate" name="IUE:ObsDate" datatype="char" width="6" ucd="TIME.EPOCH" arraysize="6">
+<DESCRIPTION>Observation date</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_Time" name="IUE:Time" datatype="char" width="6" ucd="TIME.EPOCH" arraysize="6">
+<DESCRIPTION>Observation time</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_ExpTim" name="IUE:ExpTim" datatype="int" width="6" ucd="TIME.EXPO" unit="sec">
+<DESCRIPTION>Effective exposure time</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_m" name="IUE:m" datatype="char" width="1" ucd="META.CODE.QUAL" arraysize="1">
+<DESCRIPTION>Abnormality code</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_CEB" name="IUE:CEB" datatype="char" width="3" ucd="META.CODE.CLASS" arraysize="3">
+<DESCRIPTION>Exposure quality code</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_S" name="IUE:S" datatype="char" width="1" ucd="META.FLAG;INSTR.TEL" arraysize="1">
+<DESCRIPTION>Station (V=Vilspa/G=Goddard)</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_Comments" name="IUE:Comments" datatype="char" width="20" ucd="META.NOTE" arraysize="*">
+<DESCRIPTION>Comments</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_F" name="IUE:F" datatype="char" width="1" ucd="META.CODE" arraysize="1">
+<DESCRIPTION>Flag</DESCRIPTION>
+</FIELD>
+<FIELD ID="IUE_bibcode" name="IUE:bibcode" datatype="char" width="19" ucd="META.BIB.BIBCODE" arraysize="19">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="XMM_Obsno" name="XMM:Obsno" datatype="char" width="10" ucd="META.ID;META.MAIN" arraysize="10">
+<DESCRIPTION>Observation identifier</DESCRIPTION>
+</FIELD>
+<FIELD ID="OID4" name="OID4" datatype="char" width="10" ucd="meta.record;meta.id" arraysize="*">
+<DESCRIPTION>Object internal identifier</DESCRIPTION>
+</FIELD>
+<DATA>
+<TABLEDATA>
+<TR><TD></TD><TD></TD><TD></TD><TD>V* GP Vel</TD><TD>HighMassXBin</TD><TD>135.5285870053600</TD><TD>-40.5546942133500</TD><TD>0.0109</TD><TD>0.0127</TD><TD>90</TD><TD>-4.822</TD><TD>9.282</TD><TD>0.015</TD><TD>0.016</TD><TD>90</TD><TD>0.4962</TD><TD>-3.20</TD><TD>-0.000011</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B0.5Ia</TD><TD></TD><TD>1543</TD><TD>U</TD><TD>6.85</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>7.37</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>6.87</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>6.735128</TD><TD>0.003033</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>6.31</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>6.05</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>5.833</TD><TD>0.020</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>5.705</TD><TD>0.034</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>5.596</TD><TD>0.024</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2015.316</TD><TD></TD><TD>pc</TD><TD>-61.7348</TD><TD>+61.7348</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1342244882</TD><TD>09 02 06.86</TD><TD>-40 33 16.9</TD><TD>0.4962</TD><TD>0.0152</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-4.822</TD><TD>0.015</TD><TD>+9.282</TD><TD>0.016</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>114.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD>HMXB</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>8.963020</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1997MNRAS.286L..21S</TD><TD>v</TD><TD>99.04</TD><TD></TD><TD>5.84</TD><TD>A</TD><TD>14</TD><TD>s</TD><TD></TD><TD>O</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2018yCat.1345....0G</TD><TD>19000262</TD><TD>135.5416</TD><TD>-40.5666</TD><TD>HD 77581</TD><TD></TD><TD>EI030</TD><TD>23</TD><TD>H</TD><TD>SWP</TD><TD>22324</TD><TD>L</TD><TD>5104</TD><TD>FO</TD><TD>840222</TD><TD>071748</TD><TD>009000</TD><TD></TD><TD>501</TD><TD>V</TD><TD></TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2988660</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>V* BP Cru</TD><TD>HighMassXBin</TD><TD>186.6565021620800</TD><TD>-62.7703502901900</TD><TD>0.0120</TD><TD>0.0133</TD><TD>90</TD><TD>-5.227</TD><TD>-2.071</TD><TD>0.016</TD><TD>0.019</TD><TD>90</TD><TD>0.2506</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B1Ia+</TD><TD></TD><TD>709</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B</TD><TD>12.482</TD><TD>0.04</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>B</TD><TD>V</TD><TD>10.803</TD><TD>0.04</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>V</TD><TD>G</TD><TD>9.751056</TD><TD>0.002993</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>10.304</TD><TD>0.02</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>R</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>6.717</TD><TD>0.021</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>6.077</TD><TD>0.029</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>5.672</TD><TD>0.017</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>g</TD><TD>11.704</TD><TD>0.03</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>g</TD><TD>r</TD><TD>10.207</TD><TD>0.04</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>r</TD><TD>i</TD><TD>9.026</TD><TD>0.03</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>i</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3990.423</TD><TD></TD><TD>pc</TD><TD>-254.7756</TD><TD>+254.7756</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1342225127</TD><TD>12 26 37.56</TD><TD>-62 46 13.3</TD><TD>0.2506</TD><TD>0.016</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-5.227</TD><TD>0.016</TD><TD>-2.071</TD><TD>0.019</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>HMXB</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>41.498000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2006A&amp;A...457..595K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>64401668</TD><TD>186.6564</TD><TD>-62.7528</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>@3299333</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 151515</TD><TD>SB*</TD><TD>252.4510469300799</TD><TD>-42.0017159588200</TD><TD>0.0226</TD><TD>0.0154</TD><TD>90</TD><TD>-0.934</TD><TD>-3.062</TD><TD>0.030</TD><TD>0.025</TD><TD>90</TD><TD>0.6564</TD><TD>-22</TD><TD>-0.000073</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O7II(f)</TD><TD></TD><TD>128</TD><TD>U</TD><TD>6.77</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>7.48</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>7.30</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>7.077850</TD><TD>0.002781</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>7.11</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>6.88</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>6.712</TD><TD>0.024</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>6.713</TD><TD>0.044</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>6.653</TD><TD>0.031</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1523.461</TD><TD></TD><TD>pc</TD><TD>-58.9517</TD><TD>+58.9517</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD>36000</TD><TD>3.55</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2022A&amp;A...665A.150H</TD><TD></TD><TD></TD><TD></TD><TD>0.6564</TD><TD>0.0254</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.934</TD><TD>0.030</TD><TD>-3.062</TD><TD>0.025</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>94.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-22</TD><TD></TD><TD>2</TD><TD>B</TD><TD></TD><TD></TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD>54976.434</TD><TD></TD><TD></TD><TD>2018A&amp;A...613A..65H</TD><TD></TD><TD></TD><TD></TD><TD>HD 151515</TD><TD></TD><TD>SAJCW</TD><TD>13</TD><TD>L</TD><TD>SWP</TD><TD>31625</TD><TD>L</TD><TD>3629</TD><TD>FO</TD><TD>870823</TD><TD>113800</TD><TD>000115</TD><TD>T</TD><TD>501</TD><TD>G</TD><TD>C=236,B=27</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2314493</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>V* V1290 Sco</TD><TD>SB*</TD><TD>252.5060182631400</TD><TD>-41.6212476515800</TD><TD>0.0262</TD><TD>0.0186</TD><TD>90</TD><TD>-1.643</TD><TD>-1.767</TD><TD>0.048</TD><TD>0.036</TD><TD>90</TD><TD>0.6584</TD><TD>-39.60</TD><TD>-0.000132</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B0III</TD><TD></TD><TD>83</TD><TD>U</TD><TD>7.37</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>8.10</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>7.98</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>7.926755</TD><TD>0.002885</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>8.86</TD><TD>0.05</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>R</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>7.641</TD><TD>0.027</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>7.611</TD><TD>0.036</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>7.595</TD><TD>0.026</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1518.834</TD><TD></TD><TD>pc</TD><TD>-76.3569</TD><TD>+76.3569</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.6584</TD><TD>0.0331</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-1.643</TD><TD>0.048</TD><TD>-1.767</TD><TD>0.036</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>E</TD><TD></TD><TD>7.922041</TD><TD></TD><TD>G</TD><TD></TD><TD>8.013120</TD><TD></TD><TD></TD><TD>9.421420</TD><TD></TD><TD>2457490.4323</TD><TD></TD><TD></TD><TD></TD><TD>2022yCat.1358....0G</TD><TD>v</TD><TD>-39.6</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>s</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1995A&amp;AS..114..269D</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>@2314494</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 151804</TD><TD>BlueSG</TD><TD>252.8905075217800</TD><TD>-41.2305331998600</TD><TD>0.0936</TD><TD>0.0650</TD><TD>90</TD><TD>-0.693</TD><TD>-0.754</TD><TD>0.125</TD><TD>0.105</TD><TD>90</TD><TD>0.4893</TD><TD>-63.00</TD><TD>-0.000210</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O8Iaf</TD><TD></TD><TD>380</TD><TD>U</TD><TD>4.45</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>5.29</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>5.22</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>5.168706</TD><TD>0.003026</TD><TD>Vega</TD><TD>2022yCat.1355....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>4.939</TD><TD>0.037</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>4.953</TD><TD>0.073</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>4.795</TD><TD>0.016</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2009</TD><TD></TD><TD>pc</TD><TD>-306</TD><TD>+306</TD><TD>CaIIHK</TD><TD>2009A&amp;A...507..833M</TD><TD>30000</TD><TD>3.1</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2018A&amp;A...613A..12M</TD><TD>1342263879</TD><TD>16 51 33.72</TD><TD>-41 13 49.9</TD><TD>0.4893</TD><TD>0.1180</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.693</TD><TD>0.125</TD><TD>-0.754</TD><TD>0.105</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>104.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-46</TD><TD></TD><TD>6</TD><TD>D</TD><TD></TD><TD></TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD>57116.214</TD><TD></TD><TD></TD><TD>2018A&amp;A...613A..65H</TD><TD></TD><TD></TD><TD></TD><TD>HD 151804</TD><TD></TD><TD>OSPSC</TD><TD>15</TD><TD>L</TD><TD>SWP</TD><TD>02858</TD><TD>S</TD><TD>21281</TD><TD>FO</TD><TD>781005</TD><TD>103800</TD><TD>000004</TD><TD></TD><TD></TD><TD>G</TD><TD>MAX DN = 160</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2314501</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>NAME Sco OB 1</TD><TD>Association</TD><TD>253.37</TD><TD>-41.95</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>-28.8</TD><TD>-0.000096</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>220</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1.5</TD><TD></TD><TD>kpc</TD><TD></TD><TD></TD><TD>ST-L</TD><TD>2009MNRAS.400..518M</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>@2317310</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152235</TD><TD>BlueSG</TD><TD>253.4952201720200</TD><TD>-41.9943271800500</TD><TD>0.0335</TD><TD>0.0224</TD><TD>90</TD><TD>-0.440</TD><TD>-2.328</TD><TD>0.049</TD><TD>0.037</TD><TD>90</TD><TD>0.5927</TD><TD>16.83</TD><TD>0.000056</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B0.5Ia</TD><TD></TD><TD>199</TD><TD>U</TD><TD>6.47</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>6.92</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>6.38</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>6.113081</TD><TD>0.003013</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>5.84</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>5.42</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>5.03</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>4.938</TD><TD>0.076</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>4.798</TD><TD>0.017</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1687.19</TD><TD></TD><TD>pc</TD><TD>-122.69</TD><TD>+122.69</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD>5815</TD><TD>3.5266</TD><TD>-1.677</TD><TD></TD><TD>SUN</TD><TD></TD><TD>2023A&amp;A...671A..61N</TD><TD></TD><TD></TD><TD></TD><TD>0.5927</TD><TD>0.0431</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.440</TD><TD>0.049</TD><TD>-2.328</TD><TD>0.037</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>81.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-27.600</TD><TD></TD><TD>3.400</TD><TD>C</TD><TD></TD><TD>s</TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2023ApJS..266...11B</TD><TD>28900632</TD><TD>253.4949</TD><TD>-41.9944</TD><TD>HD 152235</TD><TD></TD><TD>HSCSP</TD><TD>23</TD><TD>L</TD><TD>SWP</TD><TD>10340</TD><TD>L</TD><TD>9251</TD><TD>FO</TD><TD>801012</TD><TD>082400</TD><TD>000135</TD><TD></TD><TD>501</TD><TD>G</TD><TD>C=230,B=21</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2315164</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>* zet01 Sco</TD><TD>BlueSG</TD><TD>253.4988630478699</TD><TD>-42.3620298151300</TD><TD>0.0918</TD><TD>0.0672</TD><TD>90</TD><TD>-0.094</TD><TD>-3.368</TD><TD>0.130</TD><TD>0.107</TD><TD>90</TD><TD>0.5855</TD><TD>-26.00</TD><TD>-0.000087</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B1.5Ia+</TD><TD></TD><TD>380</TD><TD>U</TD><TD>4.80</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>5.31</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>4.79</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>4.526421</TD><TD>0.003144</TD><TD>Vega</TD><TD>2022yCat.1355....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>4.32</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>3.86</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>3.50</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>3.27</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>3.13</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1581</TD><TD></TD><TD>pc</TD><TD>-219</TD><TD>+219</TD><TD>CaIIHK</TD><TD>2009A&amp;A...507..833M</TD><TD>18000</TD><TD>2.00</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2006A&amp;A...446..279C</TD><TD>1342252032</TD><TD>16 53 59.73</TD><TD>-42 21 43.3</TD><TD>0.5855</TD><TD>0.1176</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.094</TD><TD>0.130</TD><TD>-3.368</TD><TD>0.107</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>60</TD><TD></TD><TD>5</TD><TD>D</TD><TD>1970CoAsi.239....1B</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-26.0</TD><TD></TD><TD></TD><TD></TD><TD>16</TD><TD>s</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1995A&amp;AS..114..269D</TD><TD>28900543</TD><TD>253.4984</TD><TD>-42.3619</TD><TD>HD 152236</TD><TD></TD><TD>VILSP</TD><TD>23</TD><TD>L</TD><TD>SWP</TD><TD>08968</TD><TD>L</TD><TD>27000</TD><TD>FO</TD><TD>800510</TD><TD>063100</TD><TD>000018</TD><TD></TD><TD>340</TD><TD>V</TD><TD></TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2315409</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152234</TD><TD>BlueSG</TD><TD>253.5076557440046</TD><TD>-41.8063853886519</TD><TD>0.2862</TD><TD>0.1856</TD><TD>90</TD><TD>-0.748</TD><TD>-3.370</TD><TD>0.462</TD><TD>0.324</TD><TD>90</TD><TD>0.1599</TD><TD>-71.30</TD><TD>-0.000238</TD><TD></TD><TD>0.0083</TD><TD>0.0</TD><TD>75</TD><TD>B0.5Ia</TD><TD></TD><TD>197</TD><TD>U</TD><TD>4.92</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>5.64</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>5.45</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>5.424300</TD><TD>0.004302</TD><TD>Vega</TD><TD>2022yCat.1355....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>4.95</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>4.93</TD><TD>0.04</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>4.773</TD><TD>0.018</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1832</TD><TD></TD><TD>pc</TD><TD>-269</TD><TD>+269</TD><TD>CaIIHK</TD><TD>2009A&amp;A...507..833M</TD><TD>26000</TD><TD>2.60</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2006A&amp;A...446..279C</TD><TD></TD><TD></TD><TD></TD><TD>0.1599</TD><TD>0.3406</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.748</TD><TD>0.462</TD><TD>-3.370</TD><TD>0.324</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>85</TD><TD></TD><TD>8</TD><TD>D</TD><TD>1970CoAsi.239....1B</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-6.0</TD><TD></TD><TD></TD><TD></TD><TD>15</TD><TD>s</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1995A&amp;AS..114..269D</TD><TD></TD><TD></TD><TD></TD><TD>HD 152234</TD><TD></TD><TD>IEEBS</TD><TD>23</TD><TD>L</TD><TD>SWP</TD><TD>16610</TD><TD>S</TD><TD>17581</TD><TD>FO</TD><TD>820324</TD><TD>012400</TD><TD>000014</TD><TD></TD><TD>500</TD><TD>G</TD><TD>C=170,B=17</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2315168</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152246</TD><TD>SB*</TD><TD>253.5220733988600</TD><TD>-41.0794771655400</TD><TD>0.0287</TD><TD>0.0195</TD><TD>90</TD><TD>-0.514</TD><TD>-1.606</TD><TD>0.044</TD><TD>0.033</TD><TD>90</TD><TD>0.5304</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O9IV</TD><TD></TD><TD>130</TD><TD>U</TD><TD>6.69</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>7.45</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>7.29</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>7.241871</TD><TD>0.002775</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>8.19</TD><TD>0.19</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>R</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>6.857</TD><TD>0.023</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>6.836</TD><TD>0.044</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>6.818</TD><TD>0.027</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>i</TD><TD>7.58</TD><TD>0.00</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>i</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1885.37</TD><TD></TD><TD>pc</TD><TD>-116.591</TD><TD>+116.591</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.5304</TD><TD>0.0328</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.514</TD><TD>0.044</TD><TD>-1.606</TD><TD>0.033</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>72.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>V</TD><TD>13.00</TD><TD></TD><TD>17.90</TD><TD>E</TD><TD></TD><TD>s</TD><TD></TD><TD>O</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2007AN....328..889K</TD><TD></TD><TD></TD><TD></TD><TD>HD 152246</TD><TD></TD><TD>MLDPC</TD><TD>12</TD><TD>L</TD><TD>SWP</TD><TD>16116</TD><TD>L</TD><TD>3953</TD><TD>FO</TD><TD>820126</TD><TD>055700</TD><TD>000030</TD><TD></TD><TD>500</TD><TD>G</TD><TD>C=180,B=18</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2315133</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152248</TD><TD>YSO</TD><TD>253.5419242528400</TD><TD>-41.8250386921100</TD><TD>0.0269</TD><TD>0.0178</TD><TD>90</TD><TD>-0.455</TD><TD>-2.323</TD><TD>0.037</TD><TD>0.030</TD><TD>90</TD><TD>0.6917</TD><TD>-42.30</TD><TD>-0.000141</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O7Iabf+O7Ib(f)</TD><TD></TD><TD>266</TD><TD>U</TD><TD>5.56</TD><TD></TD><TD>Vega</TD><TD>2003AJ....125.2531R</TD><TD></TD><TD></TD><TD>D</TD><TD>U</TD><TD>B</TD><TD>6.15</TD><TD>0.01</TD><TD>Vega</TD><TD>2000A&amp;A...355L..27H</TD><TD></TD><TD></TD><TD>D</TD><TD>B</TD><TD>V</TD><TD>6.088</TD><TD>0.024</TD><TD>Vega</TD><TD>2017AJ....154...87K</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>5.993099</TD><TD>0.002993</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>5.65</TD><TD>0.03</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>5.583</TD><TD>0.038</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>5.502</TD><TD>0.027</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1445.71</TD><TD></TD><TD>pc</TD><TD>-66.2558</TD><TD>+66.2558</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.6917</TD><TD>0.0317</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.455</TD><TD>0.037</TD><TD>-2.323</TD><TD>0.030</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>165.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD>E</TD><TD></TD><TD>5.974708</TD><TD></TD><TD>G</TD><TD></TD><TD>6.085862</TD><TD></TD><TD></TD><TD>5.816177</TD><TD></TD><TD>2457460.9227</TD><TD></TD><TD></TD><TD></TD><TD>2022yCat.1358....0G</TD><TD>v</TD><TD>-44.0</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>s</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1995A&amp;AS..114..269D</TD><TD></TD><TD></TD><TD></TD><TD>HD 152248</TD><TD></TD><TD>IEEBS</TD><TD>15</TD><TD>L</TD><TD>SWP</TD><TD>16609</TD><TD>S</TD><TD>11466</TD><TD>FO</TD><TD>820324</TD><TD>004200</TD><TD>000014</TD><TD></TD><TD>440</TD><TD>G</TD><TD>E=151,C=160,B=19</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD>0109490801</TD><TD>@2315415</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>NGC  6231</TD><TD>OpenCluster</TD><TD>253.5450</TD><TD>-41.8120</TD><TD></TD><TD></TD><TD></TD><TD>-0.529</TD><TD>-2.177</TD><TD>0.007</TD><TD>0.007</TD><TD>90</TD><TD>0.589</TD><TD>-28.186</TD><TD>-0.000094</TD><TD></TD><TD>120.0</TD><TD>120.0</TD><TD>0</TD><TD></TD><TD></TD><TD>550</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>989</TD><TD></TD><TD>pc</TD><TD>-72</TD><TD>+72</TD><TD>paral</TD><TD>2019MNRAS.486.5726D</TD><TD></TD><TD></TD><TD>0.110</TD><TD></TD><TD>SUN</TD><TD></TD><TD>2021MNRAS.504..356D</TD><TD></TD><TD></TD><TD></TD><TD>0.60</TD><TD>0.04</TD><TD></TD><TD>2022A&amp;A...664A..66M</TD><TD>-0.58</TD><TD>0.21</TD><TD>-2.19</TD><TD>0.22</TD><TD>ICRS</TD><TD>2022A&amp;A...664A..66M</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-32.74</TD><TD></TD><TD>14.42</TD><TD>E</TD><TD>4</TD><TD>s</TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2021A&amp;A...647A..19T</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>@2317321</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152405</TD><TD>SB*</TD><TD>253.7307058054000</TD><TD>-40.5248314437700</TD><TD>0.0264</TD><TD>0.0168</TD><TD>90</TD><TD>-0.824</TD><TD>-1.243</TD><TD>0.036</TD><TD>0.029</TD><TD>90</TD><TD>0.5734</TD><TD>0</TD><TD>0.000000</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O9.7II</TD><TD></TD><TD>122</TD><TD>U</TD><TD>6.71</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>7.42</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>7.29</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>7.134218</TD><TD>0.002789</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>7.12</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>6.96</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>6.830</TD><TD>0.018</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>6.857</TD><TD>0.034</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>6.801</TD><TD>0.017</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>i</TD><TD>7.65</TD><TD>0.00</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>D</TD><TD>i</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1743.983</TD><TD></TD><TD>pc</TD><TD>-89.1153</TD><TD>+89.1153</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD>30300</TD><TD>3.29</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2022A&amp;A...665A.150H</TD><TD></TD><TD></TD><TD></TD><TD>0.5734</TD><TD>0.0293</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.824</TD><TD>0.036</TD><TD>-1.243</TD><TD>0.029</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>77.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD>SB2</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>25.489568</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2022A&amp;A...664A.159M</TD><TD>v</TD><TD>0</TD><TD></TD><TD>3</TD><TD>C</TD><TD></TD><TD></TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD>56068.257</TD><TD></TD><TD></TD><TD>2018A&amp;A...613A..65H</TD><TD></TD><TD></TD><TD></TD><TD>HD 152405</TD><TD></TD><TD>IGDJS</TD><TD>13</TD><TD>H</TD><TD>SWP</TD><TD>16215</TD><TD>L</TD><TD>4618</TD><TD>FO</TD><TD>820131</TD><TD>035500</TD><TD>002100</TD><TD></TD><TD>503</TD><TD>G</TD><TD>C=225,B=50</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2328265</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152408</TD><TD>WolfRayet*</TD><TD>253.7437712799400</TD><TD>-41.1508591876700</TD><TD>0.0447</TD><TD>0.0297</TD><TD>90</TD><TD>-0.474</TD><TD>-1.617</TD><TD>0.078</TD><TD>0.059</TD><TD>90</TD><TD>0.5417</TD><TD>1.38</TD><TD>0.000005</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O8Iape</TD><TD></TD><TD>378</TD><TD>U</TD><TD>5.17</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>5.92</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>5.77</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>5.671538</TD><TD>0.002989</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>7.00</TD><TD>0.30</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>R</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>5.148</TD><TD>0.034</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>5.090</TD><TD>0.036</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>4.904</TD><TD>0.018</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1846.04</TD><TD></TD><TD>pc</TD><TD>-172.438</TD><TD>+172.438</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1342263875</TD><TD>16 54 58.51</TD><TD>-41 09 03.1</TD><TD>0.5417</TD><TD>0.0506</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.474</TD><TD>0.078</TD><TD>-1.617</TD><TD>0.059</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>85.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>1.38</TD><TD></TD><TD>3.80</TD><TD>C</TD><TD>13</TD><TD>s</TD><TD></TD><TD>O</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2018yCat.1345....0G</TD><TD>49200329</TD><TD>253.7430</TD><TD>-41.1507</TD><TD>HD 152408</TD><TD></TD><TD>OSPSC</TD><TD>15</TD><TD>L</TD><TD>SWP</TD><TD>01625</TD><TD>S</TD><TD>14836</TD><TD>FO</TD><TD>780524</TD><TD>183400</TD><TD>000007</TD><TD></TD><TD></TD><TD>G</TD><TD></TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2315410</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152424</TD><TD>BlueSG</TD><TD>253.7638728658799</TD><TD>-42.0908307838400</TD><TD>0.0301</TD><TD>0.0219</TD><TD>90</TD><TD>-0.529</TD><TD>-2.223</TD><TD>0.044</TD><TD>0.037</TD><TD>90</TD><TD>0.6155</TD><TD>-24</TD><TD>-0.000080</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>OC9.2Ia</TD><TD></TD><TD>202</TD><TD>U</TD><TD>6.11</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>6.69</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>6.27</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>6.146645</TD><TD>0.002849</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>7.49</TD><TD>0.26</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>R</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>5.324</TD><TD>0.037</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>5.220</TD><TD>0.047</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>5.059</TD><TD>0.018</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1624.7</TD><TD></TD><TD>pc</TD><TD>-101.362</TD><TD>+101.362</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD>30200</TD><TD>3.17</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2022A&amp;A...665A.150H</TD><TD></TD><TD></TD><TD></TD><TD>0.6155</TD><TD>0.0384</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.529</TD><TD>0.044</TD><TD>-2.223</TD><TD>0.037</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>86.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-24</TD><TD></TD><TD>4</TD><TD>C</TD><TD></TD><TD></TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD>57117.327</TD><TD></TD><TD></TD><TD>2018A&amp;A...613A..65H</TD><TD></TD><TD></TD><TD></TD><TD>HD 152424</TD><TD></TD><TD>HSCSP</TD><TD>13</TD><TD>L</TD><TD>SWP</TD><TD>10344</TD><TD>L</TD><TD>9409</TD><TD>FO</TD><TD>801012</TD><TD>102200</TD><TD>000029</TD><TD></TD><TD>400</TD><TD>G</TD><TD>C=155,B=17</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2315249</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>V* V861 Sco</TD><TD>SB*</TD><TD>254.1499068838900</TD><TD>-40.8234564657200</TD><TD>0.0242</TD><TD>0.0182</TD><TD>90</TD><TD>-0.162</TD><TD>-1.398</TD><TD>0.040</TD><TD>0.031</TD><TD>90</TD><TD>0.6577</TD><TD>-40.60</TD><TD>-0.000135</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>B2Iab/b</TD><TD></TD><TD>227</TD><TD>U</TD><TD>5.86</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>6.51</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>6.22</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>6.035681</TD><TD>0.004935</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>5.92</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>5.64</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>5.491</TD><TD>0.018</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>5.371</TD><TD>0.026</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>5.274</TD><TD>0.017</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1520.450</TD><TD></TD><TD>pc</TD><TD>-76.9819</TD><TD>+76.9819</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.6577</TD><TD>0.0333</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-0.162</TD><TD>0.040</TD><TD>-1.398</TD><TD>0.031</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>163.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD>E</TD><TD></TD><TD>5.938804</TD><TD></TD><TD>G</TD><TD></TD><TD>6.297415</TD><TD></TD><TD></TD><TD>7.847463</TD><TD></TD><TD>2457475.7100</TD><TD></TD><TD></TD><TD></TD><TD>2022yCat.1358....0G</TD><TD>v</TD><TD>-34.4</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>s</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1995A&amp;AS..114..269D</TD><TD></TD><TD></TD><TD></TD><TD>HD 152667</TD><TD></TD><TD>MLJBH</TD><TD>23</TD><TD>L</TD><TD>SWP</TD><TD>03006</TD><TD>S</TD><TD>9967</TD><TD>FO</TD><TD>781017</TD><TD>090600</TD><TD>000030</TD><TD></TD><TD></TD><TD>G</TD><TD>MAX DN = 160</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2328828</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 152723</TD><TD>SB*</TD><TD>254.2277892382200</TD><TD>-40.5123451940100</TD><TD>0.1856</TD><TD>0.1203</TD><TD>90</TD><TD>0.260</TD><TD>-0.104</TD><TD>0.264</TD><TD>0.204</TD><TD>90</TD><TD>0.6772</TD><TD>21.655500</TD><TD>0.000072</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O6.5III(f)</TD><TD></TD><TD>158</TD><TD>U</TD><TD>6.43</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>7.24</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>7.10</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>7.175996</TD><TD>0.002790</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>8.11</TD><TD>0.13</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>R</TD><TD>I</TD><TD>8.47</TD><TD>0.05</TD><TD>Vega</TD><TD>2005yCat.2263....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>6.84</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>6.74</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>6.81</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2000</TD><TD></TD><TD>pc</TD><TD>-302</TD><TD>+302</TD><TD>CaIIHK</TD><TD>2009A&amp;A...507..833M</TD><TD>38000</TD><TD>3.81</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2022A&amp;A...665A.150H</TD><TD></TD><TD></TD><TD></TD><TD>0.6772</TD><TD>0.2105</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>+0.260</TD><TD>0.264</TD><TD>-0.104</TD><TD>0.204</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>111.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD>SB2</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>18.898193</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2022A&amp;A...664A.159M</TD><TD>v</TD><TD>21.655500</TD><TD></TD><TD>1.82679</TD><TD>B</TD><TD></TD><TD>s</TD><TD></TD><TD>NIR</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2020AJ....160..120J</TD><TD></TD><TD></TD><TD></TD><TD>HD 152723</TD><TD></TD><TD>SAJCW</TD><TD>13</TD><TD>L</TD><TD>SWP</TD><TD>31626</TD><TD>L</TD><TD>3324</TD><TD>FO</TD><TD>870823</TD><TD>130700</TD><TD>000075</TD><TD>T</TD><TD>502</TD><TD>G</TD><TD>C=190,B=38</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@2328519</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>Cl Trumpler   24</TD><TD>OpenCluster</TD><TD>254.250</TD><TD>-40.667</TD><TD></TD><TD></TD><TD></TD><TD>-0.45</TD><TD>-0.82</TD><TD>0.23</TD><TD>0.20</TD><TD>90</TD><TD></TD><TD>-4.0</TD><TD>-0.000013</TD><TD></TD><TD>60.00</TD><TD>60.00</TD><TD>90</TD><TD></TD><TD></TD><TD>72</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>V</TD><TD>8.6</TD><TD></TD><TD>Vega</TD><TD></TD><TD></TD><TD></TD><TD>E</TD><TD>V</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1137</TD><TD></TD><TD>pc</TD><TD></TD><TD></TD><TD></TD><TD>2017AstBu..72..257L</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>-2.641</TD><TD>0.434</TD><TD>-5.822</TD><TD>0.461</TD><TD>ICRS</TD><TD>2017AstBu..72..257L</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-3.45</TD><TD></TD><TD>5.42</TD><TD>D</TD><TD></TD><TD>s</TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2017AstBu..72..257L</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>@2328607</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 153919</TD><TD>HighMassXBin</TD><TD>255.9865523455100</TD><TD>-37.8441425920700</TD><TD>0.0210</TD><TD>0.0121</TD><TD>90</TD><TD>2.414</TD><TD>5.022</TD><TD>0.028</TD><TD>0.021</TD><TD>90</TD><TD>0.6327</TD><TD>33.38</TD><TD>0.000111</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>O6Iafcp</TD><TD></TD><TD>833</TD><TD>U</TD><TD>6.06</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>6.78</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>B</TD><TD>V</TD><TD>6.51</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>V</TD><TD>G</TD><TD>6.420470</TD><TD>0.002922</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>6.08</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>R</TD><TD>I</TD><TD>5.90</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>I</TD><TD>J</TD><TD>5.744</TD><TD>0.021</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>5.639</TD><TD>0.038</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>5.496</TD><TD>0.023</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1580.528</TD><TD></TD><TD>pc</TD><TD>-64.7000</TD><TD>+64.7000</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.6327</TD><TD>0.0259</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>+2.414</TD><TD>0.028</TD><TD>+5.022</TD><TD>0.021</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD>122.0</TD><TD></TD><TD></TD><TD></TD><TD>2005yCat.3244....0G</TD><TD>HMXB</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>3.411660</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2016MNRAS.461..816I</TD><TD>v</TD><TD>33.38</TD><TD></TD><TD>6.93</TD><TD>D</TD><TD>16</TD><TD>s</TD><TD></TD><TD>O</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2018yCat.1345....0G</TD><TD>49200425</TD><TD>255.9865</TD><TD>-37.8443</TD><TD>HD 153919</TD><TD></TD><TD>XSAKD</TD><TD>15</TD><TD>L</TD><TD>SWP</TD><TD>02007</TD><TD>L</TD><TD>8500</TD><TD>FO</TD><TD>780714</TD><TD>143400</TD><TD>000040</TD><TD>M</TD><TD></TD><TD>G</TD><TD>MAX DN = 200</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD>0083280601</TD><TD>@2344505</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>NGC  6281</TD><TD>OpenCluster</TD><TD>256.1790</TD><TD>-37.9480</TD><TD></TD><TD></TD><TD></TD><TD>-1.8764</TD><TD>-3.9506</TD><TD>0.0144</TD><TD>0.0136</TD><TD>90</TD><TD>1.8716</TD><TD>-15.4</TD><TD>-0.000051</TD><TD></TD><TD>31.1</TD><TD>31.1</TD><TD>0</TD><TD></TD><TD></TD><TD>142</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.54</TD><TD></TD><TD>kpc</TD><TD></TD><TD></TD><TD>paral</TD><TD>2022MNRAS.509..421N</TD><TD></TD><TD></TD><TD>-0.04</TD><TD></TD><TD></TD><TD></TD><TD>2023A&amp;A...669A.119M</TD><TD></TD><TD></TD><TD></TD><TD>1.888</TD><TD>0.063</TD><TD></TD><TD>2022A&amp;A...659A..59T</TD><TD>-1.899</TD><TD>0.169</TD><TD>-4.049</TD><TD>0.130</TD><TD></TD><TD>2022A&amp;A...659A..59T</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>v</TD><TD>-5.05</TD><TD></TD><TD>0.39</TD><TD>A</TD><TD>77</TD><TD>s</TD><TD></TD><TD>Opt</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2021A&amp;A...647A..19T</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>@2344378</TD></TR>
+<TR><TD></TD><TD></TD><TD></TD><TD>HD 214419</TD><TD>WolfRayet*</TD><TD>339.2248117927700</TD><TD>+56.9058303306200</TD><TD>0.0127</TD><TD>0.0116</TD><TD>90</TD><TD>-3.424</TD><TD>-3.128</TD><TD>0.015</TD><TD>0.013</TD><TD>90</TD><TD>0.3483</TD><TD>-75.0</TD><TD>-0.000250</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>WN6o+O9Ib/II</TD><TD></TD><TD>381</TD><TD>U</TD><TD>8.68</TD><TD></TD><TD>Vega</TD><TD>2002yCat.2237....0D</TD><TD></TD><TD></TD><TD>C</TD><TD>U</TD><TD>B</TD><TD>9.376</TD><TD>0.01</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>B</TD><TD>V</TD><TD>8.996</TD><TD>0.01</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>V</TD><TD>G</TD><TD>8.749723</TD><TD>0.007841</TD><TD>Vega</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD>C</TD><TD>G</TD><TD>R</TD><TD>8.962</TD><TD>0.09</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>R</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>J</TD><TD>7.482</TD><TD>0.019</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>J</TD><TD>H</TD><TD>7.340</TD><TD>0.040</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>H</TD><TD>K</TD><TD>7.161</TD><TD>0.017</TD><TD>Vega</TD><TD>2003yCat.2246....0C</TD><TD></TD><TD></TD><TD>C</TD><TD>K</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>g</TD><TD>9.796</TD><TD>0.01</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>g</TD><TD>r</TD><TD>8.989</TD><TD>0.01</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>r</TD><TD>i</TD><TD>8.478</TD><TD>0.01</TD><TD>Vega</TD><TD>2012yCat.1322....0Z</TD><TD></TD><TD></TD><TD>E</TD><TD>i</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2871.088</TD><TD></TD><TD>pc</TD><TD>-119.5256</TD><TD>+119.5256</TD><TD>paral</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.3483</TD><TD>0.0145</TD><TD></TD><TD>2020yCat.1350....0G</TD><TD>-3.424</TD><TD>0.015</TD><TD>-3.128</TD><TD>0.013</TD><TD>ICRS</TD><TD>2020yCat.1350....0G</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>E</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1.641240</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2004AcA....54..207K</TD><TD>v</TD><TD>-53.4</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>s</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1995A&amp;AS..114..269D</TD><TD></TD><TD></TD><TD></TD><TD>HD 214419</TD><TD></TD><TD>WRDPM</TD><TD>11</TD><TD>L</TD><TD>SWP</TD><TD>14170</TD><TD>S</TD><TD>1179</TD><TD>FO</TD><TD>810603</TD><TD>133500</TD><TD>000240</TD><TD></TD><TD>331</TD><TD>G</TD><TD>E=95,C=90,B=25</TD><TD>*</TD><TD>1996IUEML.C......0I</TD><TD></TD><TD>@101996</TD></TR>
+
+</TABLEDATA>
+
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>

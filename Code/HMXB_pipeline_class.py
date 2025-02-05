@@ -245,7 +245,6 @@ class pipeline:
         Kr_mub_sol = self.U_sun*np.cos(long_rad)*np.sin(lat_rad) + self.V_sun*np.sin(long_rad)*np.sin(lat_rad) - self.W_sun*np.cos(lat_rad)
         table['mu_b_sol'] = (Kr_mub_sol/(self.k*dist))
         table['mu_b_sol'].unit = u.mas/u.yr
-        #table.add_columns([mul_sol,mub_sol],names=['mu_l_sol','mu_b_sol'])
         return table
     def flat_rotation_curve(self,table):
         '''Based off moffat 1998
@@ -309,6 +308,23 @@ class pipeline:
         table['peculiar_mu_b'] = pec_mu_b
         table['peculiar_mu_b'].unit = u.mas/u.yr
         return table
+    def calculate_errors(self,table):
+        '''I probably need to calculate errors for a bunch of my calculations
+        this is where i do it
+        
+        Calculated for 
+        Distance
+        
+        returns 
+        A bunch of columns for errors
+        
+        '''
+        prlx, prlx_err = table['parallax'], table['parallax_error']
+        table['dist_err'] = prlx_err/(prlx**2)
+        table['dist_err'].unit = u.kpc
+        return table
+        
+        
     def lay_pipe(self,filename,filetype):
         '''Combine everything'''
         table = self.make_table()
@@ -322,9 +338,13 @@ class pipeline:
         table = self.solar_proper_motion(table)
         table = self.flat_rotation_curve(table)
         table = self.peculiar_velocity(table)
+        table= self.calculate_errors(table)
         table.write(filename, format=filetype,overwrite=True)
         return table
-test_table = "GAIA_HMXB_DNE.ecsv"
+cwd = os.getcwd()
+home_files = os.path.dirname(cwd)
+csv_files  = home_files + '/DATA/'
+test_table = home_files+"/GAIA_HMXB_DNE.ecsv"
 if __name__ == "__main__":
     test_massive = pipeline(test_table,fmt='ecsv')
     my_table = test_massive.make_table()

@@ -214,6 +214,12 @@
 #   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
 #   - {CoosysSystem: ICRS}
 #   - {CoosysEpoch: J2016.0}
+# - name: dist_err
+#   unit: kpc
+#   datatype: float64
+#   description: Standard error of parallax
+#   meta: !!omap
+#   - {ucd: stat.error;pos.parallax.trig}
 # meta: !!omap
 # - {name: votable}
 # - {QUERY_STATUS: OK}
@@ -224,5 +230,5 @@
 # - {JOBNAME: HD153919}
 # - {RELEASE: Gaia DR3}
 # schema: astropy-2.0
-source_id ra ra_error dec dec_error pmra pmra_error parallax_over_error pmdec pmdec_error parallax parallax_error radial_velocity radial_velocity_error phot_g_mean_mag l b phot_bp_mean_mag phot_rp_mean_mag bp_rp distance pm_l pm_b "galactic distance" "circular velocity" "LSR velocity" mu_l_sol mu_b_sol mu_l_rot mu_b_rot "Peculiar Velocity" pm_l_poleski pm_b_poleski peculiar_mu_l peculiar_mu_b
-5976382915813535232 255.9865659301791 0.021049444 -37.8441202722809 0.012138224 2.4137032635492046 0.02806476 24.383919 5.021949969731823 0.021347089 0.6117358617075664 0.025948899 nan nan 6.4204698 347.75444710988126 2.173492429913019 6.5759535 6.0885863 0.48736715 1.6346924589456862 5.455603348660082 1.1324032166355134 6.912338733878605 221.4552103876003 -57.26304804186743 -2.0108902079289996 -0.9425966257345032 -0.33697268535874947 0.05245861863101116 62.45548401686189 5.459355496184255 1.114173464609666 7.807218389472005 2.0043114717131583
+source_id ra ra_error dec dec_error pmra pmra_error parallax_over_error pmdec pmdec_error parallax parallax_error radial_velocity radial_velocity_error phot_g_mean_mag l b phot_bp_mean_mag phot_rp_mean_mag bp_rp distance pm_l pm_b "galactic distance" "circular velocity" "LSR velocity" mu_l_sol mu_b_sol mu_l_rot mu_b_rot "Peculiar Velocity" pm_l_poleski pm_b_poleski peculiar_mu_l peculiar_mu_b dist_err
+5976382915813535232 255.9865659301791 0.021049444 -37.8441202722809 0.012138224 2.4137032635492046 0.02806476 24.383919 5.021949969731823 0.021347089 0.6117358617075664 0.025948899 nan nan 6.4204698 347.75444710988126 2.173492429913019 6.5759535 6.0885863 0.48736715 1.6346924589456862 5.455603348660082 1.1324032166355134 6.912338733878605 221.4552103876003 -57.26304804186743 -2.0108902079289996 -0.9425966257345032 -0.33697268535874947 0.05245861863101116 62.45548401686189 5.459355496184255 1.114173464609666 7.807218389472005 2.0043114717131583 0.06934115187730354

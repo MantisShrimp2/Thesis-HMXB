@@ -217,6 +217,12 @@
 #   - {utype: 'stc:AstroCoords.Position3D.Value3.C2'}
 #   - {CoosysSystem: ICRS}
 #   - {CoosysEpoch: J2016.0}
+# - name: dist_err
+#   unit: kpc
+#   datatype: float64
+#   description: Standard error of parallax
+#   meta: !!omap
+#   - {ucd: stat.error;pos.parallax.trig}
 # meta: !!omap
 # - {name: votable}
 # - {QUERY_STATUS: OK}
@@ -227,5 +233,5 @@
 # - {JOBNAME: HD 36 879}
 # - {RELEASE: Gaia DR3}
 # schema: astropy-2.0
-source_id ra ra_error dec dec_error pmra pmra_error parallax_over_error pmdec pmdec_error parallax parallax_error radial_velocity radial_velocity_error phot_g_mean_mag l b phot_bp_mean_mag phot_rp_mean_mag bp_rp distance pm_l_poleski pm_b_poleski "galactic distance" "circular velocity" "LSR velocity" mu_l_sol mu_b_sol mu_l_rot mu_b_rot "Peculiar Velocity" peculiar_mu_l peculiar_mu_b
-3402983608883878016 83.91883273030244 0.025106044 21.403216892388098 0.018456262 -5.776275982999248 0.032617416 17.74445 -8.674329760453169 0.018755654 0.5456454172073251 0.030750202 nan nan 7.496802 185.2194746127933 -5.886356704932575 7.5702705 7.292832 0.27743864 1.8326920165812315 4.264996458243135 -9.508899317798617 10.316802645383326 224.95220991995055 -16.577217662912354 1.4459742272109077 -0.7286825185029623 -0.033955068693427924 0.04160834980306812 80.54272807316016 2.8529772997256555 -8.821825149098723
+source_id ra ra_error dec dec_error pmra pmra_error parallax_over_error pmdec pmdec_error parallax parallax_error radial_velocity radial_velocity_error phot_g_mean_mag l b phot_bp_mean_mag phot_rp_mean_mag bp_rp distance pm_l_poleski pm_b_poleski "galactic distance" "circular velocity" "LSR velocity" mu_l_sol mu_b_sol mu_l_rot mu_b_rot "Peculiar Velocity" peculiar_mu_l peculiar_mu_b dist_err
+3402983608883878016 83.91883273030244 0.025106044 21.403216892388098 0.018456262 -5.776275982999248 0.032617416 17.74445 -8.674329760453169 0.018755654 0.5456454172073251 0.030750202 nan nan 7.496802 185.2194746127933 -5.886356704932575 7.5702705 7.292832 0.27743864 1.8326920165812315 4.264996458243135 -9.508899317798617 10.316802645383326 224.95220991995055 -16.577217662912354 1.4459742272109077 -0.7286825185029623 -0.033955068693427924 0.04160834980306812 80.54272807316016 2.8529772997256555 -8.821825149098723 0.10328254936999694

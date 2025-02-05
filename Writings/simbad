@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.2 http://www.ivoa.net/xml/VOTable/v1.2" version="1.2">
+<DEFINITIONS>
+<COOSYS ID="COOSYS" equinox="2000" epoch="J2000" system="ICRS"/>
+</DEFINITIONS>
+<RESOURCE name="Simbad query" type="results">
+<TABLE ID="simbad" name="simbad query"><DESCRIPTION>... query string ...</DESCRIPTION>
+<FIELD ID="BIBCODE" name="BIBCODE" ucd="meta.bib.bibcode">
+<DESCRIPTION>Bibcode</DESCRIPTION>
+</FIELD>
+<FIELD ID="ARTICLE_LOCATION" name="ARTICLE_LOCATION" datatype="char" ucd="meta.bib.journal" arraysize="*">
+<DESCRIPTION>location of the article (journal, colume, page)</DESCRIPTION>
+</FIELD>
+<FIELD ID="AUTHOR_LIST" name="AUTHOR_LIST" datatype="char" ucd="meta.bib.author" arraysize="*">
+<DESCRIPTION>list of authors (comma separated list)</DESCRIPTION>
+</FIELD>
+<FIELD ID="TITLE" name="TITLE" datatype="char" ucd="meta.title" arraysize="*">
+<DESCRIPTION>Title</DESCRIPTION>
+</FIELD>
+<FIELD ID="PUB_COM_ERR" name="PUBLIC_COMMENT_ERR" datatype="char" ucd="meta.note" arraysize="*">
+<DESCRIPTION>erratum comment</DESCRIPTION>
+</FIELD>
+<FIELD ID="PUB_COM_DIC" name="PUBLIC_COMMENT_DIC" datatype="char" ucd="meta.note" arraysize="*">
+<DESCRIPTION>erratum comment</DESCRIPTION>
+</FIELD>
+<FIELD ID="PUB_COM_FLAGS" name="PUBLIC_COMMENT_FLAGS" datatype="char" ucd="meta.note" arraysize="*">
+<DESCRIPTION>reference flags</DESCRIPTION>
+</FIELD>
+<FIELD ID="PUB_COM_FILES" name="PUBLIC_COMMENT_FILES" datatype="char" ucd="meta.note" arraysize="*">
+<DESCRIPTION>files link</DESCRIPTION>
+</FIELD>
+<FIELD ID="PUB_COM_NOTES" name="PUBLIC_COMMENT_NOTES" datatype="char" ucd="meta.note" arraysize="*">
+<DESCRIPTION>notes associated with the reference</DESCRIPTION>
+</FIELD>
+<DATA>
+<TABLEDATA>
+<TR><TD>2001A&amp;A...370..170A</TD><TD>Astronomy and Astrophysics, volume 370170-175 (2001/4-4)</TD><TD>ANKAY A.,KAPER L.,DE BRUIJNE J.H.J.,DEWI J.,HOOGERWERF R.,SAVONIJE G.J.</TD><TD>The origin of the runaway high-mass X-ray binary HD 153919/4U 1700-37.</TD><TD></TD><TD></TD><TD>(abstract)</TD><TD></TD><TD></TD></TR>
+
+</TABLEDATA>
+
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>
