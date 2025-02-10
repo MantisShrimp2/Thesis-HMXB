@@ -18,7 +18,7 @@ import gala.potential as gp
 import gala.dynamics as gd
 import astropy.units as u
 import os
-from astropy.coordinates import SkyCoord
+import astropy.coordinates as coord
 
 class GalacticTraceback:
     def __init__(self,table):
@@ -91,23 +91,28 @@ class GalacticTraceback:
         dist = float(row['distance'][0]) *u.kpc
         k = 4.74 * (u.km/u.s)/(u.mas *u.kpc/u.yr) #km/s per mas/yr 
         
-        galactic_rep = SkyCoord(l=l,b=b,pm_l_cosb=mu_l,pm_b=mu_b,distance=dist,frame='galactic')
-        
+        #transform to galactic frame
+        with coord.galactocentric_frame_defaults.set('v4.0'):
+            galcen_frame = coord.Galactocentric()
+        galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l,pm_b=mu_b,distance=dist,frame='galactic')
+        #transform frame
+        #star_galacto = galactic_rep.transform_to(galcen_frame)
         cartesian_rep  = galactic_rep.cartesian
         
-        x, y, z = cartesian_rep.x.value, cartesian_rep.y.value, cartesian_rep.z.value
-        vx, vy, = k*mu_l*dist,  k*mu_b*dist
-        if 'radial_velocity' in row.colnames and not np.isnan(row['radial_velocity'][0]):
-            vz = row['radial_velocity'][0]  # Use value from table
-        else:
-            vz =-60 *u.km/u.s  # Default to 0 km/s if not available
-        print(vz)
-        initial_pos = gd.PhaseSpacePosition(pos=(x,y,z)*u.kpc,vel=(vx,vy,vz)*(u.km/u.s))
+        # x, y, z = cartesian_rep.x.value, cartesian_rep.y.value, cartesian_rep.z.value
+        # vx, vy, = k*mu_l*dist,  k*mu_b*dist
+        # if 'radial_velocity' in row.colnames and not np.isnan(row['radial_velocity'][0]):
+        #     vz = row['radial_velocity'][0]  # Use value from table
+        # else:
+        #     vz =-60 *u.km/u.s  # Default to 0 km/s if not available
+        # print(vz)
+        initial_pos = gd.PhaseSpacePosition(galactic_rep.data)
+        #gd.PhaseSpacePosition(pos=(x,y,z)*u.kpc,vel=(vx,vy,vz)*(u.km/u.s))
         total_time = 3 *1e6 *u.yr
         print(total_time)
         potential = gp.MilkyWayPotential2022()  # Or another potential model  
         hamiltonian = gp.Hamiltonian(potential)  
-        orbit = hamiltonian.integrate_orbit(initial_pos, dt=-time_step, t1=0 * u.yr, t2=-total_time)
+        orbit = potential.integrate_orbit(initial_pos, dt=-time_step, t1=0, t2=-total_time)
         
         #tick_times = np.arange(-1,-total_time.value -1, -1) * u.Myr
         #ticks = orbit.evaluate_at(tick_times)
@@ -141,7 +146,7 @@ class GalacticTraceback:
                 x_vals, y_vals, z_vals = orbit.pos.xyz  
 
                 # Convert to Galactic coordinates
-                galactic_coords = SkyCoord(
+                galactic_coords = coord.SkyCoord(
                     x=x_vals, y=y_vals, z=z_vals, 
                     frame='galactocentric', representation_type='cartesian'
                 ).transform_to('galactic')

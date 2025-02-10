@@ -18,7 +18,7 @@ import gala.potential as gp
 import gala.dynamics as gd
 import astropy.units as u
 import os
-from astropy.coordinates import SkyCoord
+import astropy.coordinates as coord
 class GalacticTraceback:
     def __init__(self,table):
         
@@ -154,24 +154,26 @@ class GalacticTraceback:
         mu_l = float(row['pm_l_poleski'][0]) * u.mas/u.yr
         mu_b = float(row['pm_b_poleski'][0]) *u.mas/u.yr
         dist = float(row['distance'][0]) *u.kpc
+        radial_velocity = float(row['RV'][0])*u.km/u.s
         k = 4.74 * (u.km/u.s)/(u.mas *u.kpc/u.yr) #km/s per mas/yr 
-        
-        galactic_rep = SkyCoord(l=l,b=b,pm_l_cosb=mu_l,pm_b=mu_b,distance=dist,frame='galactic')
-        
-        cartesian_rep  = galactic_rep.cartesian
-        
-        x, y, z = cartesian_rep.x.value, cartesian_rep.y.value, cartesian_rep.z.value
-        vx, vy, = k*mu_l*dist,  k*mu_b*dist
-        if 'radial_velocity' in row.colnames and not np.isnan(row['radial_velocity'][0]):
-            vz = row['radial_velocity'][0]  # Use value from table
-        else:
-            vz =-60 *u.km/u.s  # Default to 0 km/s if not available
-        initial_pos = gd.PhaseSpacePosition(pos=(x,y,z)*u.kpc,vel=(vx,vy,vz)*(u.km/u.s))
-        total_time =  3 *1e6 *u.yr
-        potential = gp.MilkyWayPotential()  # Or another potential model  
-        hamiltonian = gp.Hamiltonian(potential)  
-        orbit = hamiltonian.integrate_orbit(initial_pos, dt=-time_step, t1=0 * u.Myr, t2=-total_time)
-        
+        print(radial_velocity)
+        #transform to galactic frame
+        with coord.galactocentric_frame_defaults.set('v4.0'):
+            galcen_frame = coord.Galactocentric()
+        galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l,pm_b=mu_b,distance=dist,
+                                      radial_velocity =radial_velocity, frame='galactic')
+        #transform frame
+        star_galacto = galactic_rep.transform_to(galcen_frame)
+
+
+        initial_pos = gd.PhaseSpacePosition(star_galacto.data)
+        total_time = -3.0 *u.Myr
+        dt = -0.2 *u.Myr
+        n_steps = int(np.abs(total_time/dt))
+        potential = gp.MilkyWayPotential2022()  
+       # hamiltonian = gp.Hamiltonian(potential)
+        #orbit = potential.integrate_orbit(initial_pos, dt=-time_step, t1=0, t2=-total_time)
+        orbit = potential.integrate_orbit(initial_pos, dt=dt,n_steps=n_steps)
         #tick_times = np.arange(-1,-total_time.value -1, -1) * u.Myr
         #ticks = orbit.evaluate_at(tick_times)
         
@@ -217,7 +219,7 @@ class GalacticTraceback:
                 for tick_l, tick_b in ticks:
                     tick_z = data['distance']*np.sin(np.radians(tick_b))*1000
                     
-                    plt.scatter(tick_l, tick_z, color='xkcd:electric purple', s=20)
+                    plt.scatter(tick_l, tick_z, color='xkcd:canary', s=20)
             except Exception as e:
                 print(f'{e}')
         
@@ -234,7 +236,7 @@ class GalacticTraceback:
             plt.savefig(parentdir+'/Figures/'+f"Tracepath_{today}.png")
         plt.show()
         return None
-    def plot_with_cluster(self,source_id, clustertable,savefig=False):
+    def plot_with_cluster(self,source_id, clustertable=None,savefig=False):
         
         single_star = self.table[self.table['source_id']==source_id]
         long_path, lat_path, _, ticks = self.trace_linear_path(source_id=source_id)
@@ -249,28 +251,30 @@ class GalacticTraceback:
         #proper motion vectors
         arrow_pml, arrow_pmb = single_star['pm_l_poleski'], single_star['pm_b_poleski']
         #member clusters
-        
-        member_long = clustertable['l']
-        member_lat = clustertable['b']
+        if clustertable is not None:
+            member_long = clustertable['l']
+            member_lat = clustertable['b']
         
         #include gala
         orbit  = self.trace_galactic_path(source_id)
-        x_vals, y_vals, z_vals = orbit.pos.xyz  
-
+        #fig = orbit.plot()
         # Convert to Galactic coordinates
-        galactic_coords = SkyCoord(
-            x=x_vals, y=y_vals, z=z_vals, 
-            frame='galactocentric', representation_type='cartesian'
-        ).transform_to('galactic')
+        galcen_frame = coord.Galactocentric()
+        galactic_coords = orbit.to_coord_frame(galcen_frame).transform_to(coord.Galactic())
+        # galactic_coords = coord.SkyCoord(
+        #     x=x_vals, y=y_vals, z=z_vals, 
+        #     frame='galactocentric', representation_type='cartesian'
+        # ).transform_to('galactic')
 
         # Extract Galactic longitude (l) and latitude (b)
-        gala_l_vals = galactic_coords.l.deg  # Galactic longitude in degrees
+        gala_l_vals = galactic_coords.l.deg % 360 # Galactic longitude in degrees
         gala_b_vals = galactic_coords.b.deg
         
-        print(f"Initial position: l={l_naught}, b={b_naught}")
-        print(f"Orbit start: l={gala_l_vals[0]}, b={gala_b_vals[0]}")
+        # print(f"Initial position: l={l_naught}, b={b_naught}")
+        # print(f"Orbit start: l={gala_l_vals[0]}, b={gala_b_vals[0]}")
         plt.figure(figsize=(10,5))
-        plt.scatter(member_long,member_lat, s=8,marker='*',label='Members',color='xkcd:grey')
+        if clustertable is not None:
+            plt.scatter(member_long,member_lat, s=8,marker='*',label='Members',color='xkcd:grey')
         
         N = len(long_path)
         star_name = str(single_star['Name'].value[0])
@@ -280,10 +284,11 @@ class GalacticTraceback:
         path_color = sp_type if sp_type in self.color_map else 'xkcd:grey'
         #linear path
         plt.scatter(long_path[1:N], lat_path[1:N],s=10,color='xkcd:black',alpha=0.7)
+        plt.plot([],[],color='xkcd:black',label='Linear Path')
         #inistal position
         plt.scatter(l_naught,b_naught,color=path_color,label=star_name)
         #gala
-        plt.plot(gala_l_vals,gala_b_vals, marker='*', color='xkcd:vermillion',label='Gala path')
+        plt.plot(gala_l_vals,gala_b_vals, lw=1.1, marker='*', color='xkcd:vermillion',label='Gala path')
         #pm arrows
         plt.quiver(l_naught,b_naught, arrow_pml,arrow_pmb,color='xkcd:shit brown',angles='xy',width=0.002)
         
@@ -299,9 +304,13 @@ class GalacticTraceback:
         plt.show()
         return None
 
-test_table = ascii.read('/home/karan/Documents/UvA/Thesis/HMXB_practice_analysis.csv',format='csv')
+test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250210_.ecsv',format='ecsv')
+test_170037 = test_table[test_table['Name']=='4U 1700-377']
+scoob1 = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/SCO OB1-result.ecsv')
 mydir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(mydir)
 if __name__ == "__main__":
-    GalacticTraceback(test_table).plot_trace(savefig=False)
+    GalacticTraceback(test_table).plot_with_cluster(test_170037['source_id'],clustertable=scoob1,savefig=False)
+#    GalacticTraceback(test_table).plot_trace(savefig=False)
+    
 
