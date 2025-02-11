@@ -274,7 +274,7 @@ class GalacticTraceback:
         # print(f"Orbit start: l={gala_l_vals[0]}, b={gala_b_vals[0]}")
         plt.figure(figsize=(10,5))
         if clustertable is not None:
-            plt.scatter(member_long,member_lat, s=8,marker='*',label='Members',color='xkcd:grey')
+            plt.scatter(member_long,member_lat, s=50,marker='*',label='Members',color='xkcd:grey')
         
         N = len(long_path)
         star_name = str(single_star['Name'].value[0])
