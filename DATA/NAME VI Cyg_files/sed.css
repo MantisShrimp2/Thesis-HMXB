@@ -1,0 +1,52 @@
+
+@import url("/css/simbad.css");
+/*@import url("http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css");*/
+@import url("/Simlib/jquery/jquery-ui.css");
+.RoundedS{
+ border:0px;
+ padding:8px;
+ border-radius: 15px 0 15px 0;
+ box-shadow: 5px 5px 10px #8bb;
+}
+.Rounded{
+ border:0px;
+ padding:8px;
+ border-radius: 15px 0 15px 0;
+ box-shadow: 5px 5px 10px #ccc;
+}
+#sed-help-icon {
+	cursor:pointer;
+}
+
+#sedIcon{
+ float:left;
+ padding-right: 2px;
+}
+#radiusSED{
+ width:5em;
+}
+#FormSED{
+ width:350px;
+}
+
+.no-close .ui-dialog-titlebar {
+  display: none;
+}
+
+
+.tipsy { padding: 5px; font-size: 12px; position: absolute; z-index: 100000; }
+  .tipsy-inner { padding: 5px 8px 4px 8px; background-color: #ffffe0; color: black; max-width: 300px; text-align: left; }
+  .tipsy-inner { border-radius: 3px; -moz-border-radius:3px; -webkit-border-radius:3px; }
+  .tipsy-arrow { position: absolute; background: url('../images/tipsy.gif') no-repeat top left; width: 9px; height: 5px; }
+  .tipsy-n .tipsy-arrow { top: 0; left: 50%; margin-left: -4px; }
+    .tipsy-nw .tipsy-arrow { top: 0; left: 10px; }
+    .tipsy-ne .tipsy-arrow { top: 0; right: 10px; }
+  .tipsy-s .tipsy-arrow { bottom: 0; left: 50%; margin-left: -4px; background-position: bottom left; }
+    .tipsy-sw .tipsy-arrow { bottom: 0; left: 10px; background-position: bottom left; }
+    .tipsy-se .tipsy-arrow { bottom: 0; right: 10px; background-position: bottom left; }
+  .tipsy-e .tipsy-arrow { top: 50%; margin-top: -4px; right: 0; width: 5px; height: 9px; background-position: top right; }
+  .tipsy-w .tipsy-arrow { top: 50%; margin-top: -4px; left: 0; width: 5px; height: 9px; }
+
+
+
+

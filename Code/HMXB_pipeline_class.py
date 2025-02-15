@@ -38,6 +38,7 @@ class pipeline:
      #solar values
       # solar motion km/s 
     # M. Carretero-Castrillo 2023 and Ried 2019
+    #km/s
      self.U_sun = 10.8
      self.V_sun = 13.6
      self.W_sun = 7.6
@@ -211,7 +212,7 @@ class pipeline:
             pmdec = row['pmdec'] * 1e-3
             
             prlx = row['parallax'] * 1e-3  # mas to as
-            radial = row['radial_velocity']  # km/s
+            radial = row['RV']  # km/s
             B= self.transform_space_velocity(ra, dec) # calculate the transform tensor
         
             comp_array = np.array([radial, self.k*pmra/prlx, self.k*pmdec/prlx])
@@ -243,8 +244,15 @@ class pipeline:
         table['mu_l_sol'].unit = u.mas/u.yr
         
         Kr_mub_sol = self.U_sun*np.cos(long_rad)*np.sin(lat_rad) + self.V_sun*np.sin(long_rad)*np.sin(lat_rad) - self.W_sun*np.cos(lat_rad)
+        
+      
         table['mu_b_sol'] = (Kr_mub_sol/(self.k*dist))
         table['mu_b_sol'].unit = u.mas/u.yr
+        
+        #include radial velocity
+        RV_sol = -self.U_sun*np.cos(long_rad)*np.cos(lat_rad) -self.V_sun*np.sin(long_rad)*np.cos(lat_rad)  - self.W_sun*np.sin(lat_rad)
+        table['RV_r_sol'] = RV_sol
+        table['RV_r_sol'].unit = u.km/u.s
         return table
     def flat_rotation_curve(self,table):
         '''Based off moffat 1998
@@ -267,6 +275,12 @@ class pipeline:
         K_mub_rot = -(self.R0/dist)*(omega-omega_0)*np.sin(lat_rad)*np.sin(long_rad)
         table['mu_b_rot'] = K_mub_rot/self.k
         table['mu_b_rot'].unit = u.mas/u.yr
+        
+        #and for radial velocity
+        RV_rot = R*(omega-omega_0)*np.cos(lat_rad)*np.sin(long_rad)
+        table['RV_rot'] = RV_rot
+        table['RV_rot'].unit = u.km/u.s
+        
 
         return table
     def peculiar_velocity(self, table):
@@ -287,21 +301,33 @@ class pipeline:
         # observed proper Motions
         obs_mu_l = table['pm_l_poleski']
         obs_mu_b = table['pm_b_poleski']
+        obs_RV = table['RV']
+        
+        
         #motion due to galactic rotation 
         
         rotation_mu_l = table['mu_l_rot']
         rotation_mu_b = table['mu_b_rot']
+        rotation_rv = table['RV_rot']
         
         #calculate solar motion for each object 
         mul_sol = table['mu_l_sol']
         mub_sol = table['mu_b_sol']
+        rv_sol  = table['RV_r_sol']
     
         pec_mu_l = obs_mu_l - mul_sol - rotation_mu_l
         pec_mu_b = obs_mu_b - mub_sol - rotation_mu_b
         #convert to km/s
         V_pec = self.k*dist*np.sqrt(pec_mu_l**2 + pec_mu_b**2)
+        
+        #include the peculair radial component
+        V_pec_rad = obs_RV - rotation_rv - rv_sol
         table['Peculiar Velocity'] = V_pec
         table['Peculiar Velocity'].unit = u.km/u.s
+        
+        #include radial peculiar velocity
+        table['Peculiar Radial Velocity'] = V_pec_rad
+        table['Peculiar Radial Velocity'] = u.km/u.s
         #include the proper motion in mas/yr
         table['peculiar_mu_l']= pec_mu_l
         table['peculiar_mu_l'].unit = u.mas/u.yr

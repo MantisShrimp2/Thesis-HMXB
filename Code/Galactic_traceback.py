@@ -136,7 +136,7 @@ class GalacticTraceback:
     #self.table['Galactic Path'] = traced_paths
         
         return long_path, lat_path, z_path, ticks
-    def trace_galactic_path(self, source_id, time_step=1000):
+    def trace_galactic_path(self, table):
         """
         Steps:
             define the position in galactic coodinate system
@@ -146,17 +146,16 @@ class GalacticTraceback:
         """
 
  
-        row = self.table[self.table['source_id'] == source_id]
-        #Convert to float because row[x] is a numpy array of length 1
-        #makes issues for plotting
-        l = float(row['l'][0]) *u.deg
-        b = float(row['b'][0]) * u.deg
-        mu_l = float(row['pm_l_poleski'][0]) * u.mas/u.yr
-        mu_b = float(row['pm_b_poleski'][0]) *u.mas/u.yr
-        dist = float(row['distance'][0]) *u.kpc
-        radial_velocity = float(row['RV'][0])*u.km/u.s
-        k = 4.74 * (u.km/u.s)/(u.mas *u.kpc/u.yr) #km/s per mas/yr 
-        print(radial_velocity)
+        row = self.table#self.table[self.table['source_id'] == source_id]
+        l = row['l']
+        b = row['b'] 
+        mu_l = row['pm_l_poleski']
+        mu_b = row['pm_b_poleski']
+        dist = row['distance'] #kpc
+        radial_velocity = row['RV'] 
+       # k = 4.74 * (u.km/u.s)/(u.mas *u.kpc/u.yr) #km/s per mas/yr 
+        #print(radial_velocity)
+    
         #transform to galactic frame
         with coord.galactocentric_frame_defaults.set('v4.0'):
             galcen_frame = coord.Galactocentric()
@@ -171,11 +170,11 @@ class GalacticTraceback:
         dt = -0.2 *u.Myr
         n_steps = int(np.abs(total_time/dt))
         potential = gp.MilkyWayPotential2022()  
-       # hamiltonian = gp.Hamiltonian(potential)
-        #orbit = potential.integrate_orbit(initial_pos, dt=-time_step, t1=0, t2=-total_time)
+        #hamiltonian = gp.Hamiltonian(potential)
+        #orbit = potential.integrate_orbit(initial_pos, dt=dt, t1=0, t2=total_time)
         orbit = potential.integrate_orbit(initial_pos, dt=dt,n_steps=n_steps)
-        #tick_times = np.arange(-1,-total_time.value -1, -1) * u.Myr
-        #ticks = orbit.evaluate_at(tick_times)
+        #orbit = potential.integrate_orbit(initial_pos,  dt=-0.5 * u.Myr, t1=0, t2=-4 * u.Myr)
+
         
         
         #tick_positions = [(t.represent_as('spherical').lon.value, t.z.value) for t in ticks]            
@@ -236,9 +235,30 @@ class GalacticTraceback:
             plt.savefig(parentdir+'/Figures/'+f"Tracepath_{today}.png")
         plt.show()
         return None
-    def plot_with_cluster(self,source_id, clustertable=None,savefig=False):
+    def plot_comoving_cluster(self,star,cluster):
         
-        single_star = self.table[self.table['source_id']==source_id]
+        star_source_id = star['source_id']
+        star_orbit = self.trace_galactic_path(star)
+        
+        cluster_orbit = self.trace_galactic_path(cluster)
+        
+        #star_xyz = star_orbit.xyz
+        star_x, star_y,star_z = star_orbit.x,star_orbit.y,star_orbit.z
+        
+        #cluster_xyz = cluster_orbit.xyz
+        cluster_x,cluster_y,cluster_z = cluster_orbit.x,cluster_orbit.y,cluster_orbit.z
+        plt.figure(figsize=(10,5))
+        plt.scatter(star_y,star_z)
+        
+        plt.scatter(cluster_y,cluster_z)
+        plt.show()
+        
+            
+        return None
+    def plot_with_cluster(self,clustername, clustertable=None,savefig=False):
+        
+        single_star = self.table
+        source_id = single_star['source_id']
         long_path, lat_path, _, ticks = self.trace_linear_path(source_id=source_id)
         #convert to numpy arrays
         long_path, lat_path, ticks = np.array(long_path), np.array(lat_path),np.array(ticks)
@@ -256,27 +276,38 @@ class GalacticTraceback:
             member_lat = clustertable['b']
         
         #include gala
-        orbit  = self.trace_galactic_path(source_id)
+        orbit  = self.trace_galactic_path(single_star)
+        print(orbit)
+        xyz = np.array(orbit.xyz)
+        
+        x1 = np.array(orbit.x)
+        y1 = np.array(orbit.y)
+        z1 = np.array(orbit.z)
+        
+        xyz_galctocentric = coord.SkyCoord(x=x1*u.kpc,y=y1*u.kpc,z=z1*u.kpc,frame=coord.Galactocentric())
+        xyz_galactic = xyz_galctocentric.transform_to(coord.Galactic())
+        
+        
         #fig = orbit.plot()
         # Convert to Galactic coordinates
-        galcen_frame = coord.Galactocentric()
-        galactic_coords = orbit.to_coord_frame(galcen_frame).transform_to(coord.Galactic())
-        # galactic_coords = coord.SkyCoord(
-        #     x=x_vals, y=y_vals, z=z_vals, 
-        #     frame='galactocentric', representation_type='cartesian'
-        # ).transform_to('galactic')
+        galcen_frame = coord.Galactic()
+        galactic_coords = orbit.to_coord_frame(galcen_frame)#.transform_to(coord.Galactic())
 
         # Extract Galactic longitude (l) and latitude (b)
-        gala_l_vals = galactic_coords.l.deg % 360 # Galactic longitude in degrees
-        gala_b_vals = galactic_coords.b.deg
+        # gala_l_vals = galactic_coords.l.deg # Galactic longitude in degrees
+        # gala_b_vals = galactic_coords.b.deg
+        gala_l_vals = xyz_galactic.l.deg # Galactic longitude in degrees
+        gala_b_vals = xyz_galactic.b.deg
         
         # print(f"Initial position: l={l_naught}, b={b_naught}")
         # print(f"Orbit start: l={gala_l_vals[0]}, b={gala_b_vals[0]}")
         plt.figure(figsize=(10,5))
         if clustertable is not None:
-            plt.scatter(member_long,member_lat, s=50,marker='*',label='Members',color='xkcd:grey')
+            plt.scatter(member_long,member_lat, s=50,marker='*',label=f'{clustername}',color='xkcd:grey')
         
         N = len(long_path)
+        ttotal = orbit.t[-1]
+        #print(abs(ttotal))
         star_name = str(single_star['Name'].value[0])
         #cluster_name = clustertable['Name']
         #plot path and color plot by specrtral type
@@ -301,16 +332,26 @@ class GalacticTraceback:
         plt.title(f"Retraced path of {star_name}")
         plt.grid(True)
         plt.legend(loc='best')
+        today = datetime.now().strftime("%Y%m%d")
+        if savefig == True:
+            if clustertable == None:
+                fig_clus_name = ''
+            else:
+                fig_clus_name = clustername
+                
+            plt.savefig(parentdir+'/Figures/Traceback/'+f"{star_name}_with_{fig_clus_name}_{today}.png")
         plt.show()
         return None
 
 test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250210_.ecsv',format='ecsv')
 test_170037 = test_table[test_table['Name']=='4U 1700-377']
 scoob1 = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/SCO OB1-result.ecsv')
+ngc6231_params = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/NGC2631_param.ecsv')
 mydir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(mydir)
 if __name__ == "__main__":
-    GalacticTraceback(test_table).plot_with_cluster(test_170037['source_id'],clustertable=scoob1,savefig=False)
+    #GalacticTraceback(test_170037).plot_with_cluster(clustername='SCO OB1',clustertable=scoob1,savefig=True)
+    GalacticTraceback(test_170037).plot_comoving_cluster(test_170037, ngc6231_params)
 #    GalacticTraceback(test_table).plot_trace(savefig=False)
     
 

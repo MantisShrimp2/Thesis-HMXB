@@ -1,0 +1,101 @@
+.sortable {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #AAF;
+	color: blue;
+	line-height: 90%;
+	border-collapse: collapse;
+	margin-top: 20px;
+	margin-bottom: 12px;
+}
+
+.sortable th {
+    padding: 8px 16px 8px 4px !important;
+}
+.sortable td {
+	padding: 4px 3px 4px 3px !important;
+}
+.sortable td, th {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #AAF;
+	white-space: nowrap;
+}
+
+.sortable td.lon, th.lon {
+	border-style: solid;
+	border-width: 1px 0 1px 1px;
+	border-color: #AAF;
+}
+
+.sortable td.lat, th.lat {
+	border-style: solid;
+	border-width: 1px 1px 1px 0;
+	border-color: #AAF;
+}
+
+.computed {
+	color: #666;
+	font-style: italic;
+}
+
+tr.odd {
+	background-color: #EEF;
+}
+
+tr.even {
+	background-color: white;
+}
+
+td.r {
+	text-align: right;
+}
+
+td.d {
+	text-align: ".";
+}
+
+.sortable thead th {
+	font-size: 100%;
+	background-color: #DDF;
+	padding-bottom: 18px;
+	background-image: url(/Icon/sort_gen.png);
+	background-repeat: no-repeat;
+	background-position: center 95%;
+	cursor: pointer;
+}
+
+.sortable th.order-none {
+	padding-bottom: 18px;
+	background-image: url(/Icon/sort_gen.png);
+	background-repeat: no-repeat;
+	background-position: center 95%;
+	cursor: pointer;
+}
+
+.sortable th.order-asc {
+	padding-bottom: 18px;
+	background-image: url(/Icon/sort_asc.png);
+	background-repeat: no-repeat;
+	background-position: center 95%;
+	cursor: pointer;
+}
+
+.sortable th.order-desc {
+	padding-bottom: 18px;
+	background-image: url(/Icon/sort_desc.png);
+	background-repeat: no-repeat;
+	background-position: center 95%;
+	cursor: pointer;
+}
+
+
+.hover {
+/*	background-color: #99F;
+	color: black;*/
+}
+
+.clickable .tbody {
+	border-style: solid;
+	border-width: 5px;
+}

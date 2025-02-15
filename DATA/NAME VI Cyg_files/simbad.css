@@ -1,0 +1,203 @@
+/* @import url("normalize.css"); */
+
+div.simbaderr {
+  background: #FFCECE;
+padding-block: 0.4em;
+display: block;
+}
+
+div.vizlink {
+ background: #f2effb;
+color: #CD5B45;
+padding-block: 0.4em;
+display: block;
+}
+
+input[name=Radius], input[id^="Radius" i]{
+   width:3em;
+   max-width:5em;
+}
+
+svg {
+}
+.info-tooltip div {
+ display:none;
+    border: 2px solid lightgrey;
+}
+
+.info-tooltip[width="300px"] div {
+  width: 600px !important;
+}
+
+.info-tooltip:hover {
+
+ position:relative;
+ cursor:pointer; 
+
+}
+
+.info-tooltip:hover div {
+
+    left: 20px;
+    top: 20px;
+    color: black;
+    background: #ffffe0;
+    background-clip: content-box;
+    width: auto;
+  position:absolute; /* this will let you align the popup with flexibility */
+ display:block; 
+
+}
+
+.deleteicon {
+	cursor: pointer;
+	position:relative;
+	top:-3px;
+}
+img#otypes_help {
+        filter : opacity(0.5) brightness(1.2);
+        vertical-align: text-bottom;
+}
+
+img#warn_home {
+  filter: contrast(60%) brightness(200%) hue-rotate(200deg);
+  height: 1.1em;
+  vertical-align: text-top;
+  border-style: none;
+}
+
+
+/***** default style *****/
+
+body { 
+
+ background-color: white; 
+ font: 1em Serif,arial !important;
+ color: #010101; 
+}
+
+td {
+ border-color:white;
+}
+
+form:not(.bloc) {
+ margin-left: 10px;
+ margin-right: 10px; 
+ margin-top: 1em; 
+ padding: 10px;
+ }
+
+form { 
+ font-style: normal; 
+ font-size: 0.9em;
+/* background-color: rgb(249,254,254);*/ /* ~= EEFFFF */
+/*  border-left: 3px ridge #df3f3f; */
+ /*line-height: 1em;*/
+}
+
+form b{
+ font-size:1.1em;
+}
+
+a { 
+ color: #06b; 
+ text-decoration: none; 
+}
+
+.r a {
+ text-decoration: underline !important;
+}
+
+a:hover, a:focus {
+ color: #009570; 
+ text-decoration: underline;
+}
+
+td a:visited[href*="sim-id"] {
+ color:#009570;/*#07b;*/
+}
+
+button,
+input,
+select,
+textarea {
+  font: monospace; /* 1 */
+  margin: 0; /* 2 */
+}
+
+
+
+input[type="submit"], input[type=reset], input[type=text], button, input[type=button], select {
+ border-radius: 5px;
+ border-style: outset;
+ border-color: lightgray;
+ border-width:1px;
+ padding :0.3em;
+ box-shadow: none;
+ font-size: 0.9em;
+}
+
+input[type="submit"], input[type=reset], button, input[type=button], select {
+ background: linear-gradient( #FFFFFF, #DCDCDC);
+ }
+input:hover, button:hover, select:hover {
+ box-shadow: 0 0 3px;
+}
+select,textarea,input[type=text] {
+ padding:0.1em;
+}
+
+/** barre de navigation **/
+td[id^="nav"] {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: gray;
+  border-width:0px 0px 1px 0px;
+/* background: linear-gradient( #FFFFFF, @background-color); */
+/* background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));*/
+
+}
+td[id^="nav"][bgcolor="#FFFFFF"] {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: gray;
+  border-width:1px 1px 0px 1px;
+}
+
+textarea,input[type=text] {
+ font-size:1em !important;
+}
+/*input[type=submit], input[type=button], :not(input[disabled="disabled"]) {*/
+input[type=submit]:not([disabled]), input[type=button] {
+ color: #005580; /* as a:hover */
+ font-size:1em;
+}
+input[type=reset] {
+ color: #454545; 
+}
+h1,h2,h3,.cdsPageTitle {
+  font-family: Arial,sans-serif;
+/* font-family:"Helvetica Neue", Helvetica, Arial, serif */
+}
+/*
+!td font[size="+1"] {
+padding-top: 2em;
+}*/
+
+::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.54;
+}
+.abstract{margin-right:5em;margin-left: 1em}
+
+.abstract br {
+  /* writing-mode: vertical-lr; */
+/*  margin-block-start: 0.5em; */
+  display:block;
+  margin-left: 0.5em; */
+   }
+
+/* Fix math rendering with special space (or -) characters with MathJax
+ * in abstracts: */
+.mjx-math { font-size: 1rem }
+
