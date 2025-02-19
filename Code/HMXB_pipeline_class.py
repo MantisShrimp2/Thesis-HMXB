@@ -327,7 +327,7 @@ class pipeline:
         
         #include radial peculiar velocity
         table['Peculiar Radial Velocity'] = V_pec_rad
-        table['Peculiar Radial Velocity'] = u.km/u.s
+        table['Peculiar Radial Velocity'].unit = u.km/u.s
         #include the proper motion in mas/yr
         table['peculiar_mu_l']= pec_mu_l
         table['peculiar_mu_l'].unit = u.mas/u.yr
@@ -370,8 +370,9 @@ class pipeline:
 cwd = os.getcwd()
 home_files = os.path.dirname(cwd)
 csv_files  = home_files + '/DATA/'
-test_table = home_files+"/GAIA_HMXB_DNE.ecsv"
+test_table = csv_files+"/HMXB_with_analysis.ecsv"
 if __name__ == "__main__":
     test_massive = pipeline(test_table,fmt='ecsv')
     my_table = test_massive.make_table()
-    x = test_massive.lay_pipe(filename='test_lay_pipe.ecsv',filetype='ascii.ecsv')
+    x = test_massive.lay_pipe(filename=test_table,filetype='ascii.ecsv')
+    x.write(csv_files+"HMXB_with_analysis_and_radial.ecsv",format='ascii.ecsv',overwrite=True)
