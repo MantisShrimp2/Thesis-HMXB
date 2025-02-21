@@ -333,6 +333,11 @@ class pipeline:
         table['peculiar_mu_l'].unit = u.mas/u.yr
         table['peculiar_mu_b'] = pec_mu_b
         table['peculiar_mu_b'].unit = u.mas/u.yr
+        
+        #include total pecilair velocity
+        V_pec_3d = np.sqrt(V_pec**2 + V_pec_rad**2)
+        table["Peculiar Velocity 3D"] = V_pec_3d
+        table['Peculiar Velocity 3D'].unit = u.km/u.s
         return table
     def calculate_errors(self,table):
         '''I probably need to calculate errors for a bunch of my calculations
