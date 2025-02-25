@@ -34,7 +34,6 @@ class pipeline:
      self.dec_np = np.radians(27.4) # deg to radians decliatoin of north pole
      self.theta_o = np.radians(123) # deg to radiansradians
      self.k  = 4.74 #km/s per mas/yr 
-      
      #solar values
       # solar motion km/s 
     # M. Carretero-Castrillo 2023 and Ried 2019
@@ -60,10 +59,10 @@ class pipeline:
         negative_prlx_mask = table['parallax'] <=0 
         table['parallax'][negative_prlx_mask] += table['parallax_error'][negative_prlx_mask]
         #add the distance to the table
-        table['distance']= (1/table['parallax'])*u.kpc # kpc
+        table['distance_para']= (1/table['parallax'])*u.kpc # kpc
         
         # distance from object to sun in kpc
-        table['distance'].unit = u.kpc
+        table['distance_para'].unit = u.kpc
         return table
     def Galaxy_dist(self,table):
         '''find the distance an object is to the center of the galaxy based on law of cosine
@@ -78,7 +77,7 @@ class pipeline:
         lat = table['b']
         long_rad = np.radians(long) #convert to radians
         lat_rad = np.radians(lat)
-        obj_dist = table['distance'] # kpc
+        obj_dist = table['distance_bj'] # kpc
         R_sqrd = self.R0**2 + (obj_dist**2 * np.cos(lat_rad)**2) - 2*(self.R0*obj_dist*np.cos(long_rad)*np.cos(lat_rad))
         galactic_dist = np.sqrt(R_sqrd)
        # table.add_column(galactic_dist, name = 'galactic distance')
@@ -234,7 +233,7 @@ class pipeline:
         moffat 1998'''
         lat = table['b']
         long = table['l']
-        dist = table['distance']
+        dist = table['distance_bj']
         #convert to radians
         long_rad = np.radians(long)
         lat_rad = np.radians(lat)
@@ -261,7 +260,7 @@ class pipeline:
         R = table['galactic distance']
         lat = table['b']
         long = table['l']
-        dist = table['distance']
+        dist = table['distance_bj']
         omega_0 = self.sun_curve/self.R0 # km/s per kpc
         omega  =self.sun_curve/R
         long_rad = np.radians(long)
@@ -297,7 +296,7 @@ class pipeline:
         lat = table['b'] #deg
         long_rad =  np.radians(long)
         lat_rad = np.radians(lat)
-        dist = table['distance'] # kpc
+        dist = table['distance_bj'] # kpc
         # observed proper Motions
         obs_mu_l = table['pm_l_poleski']
         obs_mu_b = table['pm_b_poleski']
