@@ -1,12 +1,12 @@
 # %ECSV 1.0
 # ---
 # datatype:
-# - {name: distance, unit: kpc, datatype: float64}
+# - {name: distance_bj, unit: kpc, datatype: float64}
 # - {name: l, unit: deg, datatype: float64}
 # - {name: b, unit: deg, datatype: float64}
 # - {name: pm_l_poleski, unit: mas / yr, datatype: float64}
 # - {name: pm_b_poleski, unit: mas / yr, datatype: float64}
 # - {name: RV, unit: km / s, datatype: float64}
 # schema: astropy-2.0
-distance l b pm_l_poleski pm_b_poleski RV
-1.5511379147742783 343.4762 1.17 -2.05709 -0.929142 -32.7
+distance_bj l b pm_l_poleski pm_b_poleski RV
+1.5511379147742783 343.4762 1.17 -2.05709 -0.929142 -20.0
