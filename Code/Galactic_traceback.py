@@ -21,7 +21,7 @@ import astropy.units as u
 import os
 import astropy.coordinates as coord
 class GalacticTraceback:
-    def __init__(self,table):
+    def __init__(self,table,int_time):
         
         # self.l = long
         # self.b = lat
@@ -41,7 +41,8 @@ class GalacticTraceback:
         "xkcd:purple": "B0e IV-V",
         "xkcd:light purple": "B1e IV-V",
         "xkcd:dark purple": "B2e IV-V",
-    }
+    }   
+        self.int_time = int_time
     def traceback_time(self):
         '''
         Calculate the traceback time for a star
@@ -71,7 +72,7 @@ class GalacticTraceback:
         
         return self.table
         
-    def trace_linear_path(self, source_id, time_step=1000):
+    def trace_linear_path(self, source_id, time_step=100):
         """
         Trace the path of the star in Galactic coordinates until b = 0, using the Euler method.
 
@@ -101,7 +102,8 @@ class GalacticTraceback:
         
         
         #limit time stepsto 3 million years
-        max_steps = int(3e6/1000)
+        total_int_time = abs(self.int_time)* 1e6
+        max_steps = int(total_int_time/time_step)
         
         #add ticks to the lines every 1 million years
         ticks = []
@@ -142,6 +144,7 @@ class GalacticTraceback:
         Steps:
             source_info- table of object's diatance, l, b, proper motion, radial velocity
             think a star or cluster'
+            int_time float of integreation time
             define the position in galactic coodinate system
             convert to cartesian coordinates
             integrate orbit
@@ -172,7 +175,7 @@ class GalacticTraceback:
         
 
         initial_pos = gd.PhaseSpacePosition(star_galacto.data)
-        total_time = -3.0 *u.Myr
+        total_time = self.int_time *u.Myr
         dt = -0.1 *u.Myr
         n_steps = int(abs(total_time.to_value(u.Myr) / dt.to_value(u.Myr)))
         potential = gp.MilkyWayPotential2022()  
@@ -295,14 +298,19 @@ class GalacticTraceback:
             return None
     def plot_comoving_cluster(self,star,cluster,plotting=False):
         
-        star_source_id = star['source_id']
+        
         star_orbit = self.trace_galactic_path(star)
         
         cluster_orbit = self.trace_galactic_path(cluster)
         
         relative_orbit =  (star_orbit.xyz - cluster_orbit.xyz).to(u.kpc)
 
-
+        time = star_orbit.t
+    
+        separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
+        min_sep = np.argmin(separation)
+        time_min_sep = time[min_sep]
+        print(time_min_sep)
         
    
         rel_x,rel_y,rel_z = np.array(relative_orbit[0]), np.array(relative_orbit[1]), np.array(relative_orbit[2])
@@ -369,7 +377,7 @@ class GalacticTraceback:
             ax.set_zlabel('Z')
             ax.legend()
             
-        return rel_x,rel_y,rel_z #star_x_shifted ,star_y_shifted, star_z_shifted
+        return rel_x,rel_y,rel_z, time_min_sep #star_x_shifted ,star_y_shifted, star_z_shifted
     def plot_with_cluster(self,clustername, cluster_params=None, clustertable=None, savefig=False):
         '''
         plot the integreated motion of a star wrt to a host cluster
@@ -383,6 +391,9 @@ class GalacticTraceback:
         savefig : boolean optional
             DESCRIPTION. save the figure for plotting
 
+        Note on the proper motion arrows
+        i need the angle between the proper motions but later  i invert the x-axis so i should flip the 
+        flip the pm_l arrow
         Returns
         -------
         None
@@ -408,6 +419,7 @@ class GalacticTraceback:
             member_lat = clustertable['b']
         
         #include gala
+        
         orbit  = self.trace_galactic_path(single_star)
        #print(orbit)
         
@@ -419,6 +431,8 @@ class GalacticTraceback:
         xyz_galactic = xyz_galctocentric.transform_to(coord.Galactic())
         
         plt.figure(figsize=(10,5))
+        if clustertable is not None:
+            plt.scatter(member_long,member_lat, s=50,marker='*',label=f'{clustername}',color='xkcd:grey')
         
         #plot the orbit integrated path of the cluster
         if cluster_params  is not None:
@@ -432,7 +446,7 @@ class GalacticTraceback:
             
             cluster_l_vals = cluster_galactic.l.deg
             cluster_b_vals = cluster_galactic.b.deg
-            rel_x, rel_y,rel_z  = self.plot_comoving_cluster(single_star, cluster_params, plotting=False)
+            rel_x, rel_y,rel_z, time_min_sep  = self.plot_comoving_cluster(single_star, cluster_params, plotting=False)
             
             relative_sky = coord.SkyCoord(x=rel_x, y=rel_y, z=rel_z, unit=u.kpc,
                             representation_type='cartesian', frame='galactocentric').transform_to('galactic')
@@ -445,19 +459,7 @@ class GalacticTraceback:
 
         gala_l_vals = xyz_galactic.l.deg # Galactic longitude in degrees
         gala_b_vals = xyz_galactic.b.deg
-        #add a sublcass from plot_comoving_cluster
-        
-        # comove_l = relative_sky.l.deg % 360
-        # comove_b =relative_sky.b.deg
-        # #plt.scatter(comove_l,comove_b,color="xkcd:salmon",label='Comoving')
-        
-        
-        # print(f"Initial position: l={l_naught}, b={b_naught}")
-        # print(f"Orbit start: l={gala_l_vals[0]}, b={gala_b_vals[0]}")
-        # plt.figure(figsize=(10,5))
-        if clustertable is not None:
-            plt.scatter(member_long,member_lat, s=50,marker='*',label=f'{clustername}',color='xkcd:grey')
-        
+
         N = len(long_path)
         ttotal = orbit.t[-1]
         #print(abs(ttotal))
@@ -467,17 +469,17 @@ class GalacticTraceback:
         sp_type = single_star['Mod_SpType'][0] #dumb
         path_color = sp_type if sp_type in self.color_map else 'xkcd:grey'
         #linear path
-        plt.scatter(long_path[1:N], lat_path[1:N],s=10,color='xkcd:black',alpha=0.7)
-        #comoving reference frame
-        #plt.scatter(comove_l,comove_b,color="xkcd:salmon",label='Comoving')
-      #  plt.plot(comove_l,comove_b,color="xkcd:salmon")
+        plt.scatter(long_path[0:N], lat_path[0:N],s=10,color='xkcd:black',alpha=0.7)
+
         plt.plot([],[],color='xkcd:black',label='Linear Path')
         #inistal position
         plt.scatter(l_naught,b_naught,color=path_color,label=star_name)
         #gala
         plt.plot(gala_l_vals,gala_b_vals, lw=1.1, marker='*', color='xkcd:vermillion',label='Gala path')
         #pm arrows
-        plt.quiver(l_naught,b_naught, arrow_pml,arrow_pmb,color='xkcd:shit brown',angles='xy',width=0.002)
+        # i need the angle between the proper motions but later  i invert the x-axis so i should flip the 
+        #flip the pm_l arrow
+        plt.quiver(l_naught,b_naught, -arrow_pml,arrow_pmb,color='xkcd:shit brown',angles='uv',width=0.002)
         
         #plot cluster integrated path
 
@@ -493,7 +495,7 @@ class GalacticTraceback:
         today = datetime.now().strftime("%Y%m%d")
         if savefig == True:
             if clustertable == None:
-                fig_clus_name = ''
+                fig_clus_name = ' '
             else:
                 fig_clus_name = clustername
                 
@@ -509,9 +511,9 @@ ngc6231_params = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/NGC2631_param
 mydir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(mydir)
 if __name__ == "__main__":
-    GalacticTraceback(test_170037).plot_trace(savefig=False)
-    GalacticTraceback(test_170037).plot_with_cluster(clustername='SCO OB1',cluster_params=ngc6231_params, clustertable=scoob1,savefig=False)
-    #x,y,z = GalacticTraceback(test_170037).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
+    GalacticTraceback(test_170037,-3.0).plot_trace(savefig=False)
+    GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=ngc6231_params, clustertable=scoob1,savefig=False)
+    x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
 #    GalacticTraceback(test_table).plot_trace(savefig=False)
     
 ngc6231_params
