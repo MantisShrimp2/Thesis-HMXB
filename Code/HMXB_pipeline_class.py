@@ -21,6 +21,7 @@ from astropy.visualization import astropy_mpl_style
 import os 
 import sys
 
+
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 class pipeline:
@@ -28,8 +29,9 @@ class pipeline:
      # define constant
      self.RUWE = 1.4
     # self.list_ID = list_ID
-     self.R0= 8.5 # solar galactic distance to center
-     self.sun_curve = 220 #km/s galactic velocity of the sun
+    #from carretero-castrillo 2023
+     self.R0= 8.15 # solar galactic distance to center
+     self.sun_curve = 236 #km/s galactic velocity of the sun
      self.ra_np = np.radians(192.25) # deg to radians right acsension of north pole
      self.dec_np = np.radians(27.4) # deg to radians decliatoin of north pole
      self.theta_o = np.radians(123) # deg to radiansradians
@@ -49,9 +51,11 @@ class pipeline:
     def modify_parllax_add_distance(self,table):
         '''Calculate the distance as 1/parallax, rememeber its an estimator
         add parallax error to negative parallax to get lower limit on distance
-        some parallax still may be negative'''
+        some parallax still may be negative
+        P_offset = Gaia parallax bias offset see
+        '''
         #offset Parallax
-        p_offset = 0.00 # from GAIA EDR3
+        p_offset = 0.00 # from GAIA DR3
         table['parallax'] = (table['parallax'] - p_offset)
         table['parallax'].unit = u.mas# from GAIA EDR3
         #add parallax units
