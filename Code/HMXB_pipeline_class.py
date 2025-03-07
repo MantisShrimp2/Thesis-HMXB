@@ -8,16 +8,13 @@ Created on Thu Oct 24 14:39:14 2024
 """
 
 import numpy as np
-import pandas as pd
 from astroquery.gaia import Gaia
-import matplotlib.pyplot as plt
 from astropy.table import Column, Table
 from astropy.io import ascii
 
 import astropy.coordinates as coords
 import astropy.units as u
 from astropy.coordinates import SkyCoord
-from astropy.visualization import astropy_mpl_style
 import os 
 import sys
 
