@@ -205,16 +205,7 @@ class GalacticTraceback:
         #calculate velocities in cartesian coordinates    # 1 km/s ≈ 1.0227e-6 kpc/yr.
         conv = 1.02201e-9 #km/s to kpc/yr
        # v_vec[0], v_vec[1], v_vec[2]
-        # if cluster_params is not None:
-        #    cluster_coords = coord.SkyCoord(l=cluster_params['l'],b = cluster_params['b'],     
-        #                                 pm_l_cosb=cluster_params['pm_l_poleski'],
-        #                                 pm_b = cluster_params['pm_b_poleski'],
-        #                                 distance = cluster_params['distance_bj'],
-        #                                 radial_velocity = cluster_params['RV'], frame='galactic')
-        #    cluster_coords = cluster_coords.transform_to(coord.Galactocentric)
-        #    cl_vx, cl_vy, cl_vz = cluster_coords.v_x.value[0], cluster_coords.v_y.value[0], cluster_coords.v_z.value[0]
-        #    vx, vy, vz = cartesian_vel[0] - cl_vx, cartesian_vel[1] - cl_vy, cartesian_vel[2] - cl_vz # km/s
-        # else:    
+  
         vx, vy, vz = cartesian_vel[0], cartesian_vel[1], cartesian_vel[2] 
         vx = vx*conv
         vy = vy*conv
@@ -250,7 +241,8 @@ class GalacticTraceback:
         x_path = np.array(x_path)
         y_path = np.array(y_path)
         z_path = np.array(z_path)
-        l_path = (np.degrees(np.arctan2(y_path,x_path))) %360
+        #atan2 is verified by GAIA
+        l_path = (np.degrees(np.arctan2(y_path,x_path))) % 360
         b_path = np.degrees(np.arctan2(z_path, np.sqrt(x_path**2 + y_path**2)))
         dist_path = np.sqrt(x_path **2 + y_path **2 + z_path **2)
        # b_path = np.degrees(np.arcsin(z_path/dist_path))
@@ -282,18 +274,6 @@ class GalacticTraceback:
         #print(radial_velocity)
         #transform to galactic frame
         #from carreto-castrillo 2023
-        # if cluster_params is not None:
-        #     mu_cl_l = cluster_params['pm_l_poleski']
-        #     mu_cl_b = cluster_params['pm_b_poleski']
-        #     dist_cl  = cluster_params['distance_bj']
-        #     radial_velocity_cl = cluster_params['RV']
-        #     #shit name
-        #     mu_l_total  = (mu_l - mu_cl_l) *u.mas/u.yr
-        #     mu_b_total = (mu_b - mu_cl_b) * u.mas/u.yr
-        #     dist_total  = dist 
-        #     radial_velocity_total =( radial_velocity- radial_velocity_cl)*u.km/u.s
-        #     print('wrt cluster')
-        # else:
         mu_l_total  = mu_l 
         mu_b_total = mu_b 
         dist_total  = dist 
@@ -459,11 +439,7 @@ class GalacticTraceback:
         #cluster_xyz = cluster_orbit.xyz
         cluster_x,cluster_y,cluster_z = np.array(cluster_orbit.x),np.array(cluster_orbit.y),np.array(cluster_orbit.z)
         
-        #offset the cluster
-        # cluster_x_shifted = cluster_x - cluster_x[0]
-        # cluster_y_shifted = cluster_y - cluster_y[0]
-        # cluster_z_shifted = cluster_z - cluster_z[0]
-        
+
         #offset the star 
         star_x_shifted = star_x - cluster_x
         star_y_shifted = star_y - cluster_y
@@ -513,18 +489,7 @@ class GalacticTraceback:
             ax.legend()
             
             fig_3d = plt.figure()
-            # ax = fig_3d.add_subplot(projection='3d')
-            # #star
-            # ax.set_title('Cluster shifted')
-            # ax.scatter(star_x_shifted, star_y_shifted, star_z_shifted, marker='*',label=f"{star_params['Name'][0]}")
-            
-            # ax.scatter(cluster_x, cluster_y, cluster_z, marker='o',label='cluster')
-            # #ax.scatter(rel_x,rel_y,rel_z,label='relative_motion')
-            # ax.set_xlabel('X')
-            # ax.set_ylabel('Y')
-            # ax.set_zlabel('Z')
-            # ax.legend()
-            
+
         return rel_x,rel_y,rel_z, time_min_sep #star_x_shifted ,star_y_shifted, star_z_shifted
     def plot_with_cluster(self,clustername, cluster_params=None, clustertable=None, savefig=False):
         '''
@@ -629,7 +594,8 @@ class GalacticTraceback:
         path_color = sp_type if sp_type in self.color_map else 'xkcd:grey'
         #linear path
         plt.scatter(long_path[0:N], lat_path[0:N],s=10,color='xkcd:black',alpha=0.7)
-       # plt.scatter(long_vdm_path, lat_vdm_path,s=50,color='xkcd:pink',alpha=0.7,label='vdm')
+        #integration from van der meji 2021
+        #plt.scatter(long_vdm_path, lat_vdm_path,s=50,color='xkcd:pink',alpha=0.7,label='vdm')
         #plt.plot(long_vdm_path, lat_vdm_path,color='xkcd:pink')
 
         plt.plot([],[],color='xkcd:black',label='Linear Path')
@@ -674,9 +640,7 @@ parentdir = os.path.dirname(mydir)
 if __name__ == "__main__":
    # GalacticTraceback(test_170037,-3.0).plot_trace(savefig=False)
    GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=ngc6231_params, clustertable=scoob1,savefig=False)
-   x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
+  # x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
 #  GalacticTraceback(test_170037, -3.0).trace_linear_path_vdm(test_170037)
 #    GalacticTraceback(test_table).plot_trace(savefig=False)
-    
-#ngc6231_params
-#test_170037['pmra']
+
