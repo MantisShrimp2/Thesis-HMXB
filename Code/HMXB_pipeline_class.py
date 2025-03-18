@@ -262,8 +262,10 @@ class pipeline:
         lat = table['b']
         long = table['l']
         dist = table['distance_bj']
+        theta = table['circular velocity']
         omega_0 = self.sun_curve/self.R0 # km/s per kpc
-        omega  =self.sun_curve/R
+        #omega  =self.sun_curve/R
+        omega = theta/R
         long_rad = np.radians(long)
         lat_rad = np.radians(lat)
         #calculate proper motion due to galactic rotation
