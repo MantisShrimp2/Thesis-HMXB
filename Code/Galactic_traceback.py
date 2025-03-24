@@ -18,6 +18,7 @@ from gala.coordinates import reflex_correct
 import astropy.units as u
 import os
 import astropy.coordinates as coord
+from astropy.coordinates import CartesianRepresentation, CartesianDifferential
 class GalacticTraceback:
     def __init__(self,table,int_time):
         
@@ -346,13 +347,13 @@ class GalacticTraceback:
         with coord.galactocentric_frame_defaults.set('v4.0'):
             galcen_frame = coord.Galactocentric()
         galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l_total,pm_b=mu_b_total,distance=dist_total,
-                                      radial_velocity =radial_velocity_total, frame='galactic')
+                                      radial_velocity =radial_velocity_total,frame=coord.Galactic())
         #transform frame
         star_galacto = galactic_rep.transform_to(galcen_frame)
 
         #correct for solar motion
-        star_galacto = reflex_correct(star_galacto)
-        
+        #star_galacto = reflex_correct(star_galacto)
+       # print(star_galacto)
 
         initial_pos = gd.PhaseSpacePosition(star_galacto.data)
         total_time = int_time *u.Myr
@@ -361,10 +362,11 @@ class GalacticTraceback:
 
         integrator = gi.LeapfrogIntegrator
         potential = gp.MilkyWayPotential2022()  
-        orbit = potential.integrate_orbit(initial_pos, dt=dt, t1=0, t2=total_time)
-        #orbit = potential.integrate_orbit(initial_pos, 
-                                         # dt=dt,n_steps=n_steps,
-                                          #Integrator=integrator)
+        #orbit = potential.integrate_orbit(initial_pos, dt=dt, t1=0, t2=total_time)
+        orbit = potential.integrate_orbit(initial_pos, 
+                                          dt=dt,n_steps=n_steps,
+                                          Integrator=integrator)
+                
 
         return orbit 
 
@@ -598,8 +600,8 @@ class GalacticTraceback:
             #star
             ax.scatter(star_x, star_y, star_z, marker='*',label=f"{star_params['Name'][0]}")
             ax.scatter(cluster_x, cluster_y, cluster_z, marker='o',label='cluster')
-            ax.set_xlabel('X kpc ')
-            ax.set_ylabel('Y  kpc')
+            ax.set_xlabel('X kpc')
+            ax.set_ylabel('Y kpc')
             ax.set_zlabel('Z kpc ')
             ax.legend()
             
@@ -618,6 +620,51 @@ class GalacticTraceback:
             
 
         return rel_x,rel_y,rel_z, time_min_sep #star_x_shifted ,star_y_shifted, star_z_shifted
+
+    def velocity_check(self, orbit):
+        # Extract Galactocentric Cartesian velocity components
+        vx1 = np.array(orbit.v_x.to_value()) #kpc/myr
+        vy1 = np.array(orbit.v_y.to_value())  #kpc/myr
+        vz1 = np.array(orbit.v_z.to_value()) # kpc/myr
+    
+        to_km_per_s = 977.8
+        
+        vx1, vy1, vz1 = vx1 * to_km_per_s * u.km/u.s, vy1 * to_km_per_s * u.km/u.s, vz1 * to_km_per_s * u.km/u.s
+        
+        # Define Galactocentric position
+        x1 = np.array(orbit.x) * u.kpc
+        y1 = np.array(orbit.y) * u.kpc
+        z1 = np.array(orbit.z) * u.kpc
+    
+        # Create the combined coordinate and velocity representation
+        galacto_rep = coord.SkyCoord(
+            x=x1,
+            y=y1,
+            z=z1,
+            v_x=vx1,
+            v_y=vy1,
+            v_z=vz1,
+            representation_type="cartesian",
+            frame="galactocentric"
+        )
+    
+        # Transform to Galactic coordinates
+        galactic_vel = galacto_rep.transform_to(coord.Galactic())
+        pml = galactic_vel.pm_l_cosb
+        pmb = galactic_vel.pm_b
+        vrad = galactic_vel.radial_velocity
+        print(pml, pmb)
+        # Compute proper motions in mas/yr
+
+        # Print results
+        print('means')
+        print(f"Vx: {np.mean(vx1)}")
+        print(f"Vy: {np.mean(vy1)}")
+        print(f"Vz: {np.mean(vz1)}")
+        print(f"pm_l: {np.mean(pml)}")
+        print(f"pm_b: {np.mean(pmb)}")
+        print(f"Vrad: {np.mean(vrad)}")
+
     def plot_with_cluster(self,clustername, cluster_params=None, clustertable=None, savefig=False):
         '''
         plot the integreated motion of a star wrt to a host cluster
@@ -646,7 +693,7 @@ class GalacticTraceback:
         #convert to numpy arrays
         long_path, lat_path, ticks = np.array(long_path), np.array(lat_path),np.array(ticks)
         
-        long_vdm_path, lat_vdm_path, _  = self.trace_linear_path_vdm(single_star)
+       # long_vdm_path, lat_vdm_path, _  = self.trace_linear_path_vdm(single_star)
         
         
         
@@ -665,14 +712,15 @@ class GalacticTraceback:
         #include gala
         
         orbit  = self.trace_galactic_path(single_star,int_time=-3.0)
+        self.velocity_check(orbit)
         #print(orbit)
         
         x1 = np.array(orbit.x)
         y1 = np.array(orbit.y)
         z1 = np.array(orbit.z)
         
-        xyz_galctocentric = coord.SkyCoord(x=x1*u.kpc,y=y1*u.kpc,z=z1*u.kpc,frame='galactocentric')
-        xyz_galactic = xyz_galctocentric.transform_to(coord.Galactic())
+        coord_rep = coord.SkyCoord(x=x1*u.kpc, y=y1*u.kpc, z=z1*u.kpc, representation_type="cartesian", frame='galactocentric')
+        xyz_galactic = coord_rep.transform_to(coord.Galactic())
         
         gala_l_vals = xyz_galactic.l.deg # Galactic longitude in degrees
         gala_b_vals = xyz_galactic.b.deg
@@ -753,8 +801,7 @@ class GalacticTraceback:
         star_arrow_orbit = self.trace_galactic_path(single_star, 0.5)
         
         star_arrow_x, star_arrow_y, star_arrow_z = np.array(star_arrow_orbit.x), np.array(star_arrow_orbit.y), np.array(star_arrow_orbit.z)
-        #delta_cl_l = cl_l_arrow[-1] - cl_l
-        #delta_cl_b = cl_b_arrow[-1] - cl_b
+
         star_arrow_galactocentric = coord.SkyCoord(x=star_arrow_x*u.kpc, y=star_arrow_y*u.kpc,
                                                  z=star_arrow_z*u.kpc,frame=coord.Galactocentric())
         star_arrow_galactic = star_arrow_galactocentric.transform_to(coord.Galactic())
@@ -782,7 +829,7 @@ class GalacticTraceback:
                 
             plt.savefig(parentdir+'/Figures/Traceback/'+f"{star_name}_with_{fig_clus_name}_{today}.png")
         plt.show()
-        return None
+        return orbit
 
 test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250301_.ecsv',format='ecsv')
 test_170037 = test_table[test_table['Name']=='4U 1700-377']
@@ -790,12 +837,6 @@ scoob1 = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/SCO OB1-result.ecsv')
 ngc6231_params = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/NGC2631_param.ecsv')
 
 
-# star_170037_theta = [np.float64(347.75444710988126),
-#  np.float64(2.173492429913019),
-#  np.float64(1.5139931999999998),
-#  np.float64(5.459355496184255),
-#  np.float64(1.114173464609666),
-#  np.float64(-60.0)]
 mydir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(mydir)
 if __name__ == "__main__":
