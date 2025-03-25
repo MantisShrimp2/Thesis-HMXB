@@ -159,7 +159,7 @@ class galactic_path_MCMC:
         star_galacto = galactic_rep.transform_to(galcen_frame)
 
         #correct for solar motion
-        star_galacto = reflex_correct(star_galacto)
+        #star_galacto = reflex_correct(star_galacto)
         
 
         initial_pos = gd.PhaseSpacePosition(star_galacto.data)
