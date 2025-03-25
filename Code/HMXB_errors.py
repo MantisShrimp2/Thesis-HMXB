@@ -12,10 +12,6 @@ from astropy.io import ascii
 import astropy.units as u
 from datetime import datetime
 from astropy.coordinates import SkyCoord
-rotation_matrix = np.array([[-0.0548755604162154, -0.8734370902348850, -0.4838350155487132],
-                            [0.4941094278755837, -0.4448296299600112, 0.7469822444972189],
-                            [-0.8676661490190047, -0.1980763734312015, 0.4559837761750669]])
-
 
 class calc_errors:
     def __init__(self):
@@ -193,6 +189,175 @@ class calc_errors:
     
         
         return table
+    def calc_V_pec_errors(self,table):
+        '''
+        Error propogation on moffat 1998 with 
+        galactic rotation curve brand and blitz 1993
+
+        mu_pec = mu_obs - mu_gal_rot - mu_solar
+        calculate errors on each parameter of mu_pec in l and b
+        
+        calaculate total mu_pec error
+        convert to 1 -sigma V_pec_tan error
+        
+        Also calculate for 3d pec velocity
+        
+        
+        
+        propogate with error in cartesian vleocity
+        Parameters
+        ----------
+        table : with errors and paraemters of HMXB.
+
+        Returns
+        -------
+        table : with v_pec_tan_errors.
+
+        '''
+        #constants
+        a1 = 1.00767
+        a2 = 0.0394
+        a3 = 0.00712
+        #km/s solar values
+        U_sun = 10.8
+        V_sun = 13.6
+        W_sun = 7.6
+        # galactic constants
+        R0 =8.15
+        omega0 =236.0 #km/s
+        #variables
+        dist = table['distance_bj']
+        dist_high = table['distance_bj_high']
+        dist_low = table['distance_bj_low']
+        
+        
+        long = table['l']
+        lat = table['b']
+        long_rad = np.radians(long)
+        lat_rad = np.radians(lat)
+        sigma_l = table['l_err']
+        sigma_b = table['b_err']
+        #symetric sigma_d
+        #have 1 sigma confidence interval for distances, convert to  symmetric error
+        sigma_d= ((dist_high - dist) + (dist - dist_low))/2
+        
+        #errors in omega
+        
+        theta = table['circular velocity']
+        gal_dist = table['galactic distance']
+        omega = theta/gal_dist
+        
+        sigma_theta = (a1*a2(gal_dist/R0)**(a2-1) * (1/R0))
+        
+        dRdd = ((dist- R0*np.cos(long_rad))/gal_dist)**2 
+        dRdl = ((R0*dist*np.sin(lat_rad))/gal_dist)**2
+        
+        sigma_R_squrd = ((dRdd * sigma_d**2 ) + (dRdl + sigma_l**2))
+        sigma_R = np.sqrt(sigma_R_squrd)
+        
+        sigma_omega = omega* np.sqrt((sigma_theta/theta)**2 + (sigma_R/gal_dist)**2)
+        
+        #this is where the fun begins
+        #solar errors 
+        dmu_l_sol_dd = -(U_sun*np.sin(long_rad) - V_sun*np.cos(long_rad)/dist)
+        dmu_l_sol_dl = (U_sun*np.cos(long_rad) + V_sun*np.sin(long_rad))
+        
+        sigma_mu_sol_l = np.sqrt((1/dist**2) *(dmu_l_sol_dd**2 * sigma_d**2) + (dmu_l_sol_dl**2 + sigma_l**2))
+        #sigma_mu_sol_b
+        dmu_b_sol_dd = (U_sun*np.cos(long_rad)*np.sin(lat_rad) + V_sun*np.sin(long_rad)*np.sin(lat_rad) + W_sun*np.cos(lat_rad))/dist
+        
+        dmu_b_sol_db = (U_sun*np.cos(long_rad)*np.cos(lat_rad) + V_sun*np.sin(long_rad)*np.cos(lat_rad) - W_sun*np.sin(lat_rad))
+        
+        dmu_b_sol_dl = (-U_sun*np.sin(long_rad)*np.sin(lat_rad) + V_sun*np.sin(long_rad)*np.sin(lat_rad))
+        
+        sigma_mu_sol_b = np.sqrt((1/dist**2)* ((dmu_b_sol_dd**2 *sigma_d**2) +
+                                               (dmu_b_sol_db**2 * sigma_b**2) +
+                                               (dmu_b_sol_dl**2 * sigma_l**2)))
+        
+        
+        #sigma mu_rot_b
+        dmu_rot_b_dd = +(omega - omega0)*np.sin(lat_rad)*np.sin(long_rad)
+        
+        dmu_rot_b_domega = -np.sin(lat_rad)*np.sin(long_rad)
+        
+        dmu_rot_b_db = (omega - omega0)*np.sin(long_rad)*np.cos(lat_rad)
+        
+        dmu_rot_b_dl = (omega - omega0)*np.sin(lat_rad)*np.cos(long_rad)
+        
+        sigma_mu_rot_b = np.sqrt(((R0/dist)**2)*((dmu_rot_b_dd**2 * sigma_d**2) + 
+                                                 (dmu_rot_b_db**2 * sigma_b**2) + 
+                                                 (dmu_rot_b_dl**2  * sigma_l**2)+
+                                                 (dmu_rot_b_domega**2 * sigma_omega**2)))
+        #sgima mu_rot_l
+        dmu_rot_l_dd = (omega - omega0)*np.cos(long_rad)/dist 
+        
+        dmu_rot_l_dl = -(omega-omega0)*np.sin(long_rad)
+        
+        dmu_rot_l_domega = (np.cos(long_rad) - (dist*np.cos(lat_rad)/R0))
+        
+        dmu_rot_l_db = ((omega - omega0)*np.cos(long_rad)*np.sin(lat_rad))/np.cos(lat_rad)
+        
+        sigma_mu_rot_l = np.sqrt((R0/dist*np.cos(lat_rad))**2 * ((dmu_rot_l_dd**2 *sigma_d**2)  + 
+                                                                 (dmu_rot_l_db**2 *sigma_b**2) +
+                                                                 (dmu_rot_l_dl**2 * sigma_l**2) +
+                                                                 (dmu_rot_l_domega**2 * sigma_omega**2)))
+        
+        
+        #now calaculate mu_pec_errors
+        sigma_mu_obs_l = table['pm_l_err']
+        sigma_mu_obs_b = table['pm_b_err']
+        
+        mu_pec_l = table['peculiar_mu_l']
+        mu_pec_b = table['peculiar_mu_b']
+        
+        mu_pec = np.sqrt(mu_pec_l**2 + mu_pec_b**2)
+        
+        #errors in peculair proper motion
+        sigma_mu_l_pec = np.sqrt(sigma_mu_obs_l**2 + sigma_mu_rot_l**2 + sigma_mu_sol_l**2)
+        sigma_mu_b_pec = np.sqrt(sigma_mu_obs_b**2 + sigma_mu_rot_b**2 + sigma_mu_sol_b**2)
+        
+        sigma_mu_pec = np.sqrt((mu_pec_l/mu_pec)**2 * sigma_mu_l_pec**2 + (mu_pec_b)/mu_pec * sigma_mu_b_pec**2)
+        
+        #sigma_tan_pec 
+        V_pec_tan = table['Peculiar Velocity']
+        sigma_v_pec_tan = V_pec_tan*np.sqrt((sigma_d/dist)**2 + (sigma_mu_pec/mu_pec)**2)
+        table['V_pec_tan_err'] = sigma_v_pec_tan
+        table['V_pec_tan_err'].unit = u.km/u.s
+        
+        #again for radial peculair 
+        #SHOOT ME
+        rv = table['RV']
+        rv_err = table['RV_err']
+        v_pec_3d = table['Peculair Velocity 3D']
+        
+        dv_sol_dl = U_sun*np.sin(long_rad)*np.cos(lat_rad) - V_sun*np.cos(long_rad)*np.cos(lat_rad)
+        
+        dv_sol_db = U_sun*np.cos(long_rad)*np.sin(lat_rad) + V_sun*np.sin(long_rad)*np.sin(lat_rad) -  W_sun*np.cos(lat_rad)
+
+        sigma_dvr_sol = np.sqrt(dv_sol_db**2 + sigma_b**2 + dv_sol_dl**2 *sigma_l**2)
+        
+        #for vr rotational galaxy
+        dv_rot_domega = R0*np.sin(long_rad)*np.cos(lat_rad)
+        
+        dv_rot_dl = R0*(omega - omega0)*np.cos(lat_rad)*np.cos(long_rad)
+        
+        dv_rot_db = -R0*(omega-omega0)*np.sin(long_rad)*np.cos(lat_rad)
+        
+        sigma_dvr_rot = np.sqrt(dv_rot_db**2 *sigma_b**2 + dv_rot_dl**2 *sigma_l**2 + dv_rot_domega**2 *sigma_omega**2)
+        
+        sigma_rv_pec = np.sqrt(rv_err**2 + sigma_dvr_rot**2 + sigma_dvr_sol**2)
+        
+        
+        #total peculair error
+        sigma_vpec_3d = v_pec_3d*np.sqrt((sigma_v_pec_tan/V_pec_tan)**2 + (sigma_rv_pec/rv)**2)
+        
+        table['V_pec_3d_err'] = sigma_vpec_3d
+        table['V_pec_3d_err'].unit = u.km/u.s        
+        
+        return table
+        
+        
+        
     def calc_all_errors(self,table):
         table = self.galactic_coord_errs(self.proper_motion_errors(table))
         return table
@@ -206,4 +371,3 @@ test_table = ascii.read(csv_files+'HMXB_pm_errs-result.ecsv',format='ecsv')
 if __name__ == "__main__":
     test_table = calc_errors().gaia_jacobian(test_table)
     test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
-#test_table['b_err']
