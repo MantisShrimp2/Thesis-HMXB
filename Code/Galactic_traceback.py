@@ -49,13 +49,13 @@ class GalacticTraceback:
         The time is takes to return to the galactic midplane in years
         
         input:
-        self
+        self.table - astopy table to put result back into
         b - galactic longitude degrees
         mu_b- proper motion in b mas/yr
 
         Returns
         -------
-        None.
+        traceback time, into table.
 
         '''
 
@@ -142,14 +142,18 @@ class GalacticTraceback:
         
     def trace_linear_path(self, source_id, cluster_params, int_time, time_step=1000):
         """
-        Trace the path of the star in Galactic coordinates until b = 0, using the Euler method.
+        Trace the linear path of a source in galactic coordinates for {int_time} years.
 
         Parameters:
         - time_step (float): Step size in years for tracing the path.
         - max_steps (int): Maximum number of steps for tracing.
+        - cluster_params (table): l,b,pm_l_cosb, pm_b, distance, rv of cluster
+        -int_time (float): how many Myrs of integration ex if int_time = -3.0,
+        integration will be for -3e6 years
 
         Returns:
-        - path  3 lists, for longitiude, latitiude and height. 
+        - path  3 lists, for longitiude, latitiude and height
+        - ticks: dots to represent every 1 million years of integration. 
         Each path is for one star
         """
 
@@ -226,8 +230,7 @@ class GalacticTraceback:
 
         Parameters
         ----------
-        table : TYPE
-            DESCRIPTION.
+        table : pd dataframe or astropy table.
 
         Returns
         -------
@@ -434,7 +437,6 @@ class GalacticTraceback:
         #plt.legend()
         plt.grid(True)
         
-        mydir = os.path.dirname(os.path.realpath(__file__))
         today = datetime.now().strftime("%Y%m%d")
         if savefig == True:
             plt.savefig(parentdir+'/Figures/'+f"Tracepath_{today}.png")
