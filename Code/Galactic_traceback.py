@@ -735,6 +735,8 @@ class GalacticTraceback:
         #plot the orbit integrated path of the cluster
         if cluster_params is not None:
             cluster_orbit = self.trace_galactic_path(cluster_params,int_time=-3.0)
+            print('cluster velocity check')
+            self.velocity_check(cluster_orbit)
             cluster_x1  = np.array(cluster_orbit.x)
             cluster_y1 = np.array(cluster_orbit.y)
             cluster_z1 = np.array(cluster_orbit.z)
