@@ -323,6 +323,7 @@ class calc_errors:
         
         #sigma_tan_pec 
         V_pec_tan = table['Peculiar Velocity']
+        V_pec_rad = table['Peculiar Radial Velocity']
         sigma_v_pec_tan = V_pec_tan*np.sqrt((sigma_d/dist)**2 + (sigma_mu_pec/mu_pec)**2)
         results['V_pec_tan_err'] = sigma_v_pec_tan
         results['V_pec_tan_err'].unit = u.km/u.s
@@ -336,23 +337,23 @@ class calc_errors:
         
         dv_sol_db = U_sun*np.cos(long_rad)*np.sin(lat_rad) + V_sun*np.sin(long_rad)*np.sin(lat_rad) -  W_sun*np.cos(lat_rad)
 
-        sigma_dvr_sol = np.sqrt(dv_sol_db**2 + sigma_b**2 + dv_sol_dl**2 *sigma_l**2)
+        sigma_dvr_sol = np.sqrt((dv_sol_db**2 * sigma_b**2) + (dv_sol_dl**2 *sigma_l**2))
         
         #for vr rotational galaxy
         dv_rot_domega = R0*np.sin(long_rad)*np.cos(lat_rad)
         
         dv_rot_dl = R0*(omega - omega0)*np.cos(lat_rad)*np.cos(long_rad)
         
-        dv_rot_db = -R0*(omega-omega0)*np.sin(long_rad)*np.cos(lat_rad)
+        dv_rot_db = -R0*(omega-omega0)*np.sin(long_rad)*np.sin(lat_rad)
+    
         
-        sigma_dvr_rot = np.sqrt(dv_rot_db**2 *sigma_b**2 + dv_rot_dl**2 *sigma_l**2 + dv_rot_domega**2 *sigma_omega**2)
+        sigma_dvr_rot = np.sqrt((dv_rot_db**2 *sigma_b**2) + (dv_rot_dl**2 *sigma_l**2) + (dv_rot_domega**2 *sigma_omega**2))
         
         sigma_rv_pec = np.sqrt(rv_err**2 + sigma_dvr_rot**2 + sigma_dvr_sol**2)
         
         
         #total peculair error
-        sigma_vpec_3d = v_pec_3d*np.sqrt((sigma_v_pec_tan/V_pec_tan)**2 + (sigma_rv_pec/rv)**2)
-        
+        sigma_vpec_3d = v_pec_3d*np.sqrt((sigma_v_pec_tan/V_pec_tan)**2 + (sigma_rv_pec/V_pec_rad)**2)
         results['V_pec_3d_err'] = sigma_vpec_3d
         results['V_pec_3d_err'].unit = u.km/u.s        
         
