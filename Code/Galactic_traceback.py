@@ -43,6 +43,13 @@ class GalacticTraceback:
     }   
         self.int_time = int_time
         self.k = 4.74047 #yr/kms convert mas/yr to km/yr
+        self.sun_params = Table()
+        self.sun_params['l'] = [0.0*u.deg]               # Galactic longitude in degrees
+        self.sun_params['b'] = [0.0*u.deg]               # Galactic latitude in degrees
+        self.sun_params['distance_bj'] = [8.15*u.kpc]        # Distance in kpc (typical Galactocentric distance of the Sun)
+        self.sun_params['RV'] = [0.0*u.km/u.s]              # Radial velocity in km/s (assumed zero for the Sun in this frame)
+        self.sun_params['pm_l_poleski'] = [0.0*u.mas/u.yr]    # Proper motion in l (mas/yr)
+        self.sun_params['pm_b_poleski'] = [0.0*u.mas/u.yr]    # Proper motion in b (mas/yr)
     def traceback_time(self):
         '''
         Calculate the traceback time for a star
@@ -691,12 +698,9 @@ class GalacticTraceback:
         
         single_star = self.table
         source_id = single_star['source_id']
-        long_path, lat_path, _, ticks = self.trace_linear_path(source_id,None,int_time=-3.0)
+        long_path, lat_path, _, ticks = self.trace_linear_path(source_id,None,int_time=self.int_time)
         #convert to numpy arrays
         long_path, lat_path, ticks = np.array(long_path), np.array(lat_path),np.array(ticks)
-        
-       # long_vdm_path, lat_vdm_path, _  = self.trace_linear_path_vdm(single_star)
-        
         
         
         #inital positions
@@ -713,15 +717,23 @@ class GalacticTraceback:
         
         #include gala
         
-        orbit  = self.trace_galactic_path(single_star,int_time=-3.0)
+        orbit  = self.trace_galactic_path(single_star,int_time=self.int_time)
         self.velocity_check(orbit)
+        
+        sun_orbit = self.trace_galactic_path(self.sun_params, self.int_time)
         #print(orbit)
         
         x1 = np.array(orbit.x)
         y1 = np.array(orbit.y)
         z1 = np.array(orbit.z)
+        sun_x = np.array(sun_orbit.x)
+        sun_y = np.array(sun_orbit.y)
+        sun_z = np.array(sun_orbit.z)
         
-        coord_rep = coord.SkyCoord(x=x1*u.kpc, y=y1*u.kpc, z=z1*u.kpc, representation_type="cartesian", frame='galactocentric')
+        rel_x1 = x1# - sun_x
+        rel_y1 = y1# - sun_y
+        rel_z1 = z1 #- sun_z
+        coord_rep = coord.SkyCoord(x=rel_x1*u.kpc, y=rel_y1*u.kpc, z=rel_z1*u.kpc, representation_type="cartesian", frame='galactocentric')
         xyz_galactic = coord_rep.transform_to(coord.Galactic())
         
         gala_l_vals = xyz_galactic.l.deg # Galactic longitude in degrees
@@ -734,15 +746,17 @@ class GalacticTraceback:
         
         #plot the orbit integrated path of the cluster
         if cluster_params is not None:
-            cluster_orbit = self.trace_galactic_path(cluster_params,int_time=-3.0)
+            cluster_orbit = self.trace_galactic_path(cluster_params,int_time=self.int_time)
             print('cluster velocity check')
             self.velocity_check(cluster_orbit)
             cluster_x1  = np.array(cluster_orbit.x)
             cluster_y1 = np.array(cluster_orbit.y)
             cluster_z1 = np.array(cluster_orbit.z)
             
-            
-            cluster_galactocentric  = coord.SkyCoord(x=cluster_x1*u.kpc, y=cluster_y1*u.kpc,z=cluster_z1*u.kpc, frame = coord.Galactocentric())
+            cl_rel_x = cluster_x1# - sun_x
+            cl_rel_y = cluster_y1# - sun_y
+            cl_rel_z = cluster_z1# - sun_z
+            cluster_galactocentric  = coord.SkyCoord(x=cl_rel_x*u.kpc, y=cl_rel_y*u.kpc,z=cl_rel_z*u.kpc, frame = coord.Galactocentric())
             
             cluster_galactic = cluster_galactocentric.transform_to(coord.Galactic())
             
@@ -834,19 +848,238 @@ class GalacticTraceback:
             plt.savefig(parentdir+'/Figures/Traceback/'+f"{star_name}_with_{fig_clus_name}_{today}.png")
         plt.show()
         return orbit
+    def plot_in_galactocentric(self, star, cluster, cluster_members=None, savefig=False):
+        """
+        Plot the integrated orbits of the star and cluster in the Galactocentric frame
+        along with their 2D projections (XY, YZ, ZX).
+    
+        Parameters
+        ----------
+        star : astropy Table or dict
+            The star's parameters (including 'l', 'b', 'distance_bj', 'RV', etc.).
+        cluster : astropy Table or dict
+            The cluster's parameters (including 'l', 'b', 'distance_bj', 'RV', etc.).
+        savefig : bool, optional
+            If True, save the figure to disk.
+    
+        Returns
+        -------
+        star_orbit, cluster_orbit : Orbit objects
+            The integrated orbits in the Galactocentric frame.
+        """
+        # Integrate the orbits for the star and the cluster.
+        star_orbit = self.trace_galactic_path(star, int_time=self.int_time)
+        cluster_orbit = self.trace_galactic_path(cluster, int_time=self.int_time)
+    
+
+        ts = star_orbit.t  
+        # Extract Cartesian positions (assumed in kpc) from the orbits.
+        # We assume star_orbit.x, .y, .z are Quantities.
+        star_x = np.array(star_orbit.x.to(u.kpc).value)
+        star_y = np.array(star_orbit.y.to(u.kpc).value)
+        star_z = np.array(star_orbit.z.to(u.kpc).value)
+    
+        cluster_x = np.array(cluster_orbit.x.to(u.kpc).value)
+        cluster_y = np.array(cluster_orbit.y.to(u.kpc).value)
+        cluster_z = np.array(cluster_orbit.z.to(u.kpc).value)
+        
+        #arrow of motion 
+        # Integrate both orbits over a short 0.5 Myr interval for motion vector plotting
+        star_short = self.trace_galactic_path(star, int_time=0.5)
+        cluster_short = self.trace_galactic_path(cluster, int_time=0.5)
+        # Positions in Galactocentric frame, convert to arrays
+        x1s, y1s, z1s = star_short.x[0].to(u.kpc).value, star_short.y[0].to(u.kpc).value, star_short.z[0].to(u.kpc).value
+        x2s, y2s, z2s = star_short.x[-1].to(u.kpc).value, star_short.y[-1].to(u.kpc).value, star_short.z[-1].to(u.kpc).value
+        
+        x1c, y1c, z1c = cluster_short.x[0].to(u.kpc).value, cluster_short.y[0].to(u.kpc).value, cluster_short.z[0].to(u.kpc).value
+        x2c, y2c, z2c = cluster_short.x[-1].to(u.kpc).value, cluster_short.y[-1].to(u.kpc).value, cluster_short.z[-1].to(u.kpc).value
+
+
+        
+        fig = plt.figure(figsize=(16, 12))
+        ax3d = fig.add_subplot(221, projection='3d')
+        ax_xy = fig.add_subplot(222)
+        ax_yz = fig.add_subplot(223)
+        ax_zx = fig.add_subplot(224)
+        #for labeling
+        star_color = star['Mod_SpType'][0]
+        cluster_color = 'xkcd:black'
+        arrow_color= 'xkcd:orange'
+        
+        star_label= f"{star['Name'][0]}"
+        cluster_label = f"{cluster['name'][0]}"
+        plot_time = str(abs(round(ts[-1].value,2)))
+        # Extract l and b from cluster_members and directly apply units
+        
+        if cluster_members is not None:
+            l_mem = cluster_members['l'] 
+            b_mem = cluster_members['b'] 
+            cl_dist = cluster['distance_bj']
+            cl_rv = cluster['RV'] 
+            cl_pml = cluster['pm_l_poleski'] 
+            cl_pmb = cluster['pm_b_poleski'] 
+            
+            distance_mem = np.ones(len(l_mem)) * cl_dist * u.kpc
+            pm_l_mem = np.ones(len(l_mem)) * cl_pml * u.mas/u.yr
+            pm_b_mem = np.ones(len(l_mem)) * cl_pmb * u.mas/u.yr
+            rv_mem = np.ones(len(l_mem)) * cl_rv * u.km/u.s
+    
+            # Create the member_table with properly formatted columns
+            member_table = Table(
+        [l_mem, b_mem, distance_mem, pm_l_mem, pm_b_mem, rv_mem],
+        names=('l', 'b', 'distance_bj', 'pm_l_poleski', 'pm_b_poleski', 'RV')
+    )
+ 
+            
+             # Extract the integrated Cartesian positions (assumed to be stored as Quantities in kpc)
+            member_orbit  = self.trace_galactic_path(member_table, self.int_time)
+            x_mem = member_orbit.x.to(u.kpc)
+            y_mem = member_orbit.y.to(u.kpc)
+            z_mem = member_orbit.z.to(u.kpc)
+            
+            # First and last positions
+            mem_curr_color = 'xkcd:light grey'
+            mem_prev_color = 'xkcd:seafoam'
+            #ax3d.scatter(x_mem[0],y_mem[0],z_mem[0], color=mem_curr_color,alpha=0.1)
+            #ax3d.scatter(x_mem[-1],y_mem[-1],z_mem[-1], color=mem_prev_color,alpha=0.1)
+            ax_yz.scatter(y_mem[0], z_mem[0], color=mem_curr_color, label=f"Current position of {cluster_label} members")
+            ax_yz.scatter(y_mem[-1], z_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago')
+            ax_xy.scatter(x_mem[0], y_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members")
+            ax_xy.scatter(x_mem[-1], y_mem[-1], color=mem_prev_color,label=f'Position of {cluster_label} members {plot_time} Myrs ago')
+ 
+            
+            ax_zx.scatter(z_mem[-1], x_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago')
+            ax_zx.scatter(z_mem[0], x_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members")
+            
+        
+        
+        
+                        
+ 
+    
+        # 3D Plot (Galactocentric)
+        ax3d.plot(star_x, star_y, star_z, c=star_color, label="Path of "+star_label)
+        ax3d.plot(cluster_x, cluster_y, cluster_z, color='black', label="path of "+cluster_label)
+        
+        ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
+        #arrow tip
+        ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
+        ax3d.plot([x1c, x2c], [y1c, y2c], [z1c, z2c], color=arrow_color, linestyle='--')
+        ax3d.plot(x2c,y2c, z2c, color=arrow_color, marker='^')
+
+
+        
+    
+        # Mark the first and last position for the cluster
+        ax3d.scatter(cluster_x[0], cluster_y[0], cluster_z[0], c=cluster_color, marker='o', s=100, label="Cluster Start")
+        ax3d.scatter(cluster_x[-1], cluster_y[-1], cluster_z[-1], c=cluster_color, marker='x', s=100, label="Cluster End")
+        
+        ax3d.scatter(star_x[0], star_y[0], star_z[0], c=star_color, marker='*', s=200, label="Current position of"+star_label)
+        ax3d.scatter(star_x[-1], star_y[-1], star_z[-1], c=star_color, marker='x', s=150, label="Position of"+star_label+f'{plot_time} Myr ago')
+        
+        ax3d.set_xlabel("X (kpc)")
+        ax3d.set_ylabel("Y (kpc)")
+        ax3d.set_zlabel("Z (kpc)")
+        ax3d.set_title("3D Galactocentric Orbit")
+        ax3d.legend(loc = 'lower right')
+    
+        # XY Projection
+      
+        ax_xy.plot(star_x, star_y, color=star_color, label='path of '+star_label)
+        ax_xy.plot(cluster_x, cluster_y, color=cluster_color, label='path of '+cluster_label)
+
+        
+       
+        # Mark the first and last positions for the cluster
+        ax_xy.scatter(star_x[0], star_y[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
+        ax_xy.scatter(star_x[-1], star_y[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
+        ax_xy.scatter(cluster_x[0], cluster_y[0], color=cluster_color, marker='o', s=100)
+        ax_xy.scatter(cluster_x[-1], cluster_y[-1], color=cluster_color, marker='x', s=100)
+        
+        #arrows 
+        ax_xy.plot([x1s, x2s], [y1s, y2s], color=arrow_color, linestyle='--')
+        ax_xy.plot([x1c, x2c], [y1c, y2c], color=arrow_color, linestyle='--')
+
+
+    
+        ax_xy.set_xlabel("X (kpc)")
+        ax_xy.set_ylabel("Y (kpc)")
+        ax_xy.set_title("XY Projection")
+        ax_xy.legend()
+    
+        # YZ Projection
+        
+        ax_yz.plot(star_y, star_z, color=star_color, label='path of '+star_label)
+        ax_yz.plot(cluster_y, cluster_z, color=cluster_color, label='path of '+cluster_label)
+        
+       
+        # Mark the first and last positions for the cluster
+        ax_yz.scatter(star_y[0], star_z[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
+        ax_yz.scatter(star_y[-1], star_z[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
+        ax_yz.scatter(cluster_y[0], cluster_z[0], color=cluster_color, marker='o', s=100)
+        ax_yz.scatter(cluster_y[-1], cluster_z[-1], color=cluster_color, marker='x', s=100)
+    
+        ax_yz.plot([y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
+        ax_yz.plot([y1c, y2c], [z1c, z2c], color=arrow_color, linestyle='--')
+        
+        ax_yz.set_xlabel("X (kpc)")
+        ax_yz.set_ylabel("Y (kpc)")
+        ax_yz.set_title("yz Projection")
+        ax_yz.legend()
+    
+    
+        # ZX Projection (Z vs. X)
+        
+        ax_zx.plot(star_z, star_x, color=star_color, label='path of '+star_label)
+        ax_zx.plot(cluster_z, cluster_x, color=cluster_color, label='path of '+cluster_label)
+        
+       
+        # Mark the first and last positions for the cluster
+        ax_zx.scatter(star_z[0], star_x[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
+        ax_zx.scatter(star_z[-1], star_x[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
+        ax_zx.scatter(cluster_z[0], cluster_x[0], color=cluster_color, marker='o', s=100)
+        ax_zx.scatter(cluster_z[-1], cluster_x[-1], color=cluster_color, marker='x', s=100)
+        #arrows
+        ax_zx.plot([z1s, z2s], [x1s, x2s], color=arrow_color, linestyle='--')
+        ax_zx.plot([z1c, z2c], [x1c, x2c], color=arrow_color, linestyle='--')
+
+    
+        ax_zx.set_xlabel("X (kpc)")
+        ax_zx.set_ylabel("Y (kpc)")
+        ax_zx.set_title("zx Projection")
+        ax_zx.legend()
+    
+        # Show the plot
+        plt.tight_layout()
+
+        if savefig:
+            import os
+            from datetime import datetime
+            mydir = os.path.dirname(os.path.realpath(__file__))
+            parentdir = os.path.dirname(mydir)
+            today = datetime.now().strftime("%Y%m%d")
+            save_path = os.path.join(parentdir, 'Figures', 'Galactocentric', f"orbits_{today}.png")
+            plt.savefig(save_path)
+    
+        plt.show()
+    
+        return None
+
+
 
 test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250301_.ecsv',format='ecsv')
 test_170037 = test_table[test_table['Name']=='4U 1700-377']
-scoob1 = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/SCO OB1-result.ecsv')
+ngc6231_members = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/Ngc6231_members_galacitc.ecsv',format='ecsv')
 ngc6231_params = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/NGC2631_param.ecsv')
 
 
 mydir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(mydir)
 if __name__ == "__main__":
-   GalacticTraceback(test_170037,-3.0).plot_trace(savefig=False, cluster_params=ngc6231_params)
-   GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=ngc6231_params, clustertable=scoob1,savefig=False)
-
-  # x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
+   #GalacticTraceback(test_170037,-3.0).plot_trace(savefig=False, cluster_params=ngc6231_params)
+   #GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=ngc6231_params, clustertable=ngc6231_members,savefig=False)
+   
+   x= GalacticTraceback(test_170037, -3.0).plot_in_galactocentric(test_170037, ngc6231_params,cluster_members=ngc6231_members)
+   #x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
 #  GalacticTraceback(test_170037, -3.0).trace_linear_path_vdm(test_170037)
-#    GalacticTraceback(test_table).plot_trace(savefig=False)
+#    GalacticTraceback(test_table).plot_trace(savefig=False
