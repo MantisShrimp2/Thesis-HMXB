@@ -153,7 +153,7 @@ class galactic_path_MCMC:
         with coord.galactocentric_frame_defaults.set('v4.0'):
             galcen_frame = coord.Galactocentric()
         galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l_total,pm_b=mu_b_total,distance=dist_total,
-                                      radial_velocity =radial_velocity_total, frame='galactic')
+                                      radial_velocity =radial_velocity_total, frame='galacticlsr')
         #transform frame
         star_galacto = galactic_rep.transform_to(galcen_frame)
 
@@ -204,10 +204,11 @@ class galactic_path_MCMC:
     
         seperation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
         min_sep = np.argmin(seperation)
-    
+        
+        min_sep_radius = float(seperation[min_sep].to(u.kpc).value)
         
         #to maximize liklehood
-        return -float(time[min_sep].value), min_sep
+        return -float(time[min_sep].value), min_sep_radius
     def log_normal_prior(self,theta,star_params):
         '''Assume each parameter of the star comes from a normal distriubtion
         Calcualte the prior for each parameter in logspace
@@ -251,7 +252,7 @@ class galactic_path_MCMC:
         if not np.all(np.isfinite(lp)):
             return -np.inf, np.nan, np.nan
         kinematic_age, min_sep = self.log_likelihood(theta, cluster_params, cluster_radius,int_time,star_params['l'], star_params['b'])
-        return lp + kinematic_age, kinematic_age, min_sep
+        return lp + kinematic_age, np.array([kinematic_age, min_sep], dtype=np.float64)
     
     def start_mcmc(self,backend_name,star_params,cluster_params, cluster_radius,int_time,names):
         '''
@@ -280,7 +281,7 @@ class galactic_path_MCMC:
         backend = emcee.backends.HDFBackend(backend_name+'.h5')
         nwalkers = 24
         ndim = len(theta) #6 if l and b change
-        nsample = 1000
+        nsample = 3000
         initial_pos = np.hstack([
         np.random.normal(theta[0:ndim], star_stds[0:ndim], size=(nwalkers, ndim)),  # Sample the remaining 4 parameters
     ])
