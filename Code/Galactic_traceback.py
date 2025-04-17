@@ -948,18 +948,26 @@ class GalacticTraceback:
             star_z = np.array(star_orbit.z.to(u.kpc).value)
             
             x1s, y1s, z1s = star_short.x[0].to(u.kpc).value, star_short.y[0].to(u.kpc).value, star_short.z[0].to(u.kpc).value
+            
             x2s, y2s, z2s = star_short.x[-1].to(u.kpc).value, star_short.y[-1].to(u.kpc).value, star_short.z[-1].to(u.kpc).value
             star_color = star['Mod_SpType'][0]
             star_label= f"{star['Name'][0]}"
             plot_time = str(abs(round(ts[-1].value,2)))
             
+            font_dict = {'fontsize':12,'color':star_color}
             
+            ax3d.plot(star_x, star_y, star_z, c=star_color, label="Path of "+star_label)
+            ax3d.scatter(star_x, star_y, star_z, c=star_color)
+            ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
+            ax3d.scatter(star_x[0], star_y[0], star_z[0], c=star_color, marker='*', s=200, label="Current position of "+star_label)
+            ax3d.scatter(star_x[-1], star_y[-1], star_z[-1], c=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
             
-            
+            #arrow tip
+            ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
             
             ax_xy.plot(star_x, star_y, color=star_color, label='path of '+star_label)
 
-            
+            ax_xy.text(star_x[0],star_y[0],s=star_label, **font_dict)
             ax_xy.scatter(star_x, star_y, color=star_color)
             ax_xy.scatter(star_x[0], star_y[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
             ax_xy.scatter(star_x[-1], star_y[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
@@ -972,6 +980,7 @@ class GalacticTraceback:
             
            
             # Mark the first and last positions for the cluster
+            ax_yz.text(star_y[0],star_z[0],s=star_label, **font_dict)
             ax_yz.scatter(star_y[0], star_z[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
             ax_yz.scatter(star_y[-1], star_z[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
 
@@ -980,13 +989,14 @@ class GalacticTraceback:
             ax_yz.plot([y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
             
             #ZX Projection
-            ax_zx.scatter(star_z[0], star_x[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
-            ax_zx.scatter(star_z[-1], star_x[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
-            ax_zx.scatter(star_z, star_x, color=star_color)
-            ax_zx.plot(star_z, star_x, color=star_color)
+            ax_zx.text(star_x[0],star_z[0],s=star_label, **font_dict)
+            ax_zx.scatter(star_x[0], star_z[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
+            ax_zx.scatter(star_x[-1], star_z[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
+            ax_zx.scatter(star_x, star_z, color=star_color)
+            ax_zx.plot(star_x, star_z, color=star_color)
    
             #arrows
-            ax_zx.plot([z1s, z2s], [x1s, x2s], color=arrow_color, linestyle='--')
+            ax_zx.plot([x1s, x2s], [z1s, z2s], color=arrow_color, linestyle='--')
      
 
             
@@ -994,22 +1004,14 @@ class GalacticTraceback:
 
 
             
-           
-            # Mark the first and last positions for the cluster
-            ax_xy.scatter(star_x[0], star_y[0], color=star_color, marker='*', s=200,label='Current position of '+star_label)
-            ax_xy.scatter(star_x[-1], star_y[-1], color=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
-            
-            x1s, y1s, z1s = star_short.x[0].to(u.kpc).value, star_short.y[0].to(u.kpc).value, star_short.z[0].to(u.kpc).value
-            x2s, y2s, z2s = star_short.x[-1].to(u.kpc).value, star_short.y[-1].to(u.kpc).value, star_short.z[-1].to(u.kpc).value
-            
-            ax_xy.scatter(star_x, star_y, color=star_color)
+ 
             
             
-            ax3d.plot(star_x, star_y, star_z, c=star_color, label="Path of "+star_label)
-            ax3d.scatter(star_x, star_y, star_z, c=star_color)
-            ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
-            #arrow tip
-            ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
+            # ax3d.plot(star_x, star_y, star_z, c=star_color, label="Path of "+star_label)
+            # ax3d.scatter(star_x, star_y, star_z, c=star_color)
+            # ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
+            # #arrow tip
+            # ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
             
         #self.velocity_check(star_orbit)
         cluster_orbit = self.trace_galactic_path(cluster, int_time=self.int_time)
@@ -1078,8 +1080,8 @@ class GalacticTraceback:
             ax_xy.scatter(x_mem[-1], y_mem[-1], color=mem_prev_color,label=f'Position of {cluster_label} members {plot_time} Myrs ago',alpha=mem_alpha)
  
             
-            ax_zx.scatter(z_mem[-1], x_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago')
-            ax_zx.scatter(z_mem[0], x_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members",alpha=mem_alpha)
+            ax_zx.scatter(x_mem[-1], z_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago')
+            ax_zx.scatter(x_mem[0], z_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members",alpha=mem_alpha)
             
         
         
@@ -1103,8 +1105,8 @@ class GalacticTraceback:
         ax3d.scatter(cluster_x[0], cluster_y[0], cluster_z[0], c=cluster_color, marker='o', s=100, label=f"Current Position of {cluster_label}")
         ax3d.scatter(cluster_x[-1], cluster_y[-1], cluster_z[-1], c=cluster_color, marker='x', s=100, label=f"Position of {cluster_label} {plot_time} Myr ago")
         
-        ax3d.scatter(star_x[0], star_y[0], star_z[0], c=star_color, marker='*', s=200, label="Current position of "+star_label)
-        ax3d.scatter(star_x[-1], star_y[-1], star_z[-1], c=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
+        # ax3d.scatter(star_x[0], star_y[0], star_z[0], c=star_color, marker='*', s=200, label="Current position of "+star_label)
+        # ax3d.scatter(star_x[-1], star_y[-1], star_z[-1], c=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
         
         ax3d.set_xlabel("X (kpc)")
         ax3d.set_ylabel("Y (kpc)")
@@ -1120,8 +1122,8 @@ class GalacticTraceback:
         ax_xy.scatter(cluster_x, cluster_y, color=cluster_color)
 
         
-       
-
+        cluster_font_dict= {'fontsize':12,'color':cluster_color}
+        ax_xy.text(cluster_x[0],cluster_y[0],s=cluster_label, **cluster_font_dict)
         ax_xy.scatter(cluster_x[0], cluster_y[0], color=cluster_color, marker='o', s=100)
         ax_xy.scatter(cluster_x[-1], cluster_y[-1], color=cluster_color, marker='x', s=100)
         
@@ -1140,7 +1142,7 @@ class GalacticTraceback:
         
         # ax_yz.plot(star_y, star_z, color=star_color, label='path of '+star_label)
         ax_yz.plot(cluster_y, cluster_z, color=cluster_color, label='path of '+cluster_label)
-        
+        ax_yz.text(cluster_y[0],cluster_z[0],s=cluster_label, **cluster_font_dict)
        
    
         ax_yz.scatter(cluster_y[0], cluster_z[0], color=cluster_color, marker='o', s=100)
@@ -1160,23 +1162,23 @@ class GalacticTraceback:
     
         # ZX Projection (Z vs. X)
         
-        ax_zx.plot(star_z, star_x, color=star_color, label='path of '+star_label)
-        ax_zx.plot(cluster_z, cluster_x, color=cluster_color, label='path of '+cluster_label)
+        ax_zx.plot(cluster_x, cluster_z, color=cluster_color, label='path of '+cluster_label)
+        ax_zx.text(cluster_x[0],cluster_z[0],s=cluster_label, **cluster_font_dict)
         
-        ax_zx.scatter(star_z, star_x, color=star_color)
-        ax_zx.scatter(cluster_z, cluster_x, color=cluster_color)
+
+        ax_zx.scatter(cluster_x, cluster_z, color=cluster_color)
         
        
 
-        ax_zx.scatter(cluster_z[0], cluster_x[0], color=cluster_color, marker='o', s=100)
-        ax_zx.scatter(cluster_z[-1], cluster_x[-1], color=cluster_color, marker='x', s=100)
+        ax_zx.scatter(cluster_x[0], cluster_z[0], color=cluster_color, marker='o', s=100)
+        ax_zx.scatter(cluster_x[-1], cluster_z[-1], color=cluster_color, marker='x', s=100)
         #arrows
 
-        ax_zx.plot([z1c, z2c], [x1c, x2c], color=arrow_color, linestyle='--')
+        ax_zx.plot([x1c, x2c], [z1c, z2c], color=arrow_color, linestyle='--')
 
     
-        ax_zx.set_xlabel("Z (kpc)")
-        ax_zx.set_ylabel("X (kpc)")
+        ax_zx.set_xlabel("x (kpc)")
+        ax_zx.set_ylabel("z (kpc)")
         ax_zx.set_title("zx Projection")
         ax_zx.legend()
     
@@ -1194,7 +1196,103 @@ class GalacticTraceback:
     
         plt.show()
     
-        return None
+        fig_cyl = plt.figure(figsize=(18, 5))
+
+        # Subplots for each pair of cylindrical axes
+        ax_rz = fig_cyl.add_subplot(131)
+        # ax_rphi = fig_cyl.add_subplot(132)
+        # ax_phiz = fig_cyl.add_subplot(133)
+        
+        for star in stars:
+            star_temp = Table(star)
+            
+            star_orbit = self.trace_galactic_path(star_temp, int_time=self.int_time)
+            star_label= f"{star_temp['Name'][0]}"
+            # Cylindrical representation
+            cyl_orbit = star_orbit.represent_as('cylindrical')
+            
+            rho = cyl_orbit.rho.to(u.kpc).value
+            phi = cyl_orbit.phi.to(u.rad).value
+            z = cyl_orbit.z.to(u.kpc).value
+        
+            color = star.get('Mod_SpType', 'black')
+        
+            # Plot (ρ, z)
+            ax_rz.text(rho[0],z[0],s=star_label,color=color)
+            ax_rz.plot(rho, z, color=color)
+            ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
+        
+            #Plot (ρ, φ)
+            # ax_rphi.plot(rho, phi, color=color)
+            # ax_rphi.text(rho[0],phi[0],s=star_label,color=color)
+            # ax_rphi.scatter(rho[0], phi[0], color=color, s=20, alpha=0.7)
+            
+            # Plot (φ, z)
+            # ax_phiz.plot(phi, z, color=color)
+            # ax_phiz.text(phi[0],z[0],s=star_label,color=color)
+            # ax_phiz.scatter(phi[0], z[0], color=color, s=20, alpha=0.7)
+        
+        
+        for clust in cluster:
+            clust_temp = Table(clust)
+            clust_orbit = self.trace_galactic_path(clust_temp, int_time=self.int_time)
+            cluster_label= f"{clust_temp['Name'][0]}"
+            # cylindrical representation
+            cyl_orbit = clust_orbit.represent_as('cylindrical')
+        
+            rho = cyl_orbit.rho.to(u.kpc).value
+            phi = cyl_orbit.phi.to(u.rad).value
+            z = cyl_orbit.z.to(u.kpc).value
+        
+            color = cluster_color
+        
+            # Plot (ρ, z)
+            ax_rz.text(rho[0],z[0],s=cluster_label,color=color)
+            ax_rz.plot(rho, z, color=color)
+            ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
+        
+            #Plot (ρ, φ)
+            # ax_rphi.plot(rho, phi, color=color)
+            # ax_rphi.text(rho[0],phi[0],s=cluster_label,color=color)
+            # ax_rphi.scatter(rho[0], phi[0], color=color, s=20, alpha=0.7)
+        
+            # Plot (φ, z)
+            # ax_phiz.plot(phi, z, color=color)
+            # ax_phiz.text(rho[0],phi[0],s=cluster_label,color=color)
+            # ax_phiz.scatter(phi[0], z[0], color=color, s=20, alpha=0.7)
+        
+        # Sun's position in cylindrical coords
+        sun_x = -8.15
+        sun_y = 0.0
+        sun_z = 0.0208
+        sun_rho = np.sqrt(sun_x**2 + sun_y**2)
+        sun_phi = np.arctan2(sun_y, sun_x)
+        
+        #ax_rz.scatter(sun_rho, sun_z, color='yellow', s=100, marker='*', label='Sun')
+        #ax_rphi.scatter(sun_rho, sun_phi, color='yellow', s=100, marker='*')
+        # Label and titles
+        ax_rz.set_xlabel(r"$R_{gal}$ (kpc)")
+        ax_rz.set_ylabel("Z (kpc)")
+        ax_rz.set_title(r"$R_{gal}$ vs Z")
+        # ax_rz.legend()
+        
+        # ax_rphi.set_xlabel(r"$R_{gal}$ (kpc)")
+        # ax_rphi.set_ylabel("φ (rad)")
+        # ax_rphi.set_title(r"$R_{gal}$ vs φ")
+        # ax_rphi.invert_xaxis()
+        ax_rz.invert_xaxis()
+        # ax_phiz.set_xlabel("φ (rad)")
+        # ax_phiz.set_ylabel("Z (kpc)")
+        # ax_phiz.set_title("φ vs Z")
+        plt.tight_layout()
+        if savefig:
+            mydir = os.path.dirname(os.path.realpath(__file__))
+            parentdir = os.path.dirname(mydir)
+            today = datetime.now().strftime("%Y%m%d")
+            save_path = os.path.join(parentdir, 'Figures', 'Traceback/Galactocentric', f"Galactocentric_cylindrical_{figname}_{today}.png")
+            plt.savefig(save_path)
+        plt.show()
+        
     def plot_multiple_stars_in_galactocentric(self, stars_table):
         """
         Plot 3D Galactocentric orbits and XY projection for multiple stars from an Astropy Table.
@@ -1254,9 +1352,48 @@ class GalacticTraceback:
         plt.tight_layout()
         plt.grid(True)
         plt.show()
+        
+        fig_cyl = plt.figure(figsize=(8, 6))
+        ax_rz = fig_cyl.add_subplot(111)
+        
+        for star in stars_table:
+            # Restore units to the star data
+            star_temp = Table(star)
+            star_orbit = self.trace_galactic_path(star_temp, int_time=self.int_time)
+        
+            # Convert orbit to cylindrical representation
+            cyl_orbit = star_orbit.represent_as('cylindrical')
+        
+            # Extract cylindrical components
+            rho = cyl_orbit.rho.to(u.kpc).value
+            z = cyl_orbit.z.to(u.kpc).value
+        
+            # Determine color based on spectral type or default to black
+            color = star.get('Mod_SpType', 'black')
+        
+            # 2D plot in cylindrical coordinates (ρ vs. z)
+            ax_rz.plot(rho, z, color=color)
+            ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
+        
+        # Mark the Sun's position in the plot
+        sun_x = -8.15  # kpc
+        sun_y = 0.0
+        sun_z = 0.0208  # kpc
+        sun_rho = np.sqrt(sun_x**2 + sun_y**2)
+        
+        ax_rz.scatter(sun_rho, sun_z, color='yellow', s=100, marker='o', label='Sun')
+        
+        # Set labels and title
+        ax_rz.set_xlabel("ρ (kpc)")
+        ax_rz.set_ylabel("Z (kpc)")
+        ax_rz.set_title("Meridional Plane (ρ vs. Z)")
+        ax_rz.legend()
+        
+        plt.tight_layout()
+        plt.grid(True)
+        plt.show()
+
         return None
-
-
 
 
 test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250301_.ecsv',format='ecsv')
