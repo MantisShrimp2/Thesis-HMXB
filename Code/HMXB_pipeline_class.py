@@ -30,7 +30,7 @@ class pipeline:
      self.R0= 8.15 # solar galactic distance to center
      self.sun_curve = 236 #km/s galactic velocity of the sun
      self.ra_np = np.radians(192.25) # deg to radians right acsension of north pole
-     self.dec_np = np.radians(27.4) # deg to radians decliatoin of north pole
+     self.dec_np = np.radians(27.13) # deg to radians decliatoin of north pole
      self.theta_o = np.radians(123) # deg to radiansradians
      self.k  = 4.74 #km/s per mas/yr 
      #solar values
@@ -93,7 +93,7 @@ class pipeline:
         a1 = 1.00767
         a2 = 0.0394
         a3 = 0.00712
-        # fit from Brand 1988
+        # fit from Brand 1993
         gal_dist = table['galactic distance']
         theta  = a1*((gal_dist/self.R0)**a2) + a3
         theta = self.sun_curve*theta #km/s
@@ -147,8 +147,10 @@ class pipeline:
         pmra = table['pmra']
         pmdec = table['pmdec']
 
-        C1 = np.sin(self.dec_np)*np.cos(dec_rad) - np.cos(self.dec_np)*np.sin(dec_rad)*np.cos(ra_rad - self.ra_np)
+        C1 = (np.sin(self.dec_np)*np.cos(dec_rad)) - (np.cos(self.dec_np)*np.sin(dec_rad)*np.cos(ra_rad - self.ra_np))
+        
         C2 = np.cos(self.dec_np)*np.sin(ra_rad - self.ra_np)
+        
         cosb = np.sqrt(C1**2 + C2**2)
         #C_mtrx = 1/(cosb)*np.array([C1, C2],[-C2, C1])
         
