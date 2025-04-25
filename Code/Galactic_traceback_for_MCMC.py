@@ -44,6 +44,7 @@ class galactic_path_MCMC:
         # star_rv  = np.array(star_params["RV"])[0]
         
         star_d   = np.array(star_params['distance_bj'])[0]
+        # star_d   = (1/star_params['parallax'])
         star_pmra = np.array(star_params['pmra'])[0]
         star_pmdec = np.array(star_params['pmdec'])[0]
         star_rv  = np.array(star_params["RV"])[0]
@@ -61,8 +62,10 @@ class galactic_path_MCMC:
         star_stds : list.
 
         '''
-        dist_up = np.array(star_params['distance_bj_high'])[0] - np.array(star_params['distance_bj'])[0]
-        dist_down = np.array(star_params['distance_bj'][0] - np.array(star_params['distance_bj_low'][0]))
+        # dist = (1/star_params['parallax']).value *u.kpc
+        dist = np.array(star_params['distance_bj'])[0]
+        dist_up = np.array(star_params['distance_bj_high'])[0] - dist
+        dist_down = dist - np.array(star_params['distance_bj_low'][0])
         dist_err = (dist_up + dist_down)/2.0
         #std_l   = np.array(star_params['l_err'])[0]
         #std_b   = np.array(star_params['b_err'])[0]
@@ -228,6 +231,7 @@ class galactic_path_MCMC:
     
     
         separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
+        
         min_sep = np.argmin(separation)
         
         min_sep_radius = float(separation[min_sep].to(u.kpc).value)
@@ -329,6 +333,80 @@ class galactic_path_MCMC:
 
         return sampler, state
        
+        
+    def compute_full_separations_and_plot(self,flat_chain, cluster_params, int_time, star_ra, star_dec,cluster_radius, n_samples=100):
+        '''
+        
+
+        Parameters
+        ----------
+       flat_chain : ndarray
+        MCMC samples, shape (n_samples_total, 4) [distance, pmra, pmdec, rv].
+    cluster_params : astropy Table
+        Cluster parameters for orbit integration.
+    int_time : float
+        Integration time (Myr).
+    star_ra, star_dec : float
+        Fixed ra and dec of the star (deg).
+    n_samples : int, optional
+        Number of random MCMC samples to use for separation computation.
+    cluster_radius : float or None, optional
+        Radius of the cluster in parsecs to plot on the graph.
+        -------
+        None.
+
+        '''
+        total_samples = len(flat_chain)
+        n_samples = min(n_samples, total_samples)
+        
+        indices = np.random.choice(total_samples, size=n_samples, replace=False)
+        chosen_samples = flat_chain[indices]
+        
+        separation_curves = []
+        for theta in chosen_samples:
+            star_d, pmra, pmdec, rv = theta
+            star_table = Table([[star_d]*u.kpc, star_ra, star_dec,
+                                [pmra]*u.mas/u.yr, [pmdec]*u.mas/u.yr,
+                                [rv]*u.km/u.s],
+                               names=["distance_bj", "ra", "dec", "pmra", "pmdec", "RV"])
+        
+            star_orbit = self.trace_galactic_path(star_table, int_time)
+            cluster_orbit = self.trace_galactic_path(cluster_params, int_time)
+        
+            time_array = star_orbit.t.to_value(u.Myr)
+            separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0).to_value(u.pc)
+        
+            separation_curves.append(separation)
+        
+        separation_curves = np.array(separation_curves)
+        
+        # Compute percentiles for confidence interval
+        p16 = np.percentile(separation_curves, 16, axis=0)
+        p50 = np.percentile(separation_curves, 50, axis=0)
+        p84 = np.percentile(separation_curves, 84, axis=0)
+        
+        # Plot all individual samples (faint)
+        plt.figure(figsize=(10,6))
+        for sep in separation_curves:
+            plt.plot(time_array, sep, color='gray', alpha=0.1)
+        
+        # Plot median and confidence interval
+        plt.plot(time_array, p50, color='xkcd:navy', lw=2, label='Median separation')
+        plt.fill_between(time_array, p16, p84, color='xkcd:emerald', alpha=0.3, label='68% confidence interval')
+        
+        # Cluster radius reference line
+        if cluster_radius is not None:
+            plt.axhline(cluster_radius, color='red', ls='--', label=f'Cluster radius = {cluster_radius:.2f} pc')
+        
+        plt.xlabel('Time (Myr)')
+        plt.ylabel('Separation (pc)')
+        plt.title('Separation of Star and Cluster Over Time')
+        plt.grid(alpha=0.3, linestyle='--')
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+        return None
+
            
               
            
