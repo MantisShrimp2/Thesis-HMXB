@@ -38,13 +38,19 @@ class galactic_path_MCMC:
         '''
         #star_l   = np.array(star_params['l'])[0]
         #star_b   = np.array(star_params['b'])[0]
+        # star_d   = np.array(star_params['distance_bj'])[0]
+        # star_pml = np.array(star_params['pm_l_poleski'])[0]
+        # star_pmb = np.array(star_params['pm_b_poleski'])[0]
+        # star_rv  = np.array(star_params["RV"])[0]
+        
         star_d   = np.array(star_params['distance_bj'])[0]
-        star_pml = np.array(star_params['pm_l_poleski'])[0]
-        star_pmb = np.array(star_params['pm_b_poleski'])[0]
+        star_pmra = np.array(star_params['pmra'])[0]
+        star_pmdec = np.array(star_params['pmdec'])[0]
         star_rv  = np.array(star_params["RV"])[0]
 
         #theta = [star_l, star_b, star_d, star_pml, star_pmb, star_rv]
-        theta = [star_d, star_pml, star_pmb, star_rv]
+       # theta = [star_d, star_pml, star_pmb, star_rv]
+        theta = [star_d, star_pmra, star_pmdec, star_rv]
         return theta
     def make_star_stds(self, star_params):
         '''
@@ -60,13 +66,20 @@ class galactic_path_MCMC:
         dist_err = (dist_up + dist_down)/2.0
         #std_l   = np.array(star_params['l_err'])[0]
         #std_b   = np.array(star_params['b_err'])[0]
+        # std_d   = dist_err
+        # std_pml = np.array(star_params['pm_l_err'])[0]
+        # std_pmb = np.array(star_params['pm_b_err'])[0]
+        # std_rv  = np.array(star_params['RV_err'])[0]
+        
+        
         std_d   = dist_err
-        std_pml = np.array(star_params['pm_l_err'])[0]
-        std_pmb = np.array(star_params['pm_b_err'])[0]
+        std_pmra = np.array(star_params['pmra_error'])[0]
+        std_pmdec = np.array(star_params['pmdec_error'])[0]
         std_rv  = np.array(star_params['RV_err'])[0]
     
        # star_stds = [std_l, std_b, std_d, std_pml, std_pmb, std_rv]
-        star_stds  = [std_d, std_pml, std_pmb, std_rv]
+        # star_stds  = [std_d, std_pml, std_pmb, std_rv]
+        star_stds  = [std_d, std_pmra, std_pmdec, std_rv]
         return star_stds
     def calc_cluster_radius(self,cluster_distance,angular_diameter):
         '''
@@ -134,26 +147,35 @@ class galactic_path_MCMC:
  
  
         row = source_info #self.table[self.table['source_id'] == source_id
-        l = row['l']
-        b = row['b'] 
-        mu_l = row['pm_l_poleski']
-        mu_b = row['pm_b_poleski']
-        dist = row['distance_bj'] #kpc
-        radial_velocity = row['RV'] 
+        # l = row['l']
+        # b = row['b'] 
+        # mu_l = row['pm_l_poleski']
+        # mu_b = row['pm_b_poleski']
+        # dist = row['distance_bj'] #kpc
+        # radial_velocity = row['RV'] 
 
+        ra = row['ra']
+        dec = row['dec']
+        pmra = row['pmra']
+        pmdec = row['pmdec']
+        radial_velocity = row['RV'] 
+        distance_icrs = row['distance_bj'] #(1/row['parallax']).value *u.kpc
        # k = 4.74 * (u.km/u.s)/(u.mas *u.kpc/u.yr) #km/s per mas/yr 
         #print(radial_velocity)
         #transform to galactic frame
         #from carreto-castrillo 2023
-        mu_l_total  = mu_l 
-        mu_b_total = mu_b 
-        dist_total  = dist 
-        radial_velocity_total = radial_velocity
+        # mu_l_total  = mu_l 
+        # mu_b_total = mu_b 
+        # dist_total  = dist 
+        # radial_velocity_total = radial_velocity
             
         with coord.galactocentric_frame_defaults.set('v4.0'):
             galcen_frame = coord.Galactocentric()
-        galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l_total,pm_b=mu_b_total,distance=dist_total,
-                                      radial_velocity =radial_velocity_total, frame='galacticlsr')
+        # galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l_total,pm_b=mu_b_total,distance=dist_total,
+        #                               radial_velocity =radial_velocity_total, frame='galactic')
+        galactic_rep = coord.SkyCoord(ra=ra, dec=dec, distance=distance_icrs,
+              pm_ra_cosdec=pmra, pm_dec=pmdec,
+              radial_velocity=radial_velocity)
         #transform frame
         star_galacto = galactic_rep.transform_to(galcen_frame)
 
@@ -169,14 +191,13 @@ class galactic_path_MCMC:
         orbit_integrator = gi.LeapfrogIntegrator
         potential = gp.MilkyWayPotential2022()  
         orbit_params = {"dt": dt, "n_steps": n_steps, "Integrator": orbit_integrator}
-        #orbit = potential.integrate_orbit(initial_pos, dt=dt, t1=0, t2=total_time)
         orbit = potential.integrate_orbit(initial_pos, **orbit_params)
 
 
         return orbit 
-    def log_likelihood(self,theta, cluster_params, cluster_radius,int_time,star_l,star_b):
+    def log_likelihood(self,theta, cluster_params, cluster_radius,int_time,star_ra,star_dec):
         '''theta  =['l','b','dist','pml','pmb','rv']
-        log likelihood is the time seperation of the star and cluster after orbit integration
+        log likelihood is the time separation of the star and cluster after orbit integration
         
         calculate the orbit of the star and cluster in galactocentric
         Very stupid, MCMC shouldn't accept theta with units so i have to remove the units and then put them back into the orbit integration
@@ -188,11 +209,15 @@ class galactic_path_MCMC:
         '''
         
         #star_d = theta[0]
-        star_d, star_pml, star_pmb, star_rv = theta[0:4]
+        star_d, star_pmra, star_pmdec, star_rv = theta[0:4]
     
         
-        star_table = Table([[star_d]*u.kpc, star_l, star_b, [star_pml]*u.mas/u.yr, [star_pmb]*u.mas/u.yr, [star_rv]*u.km/u.s],
-                    names=["distance_bj", "l", "b", "pm_l_poleski", "pm_b_poleski", "RV"])
+        # star_table = Table([[star_d]*u.kpc, star_l, star_b, [star_pml]*u.mas/u.yr, [star_pmb]*u.mas/u.yr, [star_rv]*u.km/u.s],
+        #             names=["distance_bj", "l", "b", "pm_l_poleski", "pm_b_poleski", "RV"])
+        
+        star_table = Table([[star_d]*u.kpc, star_ra, star_dec, [star_pmra]*u.mas/u.yr, [star_pmdec]*u.mas/u.yr, [star_rv]*u.km/u.s],
+                    names=["distance_bj", "ra", "dec", "pmra", "pmdec", "RV"])
+    
     
 
     
@@ -202,10 +227,10 @@ class galactic_path_MCMC:
         time = star_orbit.t
     
     
-        seperation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
-        min_sep = np.argmin(seperation)
+        separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
+        min_sep = np.argmin(separation)
         
-        min_sep_radius = float(seperation[min_sep].to(u.kpc).value)
+        min_sep_radius = float(separation[min_sep].to(u.kpc).value)
         
         #to maximize liklehood
         return -float(time[min_sep].value), min_sep_radius
@@ -215,24 +240,25 @@ class galactic_path_MCMC:
         
         cannot do self.star_params or self. theta because log probability needs those are arguements'''
         #these are sampled from walker
-        #star_l, star_b, star_d = theta[:3]
-        star_d,star_pml, star_pmb, star_rv = theta[0:4]
+        # star_d,star_pml, star_pmb, star_rv = theta[0:4]
+        star_d,star_pmra, star_pmdec, star_rv = theta[0:4]
     
         #true value of stars
         #true_l, true_b,star_params['l'], star_params['b'],
         true_d= star_params['distance_bj']
-        true_pml, true_pmb, true_rv = star_params['pm_l_poleski'], star_params['pm_b_poleski'], star_params["RV"]
+        true_pmra, true_pmdec, true_rv = star_params['pmra'], star_params['pmdec'], star_params["RV"]
     
         #true standard deviations 
-        #star_stds = [std_l, std_b, std_d, std_pml, std_pmb, std_rv]
+        
         star_stds = self.make_star_stds(star_params) 
-        #std_l, std_b, std_d = star_stds[0], star_stds[1], star_stds[2] 
-        std_d, std_pml,std_pmb,std_rv = star_stds[0:4]
-        # std_pml, std_pmb, std_rv = star_stds[3], star_stds[4], star_stds[5]
+    
+        #std_d, std_pml,std_pmb,std_rv = star_stds[0:4]
+        std_d, std_pmra,std_pmdec,std_rv = star_stds[0:4]
+        
     
         #if star_b > 90.0 or star_b < -90:
          #   return -np.inf
-        if star_d < 0.0 or np.sqrt(star_pml**2 + star_pmb**2) >self.speed_of_light: 
+        if star_d < 0.0 or np.sqrt(star_pmra**2 + star_pmdec**2) >self.speed_of_light: 
             return -np.inf
 
         #log_l = self.make_log_gauss(star_l,true_l,std_l).value
@@ -240,18 +266,24 @@ class galactic_path_MCMC:
         #print(log_l, log_b)
         log_d = self.make_log_gauss(star_d, true_d, std_d).value
         
-        log_pml = self.make_log_gauss(star_pml,true_pml, std_pml).value
-        log_pmb = self.make_log_gauss(star_pmb, true_pmb, std_pmb).value
+        # log_pml = self.make_log_gauss(star_pml,true_pml, std_pml).value
+        # log_pmb = self.make_log_gauss(star_pmb, true_pmb, std_pmb).value
+        # log_rv = self.make_log_gauss(star_rv, true_rv, std_rv).value
+        
+        log_pmra = self.make_log_gauss(star_pmra,true_pmra, std_pmra).value
+        log_pmdec = self.make_log_gauss(star_pmdec, true_pmdec, std_pmdec).value
         log_rv = self.make_log_gauss(star_rv, true_rv, std_rv).value
-        #log_l + log_b + log_d + log_pml + log_pmb + log_rv
-        return log_d + log_pml + log_pmb + log_rv
+        #log_d + log_pml + log_pmb + log_rv
+        return log_d + log_pmra + log_pmdec + log_rv
     
     def log_probability(self,theta,star_params, cluster_params,cluster_radius,int_time):
         '''Calculate the posterior and the result of the log likliehood'''
         lp = self.log_normal_prior(theta,star_params)
         if not np.all(np.isfinite(lp)):
             return -np.inf, np.nan, np.nan
-        kinematic_age, min_sep = self.log_likelihood(theta, cluster_params, cluster_radius,int_time,star_params['l'], star_params['b'])
+        # kinematic_age, min_sep = self.log_likelihood(theta, cluster_params, cluster_radius,int_time,star_params['l'], star_params['b'])
+        
+        kinematic_age, min_sep = self.log_likelihood(theta, cluster_params, cluster_radius,int_time,star_params['ra'], star_params['dec'])
         return lp + kinematic_age, np.array([kinematic_age, min_sep], dtype=np.float64)
     
     def start_mcmc(self,backend_name,star_params,cluster_params, cluster_radius,int_time,names):
@@ -281,7 +313,7 @@ class galactic_path_MCMC:
         backend = emcee.backends.HDFBackend(backend_name+'.h5')
         nwalkers = 24
         ndim = len(theta) #6 if l and b change
-        nsample = 3000
+        nsample = 1000
         initial_pos = np.hstack([
         np.random.normal(theta[0:ndim], star_stds[0:ndim], size=(nwalkers, ndim)),  # Sample the remaining 4 parameters
     ])
