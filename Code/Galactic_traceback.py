@@ -442,6 +442,15 @@ class GalacticTraceback:
     def plot_separation(self,star,cluster,savefig=False):
         star_orbit = self.trace_galactic_path(star, self.int_time)
         cluster_orbit = self.trace_galactic_path(cluster, self.int_time)
+        
+        star_vel_x, star_vel_y, star_vel_z = self.velocity_check(star_orbit,False)
+        cluster_vel_x, cluster_vel_y, cluster_vel_z = self.velocity_check(cluster_orbit,False)
+        
+        rel_velocity = np.sqrt((star_vel_x - cluster_vel_x)**2 + (star_vel_y - cluster_vel_y)**2 + (star_vel_z - cluster_vel_z)**2)
+        
+        std_rel_vel = np.std(rel_velocity,ddof=0)
+        print(f'relative velocity {np.mean(rel_velocity)}, std {std_rel_vel}')
+        
         separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
         
         separation = np.array(separation)
@@ -653,7 +662,7 @@ class GalacticTraceback:
 
         return rel_x,rel_y,rel_z, time_min_sep #star_x_shifted ,star_y_shifted, star_z_shifted
 
-    def velocity_check(self, orbit):
+    def velocity_check(self, orbit,values=False):
         # Extract Galactocentric Cartesian velocity components
         vx1 = np.array(orbit.v_x.to_value()) #kpc/myr
         vy1 = np.array(orbit.v_y.to_value())  #kpc/myr
@@ -685,18 +694,19 @@ class GalacticTraceback:
         pml = galactic_vel.pm_l_cosb
         pmb = galactic_vel.pm_b
         vrad = galactic_vel.radial_velocity
-        print(pml, pmb)
-        # Compute proper motions in mas/yr
-
-        # Print results
-        print('means')
-        print(f"Vx: {np.mean(vx1)}")
-        print(f"Vy: {np.mean(vy1)}")
-        print(f"Vz: {np.mean(vz1)}")
-        print(f"pm_l: {np.mean(pml)}")
-        print(f"pm_b: {np.mean(pmb)}")
-        print(f"Vrad: {np.mean(vrad)}")
-
+        if values:
+            print(pml, pmb)
+            # Compute proper motions in mas/yr
+    
+            # Print results
+            print('means')
+            print(f"Vx: {np.mean(vx1)}")
+            print(f"Vy: {np.mean(vy1)}")
+            print(f"Vz: {np.mean(vz1)}")
+            print(f"pm_l: {np.mean(pml)}")
+            print(f"pm_b: {np.mean(pmb)}")
+            print(f"Vrad: {np.mean(vrad)}")
+        return vx1, vy1 , vz1
     def plot_with_cluster(self,clustername, cluster_params=None, clustertable=None, savefig=False):
         '''
         plot the integreated motion of a star wrt to a host cluster
