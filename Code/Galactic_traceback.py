@@ -223,106 +223,7 @@ class GalacticTraceback:
             # if current_b * lat_path[0] < 0:
             #     break
         return long_path, lat_path, z_path, ticks
-    def trace_linear_path_vdm(self,table,time_step=1000):
-        '''
-        from van der meji 2021
-        convert  position to cartisian coordinates
-        
-        integrate with distance d = vr*dt 
-        
-        convert back to galactic longitude and galactic latitude
-        
-        
-        
 
-        Parameters
-        ----------
-        table : pd dataframe or astropy table.
-
-        Returns
-        -------
-        None.
-
-        '''
-        ra = np.radians(table['ra'])[0]
-        dec = np.radians(table['dec'])[0]
-        prlx = table['parallax'][0]
-        pmra= table['pmra'][0]
-        pmdec = table['pmdec'][0]
-        dist = table['distance_bj'][0]
-        RV = table['RV'][0]
-        
-        long = np.radians(table['l'][0])
-        lat = np.radians(table['b'][0])
-
-        
-        #inital conditions 
-        xo = dist*np.cos(lat)*np.cos(long)
-        yo = dist*np.cos(lat)*np.sin(long)
-        zo  = dist* np.sin(lat)
-
-        p_hat =np.array([-np.sin(ra), np.cos(ra), 0.0])
-        q_hat = np.array([-np.sin(dec)*np.cos(ra), - np.sin(dec)*np.sin(ra), np.cos(dec)])
-        r_hat= np.array([np.cos(dec)*np.cos(ra), np.cos(dec)*np.sin(ra),np.sin(dec)])
-        
-        #transformation matrix
-        
-        D_A  = dist*self.k # im gonna use this alot 
-        matrix_t  = [
-            [p_hat[0]*D_A, q_hat[0]*D_A, r_hat[0]],
-                     [p_hat[1]*D_A,q_hat[1]*D_A,r_hat[1]],
-                     [p_hat[2]*D_A,q_hat[2]*D_A,r_hat[2]]
-                     ]
-        galactic_vel = np.array([pmra, pmdec, RV])
-        # vra, vdec = D_A*pmra, D_A*pmdec
-        # v_vec = vra * p_hat + vdec * q_hat + RV * r_hat
-        cartesian_vel = matrix_t @ galactic_vel
-        #calculate velocities in cartesian coordinates    # 1 km/s ≈ 1.0227e-6 kpc/yr.
-        conv = 1.02201e-9 #km/s to kpc/yr
-       # v_vec[0], v_vec[1], v_vec[2]
-  
-        vx, vy, vz = cartesian_vel[0], cartesian_vel[1], cartesian_vel[2] 
-        vx = vx*conv
-        vy = vy*conv
-        vz = vz*conv
-        total_int_time =np.abs(self.int_time* 1e6)
-        max_steps =int(total_int_time/time_step)
-    
-        current_time = 0
-        #initalize postion
-        xi, yi, zi = xo, yo, zo
-        
-        x_path, y_path, z_path = [xo], [yo], [zo]   
-        for step  in range(max_steps):
-                # Update coordinates using Euler method
-                #fixed timestep
-        
-                current_time += time_step
-                
-                xi -=   vx*time_step
-                yi -=  vy* time_step
-                zi -=   vz* time_step
-                #Wrap longitude to [0, 360]
-                x_path.append(xi)
-                y_path.append(yi)
-                z_path.append(zi)
-                step +=1
-                if step >1e6:
-                    print('broke loop')
-                    break
- 
-        #convert to galactic coordinates
-        
-        x_path = np.array(x_path)
-        y_path = np.array(y_path)
-        z_path = np.array(z_path)
-        #atan2 is verified by GAIA
-        l_path = (np.degrees(np.arctan2(y_path,x_path))) % 360
-        b_path = np.degrees(np.arctan2(z_path, np.sqrt(x_path**2 + y_path**2)))
-        dist_path = np.sqrt(x_path **2 + y_path **2 + z_path **2)
-       # b_path = np.degrees(np.arcsin(z_path/dist_path))
-        return l_path, b_path, dist_path
-        
         
     def trace_galactic_path(self,source_info,int_time):
         """
@@ -338,41 +239,51 @@ class GalacticTraceback:
  
  
         row = source_info #self.table[self.table['source_id'] == source_id
-        l = row['l']
-        b = row['b'] 
-        mu_l = row['pm_l_poleski']
-        mu_b = row['pm_b_poleski']
-        # ra = row['ra']
-        # dec = row['dec']
-        # pmra = row['pmra']
-        # pmdec = row['pmdec']
-        dist = row['distance_bj'] #kpc
-        radial_velocity = row['RV'] 
+        # l = row['l']
+        # b = row['b'] 
+        # mu_l = row['pm_l_poleski']
+        # mu_b = row['pm_b_poleski']
+
+        # dist = row['distance_bj'] #kpc
+        # radial_velocity = row['RV'] 
 
    
-        mu_l_total  = mu_l
-        mu_b_total = mu_b
-        dist_total  = dist 
-        radial_velocity_total = radial_velocity
+        # mu_l_total  = mu_l
+        # mu_b_total = mu_b
+        # dist_total  = (dist.value) * u.kpc
+        # radial_velocity_total = radial_velocity
+        
+        ra = row['ra']
+        dec = row['dec']
+        pmra = row['pmra']
+        pmdec = row['pmdec']
+        radial_velocity = row['RV'] 
+        # if row['parallax'].value/row['parallax_error'].value >5.0:
+            
+        #     distance_icrs = row['distance_bj']
+        # else:
+        distance_icrs = (1/row['parallax']).value *u.kpc
+        
+        
             
         with coord.galactocentric_frame_defaults.set('v4.0'):
-            galcen_frame = coord.Galactocentric(galcen_distance=8.5 * u.kpc)
-        galactic_rep = coord.SkyCoord(l=l,
-                                      b=b,
-                                      pm_l_cosb=mu_l_total,
-                                      pm_b=mu_b_total,
-                                      distance=dist_total,
-                                      radial_velocity=radial_velocity_total,
-                                      frame="galacticlsr")
+            galcen_frame = coord.Galactocentric()
+        # galactic_rep = coord.SkyCoord(l=l,
+        #                               b=b,
+        #                               pm_l_cosb=mu_l_total,
+        #                               pm_b=mu_b_total,
+        #                               distance=dist_total,
+        #                               radial_velocity=radial_velocity_total,
+        #                               frame="galactic")
+        #galactic_rep = coord.SkyCoord(ra=ra,dec=dec,pm_ra_cosdec=pmra, pm_dec=pmdec,radial_velocity=radial_velocity)
         
-        # galactic_rep = coord.SkyCoord(ra=ra, dec=dec, distance=dist,
-        #       pm_ra_cosdec=pmra, pm_dec=pmdec,
-        #       radial_velocity=radial_velocity, frame='icrs')
-        # #transform frame
+        galactic_rep = coord.SkyCoord(ra=ra, dec=dec, distance=distance_icrs,
+              pm_ra_cosdec=pmra, pm_dec=pmdec,
+              radial_velocity=radial_velocity)
+        #transform frame
         star_galacto = galactic_rep.transform_to(galcen_frame)
         # star_galacto = reflex_correct(star_galacto)
         #correct for solar motion
-     
        # print(star_galacto)
 
         initial_pos = gd.PhaseSpacePosition(star_galacto.data)
@@ -381,7 +292,7 @@ class GalacticTraceback:
         n_steps = int(abs(total_time/dt))
 
         integrator = gi.LeapfrogIntegrator
-        potential = gp.MilkyWayPotential2022()  
+        potential = gp.MilkyWayPotential()  
         orbit = potential.integrate_orbit(initial_pos, dt=dt, t1=0*u.Myr, t2=total_time)
         #orbit = potential.integrate_orbit(initial_pos, 
                                         # dt=dt,n_steps=n_steps,
@@ -528,7 +439,42 @@ class GalacticTraceback:
             plt.show()
             
         return None
-
+    def plot_separation(self,star,cluster,savefig=False):
+        star_orbit = self.trace_galactic_path(star, self.int_time)
+        cluster_orbit = self.trace_galactic_path(cluster, self.int_time)
+        separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
+        
+        separation = np.array(separation)
+        fig, ax = plt.subplots(1, figsize=(10,10))
+        t_array = np.array(star_orbit.t)
+        print(np.amin(separation)*1e3, 'pc')
+        print(t_array[np.argmin(separation)]/1e6, 'Myr ago')    
+        star_name = star['Name'][0]
+        cluster_name = cluster['Name'][0]
+        
+        sep_where_min = np.amin(separation)*1e3
+        time_where_min = t_array[np.argmin(separation)]
+        #for labeling
+        sep_where_min_round = round(np.amin(separation)*1e3,2)
+        time_where_min_round = round(t_array[np.argmin(separation)],2)
+        
+        ax.set_title(f'Separation Between {cluster_name} with {star_name}')
+        ax.set_ylabel('Separation pc')
+        ax.set_xlabel('Time (Myr)')
+        ax.scatter(time_where_min, sep_where_min, label=f'{time_where_min_round} Myr at {sep_where_min_round} pc',color='xkcd:purple', s=100)
+        ax.plot(t_array[:-1], separation[:-1]*1e3, color='dodgerblue', ls='-', marker='', lw=2, zorder=-1)
+        ax.legend(title='Kinematical Age and Minimum Separation')
+        
+        if savefig:
+            mydir = os.path.dirname(os.path.realpath(__file__))
+            parentdir = os.path.dirname(mydir)
+            today = datetime.now().strftime("%Y%m%d")
+            save_path = os.path.join(parentdir, 'Figures', 'Traceback/Separations', f"separation_{star_name}_with_{cluster_name}_{today}.png")
+            plt.savefig(save_path)
+    
+        plt.show()
+        return None
+        
     def plot_orbit_planes(self, star_x, star_y, star_z, cluster_x, cluster_y, cluster_z, star_label="Star", cluster_label="Cluster"):
         """
         Plot orbit projections of the star and cluster in (Y, X), (X, Z), and (Y, Z) planes, with motion direction arrows.
@@ -837,7 +783,7 @@ class GalacticTraceback:
             cluster_b_vals = cluster_galactic.b
             #huuh?
             # rel_x, rel_y,rel_z, time_min_sep  = self.plot_comoving_cluster(single_star, cluster_params, plotting=False)
-            # print(f'Minimum Seperation time {time_min_sep}')
+            # print(f'Minimum separation time {time_min_sep}')
             # relative_sky = coord.SkyCoord(x=rel_x, y=rel_y, z=rel_z, unit=u.kpc,
             #                 representation_type='cartesian', frame='galactocentric').transform_to('galactic')
             
@@ -906,7 +852,7 @@ class GalacticTraceback:
             plt.savefig(parentdir+'/Figures/Traceback/'+f"{star_name}_with_{fig_clus_name}_{today}.png")
         plt.show()
         return orbit
-    def plot_in_galactocentric(self, stars, cluster,figname, cluster_members=None, savefig=False):
+    def plot_in_galactocentric(self, stars,figname, cluster=None, cluster_members=None, savefig=False):
         """
         Plot the integrated orbits of the star and cluster in the Galactocentric frame
         along with their 2D projections (XY, YZ, ZX).
@@ -935,12 +881,14 @@ class GalacticTraceback:
         
         cluster_color = 'xkcd:steel blue'
         arrow_color= 'xkcd:orange'
+        
         # Integrate the orbits for the star and the cluster.
         for star in stars:
             star = Table(star)
             star_orbit = self.trace_galactic_path(star, int_time=self.int_time)
             ts = star_orbit.t  
             star_short = self.trace_galactic_path(star, int_time=0.5)
+            plot_time = str(abs(round(ts[-1].value,2)))
             # Extract Cartesian positions (assumed in kpc) from the orbits.
             # We assume star_orbit.x, .y, .z are Quantities.
             star_x = np.array(star_orbit.x.to(u.kpc).value)
@@ -998,39 +946,79 @@ class GalacticTraceback:
             #arrows
             ax_zx.plot([x1s, x2s], [z1s, z2s], color=arrow_color, linestyle='--')
      
-
-            
-
-
-
-            
- 
-            
-            
-            # ax3d.plot(star_x, star_y, star_z, c=star_color, label="Path of "+star_label)
-            # ax3d.scatter(star_x, star_y, star_z, c=star_color)
-            # ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
-            # #arrow tip
-            # ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
-            
-        #self.velocity_check(star_orbit)
-        cluster_orbit = self.trace_galactic_path(cluster, int_time=self.int_time)
-        #self.velocity_check(cluster_orbit)
+        if cluster is not None:
     
+            cluster_orbit = self.trace_galactic_path(cluster, int_time=self.int_time)
+            cluster_label = f"{cluster['Name'][0]}"
+            
+            cluster_x = np.array(cluster_orbit.x.to(u.kpc).value)
+            cluster_y = np.array(cluster_orbit.y.to(u.kpc).value)
+            cluster_z = np.array(cluster_orbit.z.to(u.kpc).value)
+            #arrow of motion 
+            # Integrate both orbits over a short 0.5 Myr interval for motion vector plotting
+            #star_short = self.trace_galactic_path(star, int_time=0.5)
+            cluster_short = self.trace_galactic_path(cluster, int_time=0.5)
 
-  
-        cluster_x = np.array(cluster_orbit.x.to(u.kpc).value)
-        cluster_y = np.array(cluster_orbit.y.to(u.kpc).value)
-        cluster_z = np.array(cluster_orbit.z.to(u.kpc).value)
-        
-        #arrow of motion 
-        # Integrate both orbits over a short 0.5 Myr interval for motion vector plotting
-        #star_short = self.trace_galactic_path(star, int_time=0.5)
-        cluster_short = self.trace_galactic_path(cluster, int_time=0.5)
+            x1c, y1c, z1c = cluster_short.x[0].to(u.kpc).value, cluster_short.y[0].to(u.kpc).value, cluster_short.z[0].to(u.kpc).value
+            x2c, y2c, z2c = cluster_short.x[-1].to(u.kpc).value, cluster_short.y[-1].to(u.kpc).value, cluster_short.z[-1].to(u.kpc).value
 
+            ax3d.plot(cluster_x, cluster_y, cluster_z, color=cluster_color, label="path of "+cluster_label)
+       
+            ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
+       #arrow tip
+            ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
+            ax3d.plot([x1c, x2c], [y1c, y2c], [z1c, z2c], color=arrow_color, linestyle='--')
+            ax3d.plot(x2c,y2c, z2c, color=arrow_color, marker='^')
+            
+            ax3d.plot(cluster_x, cluster_y, cluster_z, color=cluster_color, label="path of "+cluster_label)
+            
+            # Mark the first and last position for the cluster
+            ax3d.scatter(cluster_x[0], cluster_y[0], cluster_z[0], c=cluster_color, marker='o', s=100, label=f"Current Position of {cluster_label}")
+            ax3d.scatter(cluster_x[-1], cluster_y[-1], cluster_z[-1], c=cluster_color, marker='x', s=100, label=f"Position of {cluster_label} {plot_time} Myr ago")
+            
+            #xy projection 
+            ax_xy.plot(cluster_x, cluster_y, color=cluster_color, label='path of '+cluster_label)
+            
+           
+            ax_xy.scatter(cluster_x, cluster_y, color=cluster_color)
+
+            
+            cluster_font_dict= {'fontsize':12,'color':cluster_color}
+            ax_xy.text(cluster_x[0],cluster_y[0],s=cluster_label, **cluster_font_dict)
+            ax_xy.scatter(cluster_x[0], cluster_y[0], color=cluster_color, marker='o', s=100)
+            ax_xy.scatter(cluster_x[-1], cluster_y[-1], color=cluster_color, marker='x', s=100)
+            
+            #arrows 
+            ax_xy.plot([x1c, x2c], [y1c, y2c], color=arrow_color, linestyle='--')
+
+            #yz projection 
+            ax_yz.plot(cluster_y, cluster_z, color=cluster_color, label='path of '+cluster_label)
+            ax_yz.text(cluster_y[0],cluster_z[0],s=cluster_label, **cluster_font_dict)
+           
+       
+            ax_yz.scatter(cluster_y[0], cluster_z[0], color=cluster_color, marker='o', s=100)
+            ax_yz.scatter(cluster_y[-1], cluster_z[-1], color=cluster_color, marker='x', s=100,zorder=1)
+            
+            # ax_yz.scatter(star_y, star_z, color=star_color)
+            ax_yz.scatter(cluster_y, cluster_z, color=cluster_color)
         
-        x1c, y1c, z1c = cluster_short.x[0].to(u.kpc).value, cluster_short.y[0].to(u.kpc).value, cluster_short.z[0].to(u.kpc).value
-        x2c, y2c, z2c = cluster_short.x[-1].to(u.kpc).value, cluster_short.y[-1].to(u.kpc).value, cluster_short.z[-1].to(u.kpc).value
+        
+            ax_yz.plot([y1c, y2c], [z1c, z2c], color=arrow_color, linestyle='--')
+            #xz projection
+            ax_zx.plot(cluster_x, cluster_z, color=cluster_color, label='path of '+cluster_label)
+            ax_zx.text(cluster_x[0],cluster_z[0],s=cluster_label, **cluster_font_dict)
+            
+
+            ax_zx.scatter(cluster_x, cluster_z, color=cluster_color)
+            
+           
+
+            ax_zx.scatter(cluster_x[0], cluster_z[0], color=cluster_color, marker='o', s=100)
+            ax_zx.scatter(cluster_x[-1], cluster_z[-1], color=cluster_color, marker='x', s=100)
+            #arrows
+
+            ax_zx.plot([x1c, x2c], [z1c, z2c], color=arrow_color, linestyle='--')
+            
 
 
         
@@ -1039,7 +1027,7 @@ class GalacticTraceback:
 
         
         # star_label= f"{star['Name'][0]}"
-        cluster_label = f"{cluster['Name'][0]}"
+
         plot_time = str(abs(round(ts[-1].value,2)))
         # Extract l and b from cluster_members and directly apply units
         
@@ -1073,63 +1061,25 @@ class GalacticTraceback:
             mem_curr_color = 'xkcd:dark'
             mem_prev_color = 'xkcd:light grey'
             mem_alpha = 0.8
- 
-            ax_yz.scatter(y_mem[0], z_mem[0], color=mem_curr_color, label=f"Current position of {cluster_label} members",alpha=mem_alpha)
-            ax_yz.scatter(y_mem[-1], z_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago')
-            ax_xy.scatter(x_mem[0], y_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members",alpha=mem_alpha)
-            ax_xy.scatter(x_mem[-1], y_mem[-1], color=mem_prev_color,label=f'Position of {cluster_label} members {plot_time} Myrs ago',alpha=mem_alpha)
+            
+            zorder = -1
+            ax_yz.scatter(y_mem[0], z_mem[0], color=mem_curr_color, label=f"Current position of {cluster_label} members",alpha=mem_alpha,zorder=zorder)
+            ax_yz.scatter(y_mem[-1], z_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago',zorder=zorder)
+            ax_xy.scatter(x_mem[0], y_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members",alpha=mem_alpha,zorder=zorder)
+            ax_xy.scatter(x_mem[-1], y_mem[-1], color=mem_prev_color,label=f'Position of {cluster_label} members {plot_time} Myrs ago',alpha=mem_alpha,zorder=zorder)
  
             
-            ax_zx.scatter(x_mem[-1], z_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago')
-            ax_zx.scatter(x_mem[0], z_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members",alpha=mem_alpha)
+            ax_zx.scatter(x_mem[-1], z_mem[-1],color=mem_prev_color, label=f'Position of {cluster_label} members {plot_time} Myrs ago',zorder=zorder)
+            ax_zx.scatter(x_mem[0], z_mem[0], color=mem_curr_color,label=f"Current position of {cluster_label} members",alpha=mem_alpha,zorder=zorder)
             
-        
-        
-        
-                        
+    
  
-    
-   
-        ax3d.plot(cluster_x, cluster_y, cluster_z, color=cluster_color, label="path of "+cluster_label)
-        
-        ax3d.plot([x1s, x2s], [y1s, y2s], [z1s, z2s], color=arrow_color, linestyle='--')
-        #arrow tip
-        ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
-        ax3d.plot([x1c, x2c], [y1c, y2c], [z1c, z2c], color=arrow_color, linestyle='--')
-        ax3d.plot(x2c,y2c, z2c, color=arrow_color, marker='^')
-
-
-        
-    
-        # Mark the first and last position for the cluster
-        ax3d.scatter(cluster_x[0], cluster_y[0], cluster_z[0], c=cluster_color, marker='o', s=100, label=f"Current Position of {cluster_label}")
-        ax3d.scatter(cluster_x[-1], cluster_y[-1], cluster_z[-1], c=cluster_color, marker='x', s=100, label=f"Position of {cluster_label} {plot_time} Myr ago")
-        
-        # ax3d.scatter(star_x[0], star_y[0], star_z[0], c=star_color, marker='*', s=200, label="Current position of "+star_label)
-        # ax3d.scatter(star_x[-1], star_y[-1], star_z[-1], c=star_color, marker='x', s=150, label="Position of "+star_label+f' {plot_time} Myr ago')
-        
         ax3d.set_xlabel("X (kpc)")
         ax3d.set_ylabel("Y (kpc)")
         ax3d.set_zlabel("Z (kpc)")
         ax3d.set_title("3D Galactocentric Orbit")
         ax3d.legend(loc = 'best')
     
-        # XY Projection
-      
-        ax_xy.plot(cluster_x, cluster_y, color=cluster_color, label='path of '+cluster_label)
-        
-       
-        ax_xy.scatter(cluster_x, cluster_y, color=cluster_color)
-
-        
-        cluster_font_dict= {'fontsize':12,'color':cluster_color}
-        ax_xy.text(cluster_x[0],cluster_y[0],s=cluster_label, **cluster_font_dict)
-        ax_xy.scatter(cluster_x[0], cluster_y[0], color=cluster_color, marker='o', s=100)
-        ax_xy.scatter(cluster_x[-1], cluster_y[-1], color=cluster_color, marker='x', s=100)
-        
-        #arrows 
-        # ax_xy.plot([x1s, x2s], [y1s, y2s], color=arrow_color, linestyle='--')
-        ax_xy.plot([x1c, x2c], [y1c, y2c], color=arrow_color, linestyle='--')
 
 
     
@@ -1138,43 +1088,13 @@ class GalacticTraceback:
         ax_xy.set_title("XY Projection")
         ax_xy.legend()
     
-        # YZ Projection
-        
-        # ax_yz.plot(star_y, star_z, color=star_color, label='path of '+star_label)
-        ax_yz.plot(cluster_y, cluster_z, color=cluster_color, label='path of '+cluster_label)
-        ax_yz.text(cluster_y[0],cluster_z[0],s=cluster_label, **cluster_font_dict)
-       
-   
-        ax_yz.scatter(cluster_y[0], cluster_z[0], color=cluster_color, marker='o', s=100)
-        ax_yz.scatter(cluster_y[-1], cluster_z[-1], color=cluster_color, marker='x', s=100)
-        
-        # ax_yz.scatter(star_y, star_z, color=star_color)
-        ax_yz.scatter(cluster_y, cluster_z, color=cluster_color)
-    
-    
-        ax_yz.plot([y1c, y2c], [z1c, z2c], color=arrow_color, linestyle='--')
-        
+
         ax_yz.set_xlabel("Y (kpc)")
         ax_yz.set_ylabel("Z (kpc)")
         ax_yz.set_title("yz Projection")
         ax_yz.legend()
     
     
-        # ZX Projection (Z vs. X)
-        
-        ax_zx.plot(cluster_x, cluster_z, color=cluster_color, label='path of '+cluster_label)
-        ax_zx.text(cluster_x[0],cluster_z[0],s=cluster_label, **cluster_font_dict)
-        
-
-        ax_zx.scatter(cluster_x, cluster_z, color=cluster_color)
-        
-       
-
-        ax_zx.scatter(cluster_x[0], cluster_z[0], color=cluster_color, marker='o', s=100)
-        ax_zx.scatter(cluster_x[-1], cluster_z[-1], color=cluster_color, marker='x', s=100)
-        #arrows
-
-        ax_zx.plot([x1c, x2c], [z1c, z2c], color=arrow_color, linestyle='--')
 
     
         ax_zx.set_xlabel("x (kpc)")
@@ -1196,95 +1116,7 @@ class GalacticTraceback:
     
         plt.show()
     
-        fig_cyl = plt.figure(figsize=(18, 5))
 
-        # Subplots for each pair of cylindrical axes
-        ax_rz = fig_cyl.add_subplot(131)
-        # ax_rphi = fig_cyl.add_subplot(132)
-        # ax_phiz = fig_cyl.add_subplot(133)
-        
-        for star in stars:
-            star_temp = Table(star)
-            
-            star_orbit = self.trace_galactic_path(star_temp, int_time=self.int_time)
-            star_label= f"{star_temp['Name'][0]}"
-            # Cylindrical representation
-            cyl_orbit = star_orbit.represent_as('cylindrical')
-            
-            rho = cyl_orbit.rho.to(u.kpc).value
-            phi = cyl_orbit.phi.to(u.rad).value
-            z = cyl_orbit.z.to(u.kpc).value
-        
-            color = star.get('Mod_SpType', 'black')
-        
-            # Plot (ρ, z)
-            ax_rz.text(rho[0],z[0],s=star_label,color=color)
-            ax_rz.plot(rho, z, color=color)
-            ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
-        
-            #Plot (ρ, φ)
-            # ax_rphi.plot(rho, phi, color=color)
-            # ax_rphi.text(rho[0],phi[0],s=star_label,color=color)
-            # ax_rphi.scatter(rho[0], phi[0], color=color, s=20, alpha=0.7)
-            
-            # Plot (φ, z)
-            # ax_phiz.plot(phi, z, color=color)
-            # ax_phiz.text(phi[0],z[0],s=star_label,color=color)
-            # ax_phiz.scatter(phi[0], z[0], color=color, s=20, alpha=0.7)
-        
-        
-        for clust in cluster:
-            clust_temp = Table(clust)
-            clust_orbit = self.trace_galactic_path(clust_temp, int_time=self.int_time)
-            cluster_label= f"{clust_temp['Name'][0]}"
-            # cylindrical representation
-            cyl_orbit = clust_orbit.represent_as('cylindrical')
-        
-            rho = cyl_orbit.rho.to(u.kpc).value
-            phi = cyl_orbit.phi.to(u.rad).value
-            z = cyl_orbit.z.to(u.kpc).value
-        
-            color = cluster_color
-        
-            # Plot (ρ, z)
-            ax_rz.text(rho[0],z[0],s=cluster_label,color=color)
-            ax_rz.plot(rho, z, color=color)
-            ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
-        
-            #Plot (ρ, φ)
-            # ax_rphi.plot(rho, phi, color=color)
-            # ax_rphi.text(rho[0],phi[0],s=cluster_label,color=color)
-            # ax_rphi.scatter(rho[0], phi[0], color=color, s=20, alpha=0.7)
-        
-            # Plot (φ, z)
-            # ax_phiz.plot(phi, z, color=color)
-            # ax_phiz.text(rho[0],phi[0],s=cluster_label,color=color)
-            # ax_phiz.scatter(phi[0], z[0], color=color, s=20, alpha=0.7)
-        
-        # Sun's position in cylindrical coords
-        sun_x = -8.15
-        sun_y = 0.0
-        sun_z = 0.0208
-        sun_rho = np.sqrt(sun_x**2 + sun_y**2)
-        sun_phi = np.arctan2(sun_y, sun_x)
-        
-        #ax_rz.scatter(sun_rho, sun_z, color='yellow', s=100, marker='*', label='Sun')
-        #ax_rphi.scatter(sun_rho, sun_phi, color='yellow', s=100, marker='*')
-        # Label and titles
-        ax_rz.set_xlabel(r"$R_{gal}$ (kpc)")
-        ax_rz.set_ylabel("Z (kpc)")
-        ax_rz.set_title(r"$R_{gal}$ vs Z")
-        # ax_rz.legend()
-        
-        # ax_rphi.set_xlabel(r"$R_{gal}$ (kpc)")
-        # ax_rphi.set_ylabel("φ (rad)")
-        # ax_rphi.set_title(r"$R_{gal}$ vs φ")
-        # ax_rphi.invert_xaxis()
-        ax_rz.invert_xaxis()
-        # ax_phiz.set_xlabel("φ (rad)")
-        # ax_phiz.set_ylabel("Z (kpc)")
-        # ax_phiz.set_title("φ vs Z")
-        plt.tight_layout()
         if savefig:
             mydir = os.path.dirname(os.path.realpath(__file__))
             parentdir = os.path.dirname(mydir)
@@ -1410,7 +1242,8 @@ if __name__ == "__main__":
    #GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=ngc6231_params, clustertable=ngc6231_members,savefig=False)
   #GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=None, clustertable=None,savefig=False)
    
-    x= GalacticTraceback(test_170037, -3.0).plot_in_galactocentric(test_170037, ngc6231_params,figname='170037_NGC6231',cluster_members=ngc6231_members,savefig=True)
-  #GalacticTraceback(None, -3.0).plot_multiple_stars_in_galactocentric(plot_galactocentric_table)
+    x= GalacticTraceback(test_170037, -5.0).plot_in_galactocentric(test_170037, figname='170037_NGC6231',cluster=ngc6231_params,cluster_members=None,savefig=True)
+    GalacticTraceback(test_170037, -5.0).plot_separation(test_170037, ngc6231_params,savefig=True)
+   # GalacticTraceback(None, -3.0).plot_multiple_stars_in_galactocentric(plot_galactocentric_table)
    #x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
 #    GalacticTraceback(test_table).plot_trace(savefig=False
