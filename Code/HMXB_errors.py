@@ -328,7 +328,7 @@ class calc_errors:
         results['V_pec_tan_err'] = sigma_v_pec_tan
         results['V_pec_tan_err'].unit = u.km/u.s
         
-        #again for radial peculair 
+        #again for radial peculiar
         rv = table['RV']
         rv_err = table['RV_err']
         v_pec_3d = table['Peculiar Velocity 3D']
