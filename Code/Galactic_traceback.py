@@ -263,6 +263,7 @@ class GalacticTraceback:
         #     distance_icrs = row['distance_bj']
         # else:
         distance_icrs = (1/row['parallax']).value *u.kpc
+        #distance_icrs = row['distance_bj']
         
         
             
@@ -292,7 +293,7 @@ class GalacticTraceback:
         n_steps = int(abs(total_time/dt))
 
         integrator = gi.LeapfrogIntegrator
-        potential = gp.MilkyWayPotential()  
+        potential = gp.MilkyWayPotential2022()  
         orbit = potential.integrate_orbit(initial_pos, dt=dt, t1=0*u.Myr, t2=total_time)
         #orbit = potential.integrate_orbit(initial_pos, 
                                         # dt=dt,n_steps=n_steps,
@@ -483,6 +484,101 @@ class GalacticTraceback:
     
         plt.show()
         return None
+    def plot_separation_with_uncertainty(self, star, cluster, N=100, savefig=False):
+        """
+        Plot separation between star and cluster using N samples from star parameter uncertainties.
+        Includes confidence intervals and global minimum marker.
+    
+        Parameters
+        ----------
+        star : astropy Table (length=1)
+            The star data row with columns: ra, dec, distance_bj, pmra, pmdec, RV and their *_err.
+        cluster : astropy Table (length=1)
+            The cluster data row, same format as star.
+        N : int
+            Number of Monte Carlo samples for the star orbit.
+        savefig : bool
+            Whether to save the figure.
+        """
+    
+        int_time = self.int_time
+    
+        # Get cluster orbit (only once)
+        cluster_orbit = self.trace_galactic_path(cluster, int_time)
+        cluster_xyz = cluster_orbit.xyz.to_value(u.pc)
+        time_array = cluster_orbit.t.to_value(u.Myr)
+    
+        dist = np.array(star['distance_bj'])[0]
+        dist_up = np.array(star['distance_bj_high'])[0] - dist
+        dist_down = dist - np.array(star['distance_bj_low'][0])
+        dist_err = (dist_up + dist_down)/2.0
+        # Sample from star uncertainties
+        d     = np.random.normal(dist,  dist_err,  N)
+        parallax = np.random.normal(star['parallax'][0], star['parallax_error'][0], N)
+        pmra  = np.random.normal(star['pmra'][0],         star['pmra_error'][0],         N)
+        pmdec = np.random.normal(star['pmdec'][0],        star['pmdec_error'][0],        N)
+        rv    = np.random.normal(star['RV'][0],           star['RV_err'][0],           N)
+        ra    = star['ra'][0]
+        dec   = star['dec'][0]
+    
+        sep_curves = []
+    
+        for i in range(N):
+            star_sample = Table(
+                [[d[i]] * u.kpc, [ra]*u.deg, [dec]*u.deg, [pmra[i]] * u.mas/u.yr, [pmdec[i]] * u.mas/u.yr, [rv[i]] * u.km/u.s, [parallax[i]]*u.mas],
+                names=["distance_bj", "ra", "dec", "pmra", "pmdec", "RV",'parallax']
+            )
+    
+            star_orbit = self.trace_galactic_path(star_sample, int_time)
+            star_xyz = star_orbit.xyz.to_value(u.pc)
+    
+            sep = np.linalg.norm(star_xyz - cluster_xyz, axis=0)
+            sep_curves.append(sep)
+    
+        sep_curves = np.array(sep_curves)
+    
+        # Percentiles
+        p16 = np.percentile(sep_curves, 16, axis=0)
+        p50 = np.percentile(sep_curves, 50, axis=0)
+        p84 = np.percentile(sep_curves, 84, axis=0)
+    
+        # Global min
+        min_idx = np.argmin(sep_curves.min(axis=1))
+        min_time = time_array[np.argmin(sep_curves[min_idx])]
+        min_sep = np.min(sep_curves[min_idx])
+    
+        # Plotting
+        fig, ax = plt.subplots(1, figsize=(10, 6))
+    
+        for sep in sep_curves:
+            ax.plot(time_array, sep, color='gray', alpha=0.1)
+    
+        ax.plot(time_array, p50, color='xkcd:navy', lw=2, label='Median separation')
+        ax.fill_between(time_array, p16, p84, color='xkcd:emerald', alpha=0.3, label='68% CI')
+    
+        ax.scatter(min_time, min_sep, color='xkcd:red', s=80,
+                   label=f'Min: {min_time:.2f} Myr, {min_sep:.1f} pc')
+        ax.axvline(min_time, ls=':', color='xkcd:red')
+        ax.axhline(min_sep, ls=':', color='xkcd:red')
+    
+        ax.set_title(f'Separation: {star["Name"][0]} vs {cluster["Name"][0]}')
+        ax.set_xlabel('Time (Myr)')
+        ax.set_ylabel('Separation (pc)')
+        ax.legend()
+        ax.grid(True)
+    
+        if savefig:
+            mydir = os.path.dirname(os.path.realpath(__file__))
+            parentdir = os.path.dirname(mydir)
+            today = datetime.now().strftime("%Y%m%d")
+            save_path = os.path.join(parentdir, 'Figures', 'Traceback/Separations',
+                                     f"sep_{star['Name'][0]}_{cluster['Name'][0]}_{today}.png")
+            plt.savefig(save_path, dpi=150)
+    
+        plt.tight_layout()
+        plt.show()
+        return None
+
         
     def plot_orbit_planes(self, star_x, star_y, star_z, cluster_x, cluster_y, cluster_z, star_label="Star", cluster_label="Cluster"):
         """
@@ -892,6 +988,16 @@ class GalacticTraceback:
         cluster_color = 'xkcd:steel blue'
         arrow_color= 'xkcd:orange'
         
+        import matplotlib as mpl
+        mpl.rcParams.update({
+        'font.size': 18,        # Adjust as needed
+        'axes.titlesize': 18,
+        'axes.labelsize': 16,
+        'xtick.labelsize': 14,
+        'ytick.labelsize': 18,
+        'legend.fontsize': 10,
+        'lines.linewidth': 2,   # Thicker lines for better visibility
+    })
         # Integrate the orbits for the star and the cluster.
         for star in stars:
             star = Table(star)
@@ -1042,22 +1148,25 @@ class GalacticTraceback:
         # Extract l and b from cluster_members and directly apply units
         
         if cluster_members is not None:
-            l_mem = cluster_members['l'] 
-            b_mem = cluster_members['b'] 
+            ra_mem = cluster_members['ra'] 
+            dec_mem = cluster_members['dec'] 
             cl_dist = cluster['distance_bj']
             cl_rv = cluster['RV'] 
-            cl_pml = cluster['pm_l_poleski'] 
-            cl_pmb = cluster['pm_b_poleski'] 
+            cl_pmra = cluster['pmra'] 
+            cl_pmdec = cluster['pmdec']
+            cl_parallax = cluster['parallax']
             
-            distance_mem = np.ones(len(l_mem)) * cl_dist * u.kpc
-            pm_l_mem = np.ones(len(l_mem)) * cl_pml * u.mas/u.yr
-            pm_b_mem = np.ones(len(l_mem)) * cl_pmb * u.mas/u.yr
-            rv_mem = np.ones(len(l_mem)) * cl_rv * u.km/u.s
+            
+            distance_mem = np.ones(len(ra_mem)) * cl_dist * u.kpc
+            pmra_mem = np.ones(len(ra_mem)) * cl_pmra * u.mas/u.yr
+            pmdec_mem = np.ones(len(ra_mem)) * cl_pmdec * u.mas/u.yr
+            rv_mem = np.ones(len(ra_mem)) * cl_rv * u.km/u.s
+            parallax_mem = np.ones(len(ra_mem)) * cl_parallax * u.mas
     
             # Create the member_table with properly formatted columns
             member_table = Table(
-        [l_mem, b_mem, distance_mem, pm_l_mem, pm_b_mem, rv_mem],
-        names=('l', 'b', 'distance_bj', 'pm_l_poleski', 'pm_b_poleski', 'RV')
+        [ra_mem, dec_mem, distance_mem, pmra_mem, pmdec_mem, rv_mem,parallax_mem],
+        names=('ra', 'dec', 'distance_bj', 'pmra', 'pmdec', 'RV','parallax')
     )
  
             
