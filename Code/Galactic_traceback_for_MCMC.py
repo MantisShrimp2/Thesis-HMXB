@@ -334,7 +334,7 @@ class galactic_path_MCMC:
         return sampler, state
        
         
-    def compute_full_separations_and_plot(self,flat_chain, cluster_params, int_time, star_ra, star_dec,cluster_radius, n_samples=100):
+    def compute_full_separations_and_plot(self,flat_chain, cluster_params, int_time, star_ra, star_dec,cluster_radius, title, n_samples=100):
         '''
         
 
@@ -365,18 +365,25 @@ class galactic_path_MCMC:
         separation_curves = []
         for theta in chosen_samples:
             star_d, pmra, pmdec, rv = theta
-            star_table = Table([[star_d]*u.kpc, star_ra, star_dec,
-                                [pmra]*u.mas/u.yr, [pmdec]*u.mas/u.yr,
-                                [rv]*u.km/u.s],
-                               names=["distance_bj", "ra", "dec", "pmra", "pmdec", "RV"])
-        
+            #star_d = 1/star_parallax.value * u.kpc
+            star_table = Table(
+    [
+        [star_d] * u.kpc,
+        star_ra,
+        star_dec,
+        [pmra] * u.mas / u.yr,
+        [pmdec] * u.mas / u.yr,
+        [rv] * u.km / u.s
+    ],
+    names=["distance_bj", "ra", "dec", "pmra", "pmdec", "RV"]
+)
+
             star_orbit = self.trace_galactic_path(star_table, int_time)
             cluster_orbit = self.trace_galactic_path(cluster_params, int_time)
         
             time_array = star_orbit.t.to_value(u.Myr)
-            separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0).to_value(u.pc)
-        
-            separation_curves.append(separation)
+            separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
+            separation_curves.append(separation*1e3)
         
         separation_curves = np.array(separation_curves)
         
@@ -385,22 +392,30 @@ class galactic_path_MCMC:
         p50 = np.percentile(separation_curves, 50, axis=0)
         p84 = np.percentile(separation_curves, 84, axis=0)
         
+        p2 = np.percentile(separation_curves,2.5,axis=0)
+        p98 = np.percentile(separation_curves, 97.5, axis=0)
+        
         # Plot all individual samples (faint)
         plt.figure(figsize=(10,6))
         for sep in separation_curves:
             plt.plot(time_array, sep, color='gray', alpha=0.1)
         
         # Plot median and confidence interval
-        plt.plot(time_array, p50, color='xkcd:navy', lw=2, label='Median separation')
+        plt.plot(time_array, p50, color='xkcd:purple',lw=2,label='Median')
         plt.fill_between(time_array, p16, p84, color='xkcd:emerald', alpha=0.3, label='68% confidence interval')
+        plt.fill_between(time_array, p2, p98, color='xkcd:orange', alpha=0.3, label='95% confidence interval',zorder=-1)
         
         # Cluster radius reference line
         if cluster_radius is not None:
             plt.axhline(cluster_radius, color='red', ls='--', label=f'Cluster radius = {cluster_radius:.2f} pc')
+        if title:
+            plt.title(title)
+        else:
+            plt.title('Separation of Star and Cluster Over Time')
         
         plt.xlabel('Time (Myr)')
         plt.ylabel('Separation (pc)')
-        plt.title('Separation of Star and Cluster Over Time')
+      
         plt.grid(alpha=0.3, linestyle='--')
         plt.legend()
         plt.tight_layout()
