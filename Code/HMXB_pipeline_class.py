@@ -118,7 +118,7 @@ class pipeline:
         
         long_rad = np.radians(long)
         lat_rad = np.radians(lat)
-        V_lsr = (theta * (self.R0/gal_dist) - self.theta_o)*np.sin(long_rad)*np.cos(lat_rad)
+        V_lsr = (theta * (self.R0/gal_dist) - self.sun_curve)*np.sin(long_rad)*np.cos(lat_rad)
         #table.add_column(V_lsr, name='LSR velocity')
         table['LSR velocity']=  V_lsr
         table['LSR velocity'].unit = u.km/u.s
@@ -346,6 +346,7 @@ class pipeline:
     def calculate_errors(self,table):
         '''I probably need to calculate errors for a bunch of my calculations
         this is where i do it
+        OR SEE HMXB_errors.py
         
         Calculated for 
         Distance
