@@ -262,8 +262,11 @@ class GalacticTraceback:
             
         #     distance_icrs = row['distance_bj']
         # else:
-        distance_icrs = (1/row['parallax']).value *u.kpc
+        if row['parallax'][0] <= 0.0:
+            distance_icrs = row['distance_bj']
         #distance_icrs = row['distance_bj']
+        else:
+            distance_icrs = (1/row['parallax']).value *u.kpc
         
         
             
@@ -449,7 +452,7 @@ class GalacticTraceback:
         
         rel_velocity = np.sqrt((star_vel_x - cluster_vel_x)**2 + (star_vel_y - cluster_vel_y)**2 + (star_vel_z - cluster_vel_z)**2)
         
-        std_rel_vel = np.std(rel_velocity,ddof=0)
+        std_rel_vel = np.std(rel_velocity)
         print(f'relative velocity {np.mean(rel_velocity)}, std {std_rel_vel}')
         
         separation = np.linalg.norm(star_orbit.xyz - cluster_orbit.xyz, axis=0)
@@ -981,6 +984,7 @@ class GalacticTraceback:
         
         fig = plt.figure(figsize=(16, 12))
         ax3d = fig.add_subplot(221, projection='3d')
+        
         ax_xy = fig.add_subplot(222)
         ax_yz = fig.add_subplot(223)
         ax_zx = fig.add_subplot(224)
@@ -990,10 +994,10 @@ class GalacticTraceback:
         
         import matplotlib as mpl
         mpl.rcParams.update({
-        'font.size': 18,        # Adjust as needed
-        'axes.titlesize': 18,
-        'axes.labelsize': 16,
-        'xtick.labelsize': 14,
+        'font.size': 20,        # Adjust as needed
+        'axes.titlesize': 22,
+        'axes.labelsize': 20,
+        'xtick.labelsize': 18,
         'ytick.labelsize': 18,
         'legend.fontsize': 10,
         'lines.linewidth': 2,   # Thicker lines for better visibility
@@ -1028,6 +1032,7 @@ class GalacticTraceback:
             
             #arrow tip
             ax3d.plot(x2s,y2s, z2s, color=arrow_color, marker='^')
+            ax3d.tick_params(labelsize=11)
             
             ax_xy.plot(star_x, star_y, color=star_color, label='path of '+star_label)
 
@@ -1063,7 +1068,7 @@ class GalacticTraceback:
             ax_zx.plot([x1s, x2s], [z1s, z2s], color=arrow_color, linestyle='--')
      
         if cluster is not None:
-    
+            plt.suptitle(f'Galactocentric Orbit of {stars['Name'][0]} with {cluster['Name'][0]}', fontsize=25)
             cluster_orbit = self.trace_galactic_path(cluster, int_time=self.int_time)
             cluster_label = f"{cluster['Name'][0]}"
             
@@ -1197,7 +1202,7 @@ class GalacticTraceback:
         ax3d.set_ylabel("Y (kpc)")
         ax3d.set_zlabel("Z (kpc)")
         ax3d.set_title("3D Galactocentric Orbit")
-        ax3d.legend(loc = 'best')
+        #ax3d.legend(loc = 'best')
     
 
 
@@ -1220,6 +1225,27 @@ class GalacticTraceback:
         ax_zx.set_ylabel("z (kpc)")
         ax_zx.set_title("zx Projection")
         ax_zx.legend()
+        
+        # xlow, xhigh = -6.63,-6.35
+        # ylow, yhigh = -1.5, 0
+        # zlow, zhigh  = 0.020, 0.085
+        
+        # ax3d.view_init(elev=27, azim=40)
+        # ax3d.set_xlim(xlow, xhigh)
+        # ax3d.set_ylim(ylow, yhigh)
+        # ax3d.set_zlim(zlow, zhigh)
+        
+        # # XY projection
+        # ax_xy.set_xlim(xlow, xhigh)
+        # ax_xy.set_ylim(ylow, yhigh)
+        
+        # # # YZ projection
+        # ax_yz.set_xlim(ylow, yhigh)
+        # ax_yz.set_ylim(zlow, zhigh)
+        
+        # # # ZX projection
+        # ax_zx.set_xlim(xlow, xhigh)
+        # ax_zx.set_ylim(zlow, zhigh)
     
         # Show the plot
         plt.tight_layout()
@@ -1259,6 +1285,8 @@ class GalacticTraceback:
         ax3d = fig.add_subplot(121, projection='3d')
         ax_xy = fig.add_subplot(122)
     
+        prlx_mask = stars_table['parallax']/stars_table['parallax_error'] >=5.0
+        stars_table = stars_table[prlx_mask]
         for star in stars_table:
             #star loses units, very DUMB
             #add units back with Table(star), then it rememebers the units
@@ -1288,7 +1316,7 @@ class GalacticTraceback:
     
         # Mark the Sun in both projections
         ax3d.scatter(sun_x, sun_y, sun_z, color='yellow', s=100, marker='*')
-        ax_xy.scatter(sun_x, sun_y, color='yellow', s=100, marker='o',label='Sun')
+        ax_xy.scatter(sun_x, sun_y, color='yellow', s=300,edgecolors='xkcd:black', marker='o',label='Sun',zorder=5)
     
         # Labels and layout
         ax3d.set_xlabel("X (kpc)")
@@ -1304,50 +1332,50 @@ class GalacticTraceback:
         plt.grid(True)
         plt.show()
         
-        fig_cyl = plt.figure(figsize=(8, 6))
-        ax_rz = fig_cyl.add_subplot(111)
+        # fig_cyl = plt.figure(figsize=(8, 6))
+        # ax_rz = fig_cyl.add_subplot(111)
         
-        for star in stars_table:
-            # Restore units to the star data
-            star_temp = Table(star)
-            star_orbit = self.trace_galactic_path(star_temp, int_time=self.int_time)
+        # for star in stars_table:
+        #     # Restore units to the star data
+        #     star_temp = Table(star)
+        #     star_orbit = self.trace_galactic_path(star_temp, int_time=self.int_time)
         
-            # Convert orbit to cylindrical representation
-            cyl_orbit = star_orbit.represent_as('cylindrical')
+        #     # Convert orbit to cylindrical representation
+        #     cyl_orbit = star_orbit.represent_as('cylindrical')
         
-            # Extract cylindrical components
-            rho = cyl_orbit.rho.to(u.kpc).value
-            z = cyl_orbit.z.to(u.kpc).value
+        #     # Extract cylindrical components
+        #     rho = cyl_orbit.rho.to(u.kpc).value
+        #     z = cyl_orbit.z.to(u.kpc).value
         
-            # Determine color based on spectral type or default to black
-            color = star.get('Mod_SpType', 'black')
+        #     # Determine color based on spectral type or default to black
+        #     color = star.get('Mod_SpType', 'black')
         
-            # 2D plot in cylindrical coordinates (ρ vs. z)
-            ax_rz.plot(rho, z, color=color)
-            ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
+        #     # 2D plot in cylindrical coordinates (ρ vs. z)
+        #     ax_rz.plot(rho, z, color=color)
+        #     ax_rz.scatter(rho[0], z[0], color=color, s=20, alpha=0.7)
         
-        # Mark the Sun's position in the plot
-        sun_x = -8.15  # kpc
-        sun_y = 0.0
-        sun_z = 0.0208  # kpc
-        sun_rho = np.sqrt(sun_x**2 + sun_y**2)
+        # # Mark the Sun's position in the plot
+        # sun_x = -8.15  # kpc
+        # sun_y = 0.0
+        # sun_z = 0.0208  # kpc
+        # sun_rho = np.sqrt(sun_x**2 + sun_y**2)
         
-        ax_rz.scatter(sun_rho, sun_z, color='yellow', s=100, marker='o', label='Sun')
+        # ax_rz.scatter(sun_rho, sun_z, color='yellow', s=100, marker='o', label='Sun')
         
-        # Set labels and title
-        ax_rz.set_xlabel("ρ (kpc)")
-        ax_rz.set_ylabel("Z (kpc)")
-        ax_rz.set_title("Meridional Plane (ρ vs. Z)")
-        ax_rz.legend()
+        # # Set labels and title
+        # ax_rz.set_xlabel("ρ (kpc)")
+        # ax_rz.set_ylabel("Z (kpc)")
+        # ax_rz.set_title("Meridional Plane (ρ vs. Z)")
+        # ax_rz.legend()
         
-        plt.tight_layout()
-        plt.grid(True)
-        plt.show()
+        # plt.tight_layout()
+        # plt.grid(True)
+        # plt.show()
 
         return None
 
 
-test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250301_.ecsv',format='ecsv')
+test_table = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/HMXB_20250527_.ecsv',format='ecsv')
 test_170037 = test_table[test_table['Name']=='4U 1700-377']
 ngc6231_members = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/Ngc6231_members_galacitc.ecsv',format='ecsv')
 ngc6231_params = ascii.read('/home/karan/Documents/UvA/Thesis/DATA/NGC2631_param.ecsv')
@@ -1361,8 +1389,8 @@ if __name__ == "__main__":
    #GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=ngc6231_params, clustertable=ngc6231_members,savefig=False)
   #GalacticTraceback(test_170037,-3.0).plot_with_cluster(clustername='NGC 6231',cluster_params=None, clustertable=None,savefig=False)
    
-    x= GalacticTraceback(test_170037, -5.0).plot_in_galactocentric(test_170037, figname='170037_NGC6231',cluster=ngc6231_params,cluster_members=None,savefig=True)
-    GalacticTraceback(test_170037, -5.0).plot_separation(test_170037, ngc6231_params,savefig=True)
-   # GalacticTraceback(None, -3.0).plot_multiple_stars_in_galactocentric(plot_galactocentric_table)
+    x= GalacticTraceback(test_170037, -3.0).plot_in_galactocentric(test_170037, figname='170037_NGC6231',cluster=ngc6231_params,cluster_members=ngc6231_members,savefig=True)
+    #GalacticTraceback(test_170037, -5.0).plot_separation(test_170037, ngc6231_params,savefig=True)
+    #GalacticTraceback(None, 5.0).plot_multiple_stars_in_galactocentric(plot_galactocentric_table)
    #x,y,z,t_min_sep = GalacticTraceback(test_170037,int_time=-3.0).plot_comoving_cluster(test_170037, ngc6231_params,plotting=True)
 #    GalacticTraceback(test_table).plot_trace(savefig=False
