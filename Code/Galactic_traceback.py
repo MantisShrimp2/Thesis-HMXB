@@ -3,7 +3,7 @@
 """
 Created on Mon Nov 18 15:04:32 2024
 
-@author: karan
+@author: Karan Kumar
 """
 
 import numpy as np
@@ -546,9 +546,11 @@ class GalacticTraceback:
         p84 = np.percentile(sep_curves, 84, axis=0)
     
         # Global min
-        min_idx = np.argmin(sep_curves.min(axis=1))
-        min_time = time_array[np.argmin(sep_curves[min_idx])]
-        min_sep = np.min(sep_curves[min_idx])
+      
+        min_idx = np.argmin(p50)
+        min_time = time_array[min_idx]
+        min_sep = p50[min_idx]
+
     
         # Plotting
         fig, ax = plt.subplots(1, figsize=(10, 6))
@@ -760,7 +762,26 @@ class GalacticTraceback:
             
 
         return rel_x,rel_y,rel_z, time_min_sep #star_x_shifted ,star_y_shifted, star_z_shifted
-
+    def calc_cluster_radius(self,members,cluster_params):
+        ra = members['ra']
+        dec = members['dec']
+        
+        #compute center as mean
+        ra_cen, dec_cen = np.mean(ra), np.mean(dec)
+        
+        positions = coord.SkyCoord(ra=ra,dec=dec,frame='icrs')
+        center = coord.SkyCoord(ra=ra_cen*u.deg,dec=dec_cen*u.deg,frame='icrs')
+        
+        theta = positions.separation(center).to(u.rad)
+        
+        #distance
+        if 'parallax' in cluster_params.colnames:
+            distance = 1/cluster_params['parallax'].value * u.kpc
+        else:
+            distance = cluster_params['distance_bj']
+        projected_radius = distance * theta.value
+        return projected_radius, np.max(projected_radius), np.std(projected_radius)
+        
     def velocity_check(self, orbit,values=False):
         # Extract Galactocentric Cartesian velocity components
         vx1 = np.array(orbit.v_x.to_value()) #kpc/myr
