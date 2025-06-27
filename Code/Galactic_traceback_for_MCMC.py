@@ -3,10 +3,11 @@
 """
 Created on Wed Mar 12 19:51:02 2025
 
-@author: karan
+@author: Karan Kumar
 """
 import numpy as np
 import pandas as pd
+from datetime import datetime
 from astroquery.gaia import Gaia
 from astropy.io import ascii
 import emcee
@@ -21,6 +22,7 @@ from multiprocessing import Pool
 import h5py
 import matplotlib.pyplot as plt
 from astropy.table import Table
+import matplotlib.animation as animation
 class galactic_path_MCMC:
     def __init__(self):
         self.frac_of_light = 0.1
@@ -62,17 +64,12 @@ class galactic_path_MCMC:
         star_stds : list.
 
         '''
-        # dist = (1/star_params['parallax']).value *u.kpc
+
         dist = np.array(star_params['distance_bj'])[0]
         dist_up = np.array(star_params['distance_bj_high'])[0] - dist
         dist_down = dist - np.array(star_params['distance_bj_low'][0])
         dist_err = (dist_up + dist_down)/2.0
-        #std_l   = np.array(star_params['l_err'])[0]
-        #std_b   = np.array(star_params['b_err'])[0]
-        # std_d   = dist_err
-        # std_pml = np.array(star_params['pm_l_err'])[0]
-        # std_pmb = np.array(star_params['pm_b_err'])[0]
-        # std_rv  = np.array(star_params['RV_err'])[0]
+   
         
         
         std_d   = dist_err
@@ -80,8 +77,7 @@ class galactic_path_MCMC:
         std_pmdec = np.array(star_params['pmdec_error'])[0]
         std_rv  = np.array(star_params['RV_err'])[0]
     
-       # star_stds = [std_l, std_b, std_d, std_pml, std_pmb, std_rv]
-        # star_stds  = [std_d, std_pml, std_pmb, std_rv]
+   
         star_stds  = [std_d, std_pmra, std_pmdec, std_rv]
         return star_stds
     def calc_cluster_radius(self,cluster_distance,angular_diameter):
@@ -90,18 +86,15 @@ class galactic_path_MCMC:
 
         Parameters
         ----------
-        cluster_distance : TYPE
-            DESCRIPTION.
-        angular_diameter : TYPE
-            DESCRIPTION.
+        cluster_distance : float in kpc or pc.
+        angular_diameter : float radians.
 
         Returns
         -------
-        TYPE
-            DESCRIPTION.
+        radius of cluster in pc or kpc (distance dependent).
 
         '''
-        rad_diameter = angular_diameter* (np.pi/ (60*180)) # diamter of cluster in radians
+        rad_diameter = angular_diameter* (np.pi/ (60*180)) # diameter of cluster in radians
         return cluster_distance.value*np.tan(rad_diameter/2)
     
     def make_log_gauss(self,x,mu,sigma):
@@ -116,8 +109,7 @@ class galactic_path_MCMC:
 
         Returns
         -------
-        TYPE
-            DESCRIPTION.
+        log probability of prior.
 
         '''
         return -0.5 * ((x - mu)/sigma)**2
@@ -150,12 +142,7 @@ class galactic_path_MCMC:
  
  
         row = source_info #self.table[self.table['source_id'] == source_id
-        # l = row['l']
-        # b = row['b'] 
-        # mu_l = row['pm_l_poleski']
-        # mu_b = row['pm_b_poleski']
-        # dist = row['distance_bj'] #kpc
-        # radial_velocity = row['RV'] 
+  
 
         ra = row['ra']
         dec = row['dec']
@@ -164,26 +151,16 @@ class galactic_path_MCMC:
         radial_velocity = row['RV'] 
         distance_icrs = row['distance_bj'] #(1/row['parallax']).value *u.kpc
        # k = 4.74 * (u.km/u.s)/(u.mas *u.kpc/u.yr) #km/s per mas/yr 
-        #print(radial_velocity)
-        #transform to galactic frame
-        #from carreto-castrillo 2023
-        # mu_l_total  = mu_l 
-        # mu_b_total = mu_b 
-        # dist_total  = dist 
-        # radial_velocity_total = radial_velocity
+
             
         with coord.galactocentric_frame_defaults.set('v4.0'):
             galcen_frame = coord.Galactocentric()
-        # galactic_rep = coord.SkyCoord(l=l,b=b,pm_l_cosb=mu_l_total,pm_b=mu_b_total,distance=dist_total,
-        #                               radial_velocity =radial_velocity_total, frame='galactic')
+
         galactic_rep = coord.SkyCoord(ra=ra, dec=dec, distance=distance_icrs,
               pm_ra_cosdec=pmra, pm_dec=pmdec,
               radial_velocity=radial_velocity)
         #transform frame
         star_galacto = galactic_rep.transform_to(galcen_frame)
-
-
-        
 
         initial_pos = gd.PhaseSpacePosition(star_galacto.data)
         total_time = int_time *u.Myr
@@ -244,11 +221,8 @@ class galactic_path_MCMC:
         
         cannot do self.star_params or self. theta because log probability needs those are arguements'''
         #these are sampled from walker
-        # star_d,star_pml, star_pmb, star_rv = theta[0:4]
         star_d,star_pmra, star_pmdec, star_rv = theta[0:4]
-    
-        #true value of stars
-        #true_l, true_b,star_params['l'], star_params['b'],
+
         true_d= star_params['distance_bj']
         true_pmra, true_pmdec, true_rv = star_params['pmra'], star_params['pmdec'], star_params["RV"]
     
@@ -256,24 +230,16 @@ class galactic_path_MCMC:
         
         star_stds = self.make_star_stds(star_params) 
     
-        #std_d, std_pml,std_pmb,std_rv = star_stds[0:4]
         std_d, std_pmra,std_pmdec,std_rv = star_stds[0:4]
         
     
-        #if star_b > 90.0 or star_b < -90:
-         #   return -np.inf
+
         if star_d < 0.0 or np.sqrt(star_pmra**2 + star_pmdec**2) >self.speed_of_light: 
             return -np.inf
 
-        #log_l = self.make_log_gauss(star_l,true_l,std_l).value
-        #log_b = self.make_log_gauss(star_b,true_b,std_b).value
-        #print(log_l, log_b)
+
         log_d = self.make_log_gauss(star_d, true_d, std_d).value
-        
-        # log_pml = self.make_log_gauss(star_pml,true_pml, std_pml).value
-        # log_pmb = self.make_log_gauss(star_pmb, true_pmb, std_pmb).value
-        # log_rv = self.make_log_gauss(star_rv, true_rv, std_rv).value
-        
+
         log_pmra = self.make_log_gauss(star_pmra,true_pmra, std_pmra).value
         log_pmdec = self.make_log_gauss(star_pmdec, true_pmdec, std_pmdec).value
         log_rv = self.make_log_gauss(star_rv, true_rv, std_rv).value
@@ -285,8 +251,7 @@ class galactic_path_MCMC:
         lp = self.log_normal_prior(theta,star_params)
         if not np.all(np.isfinite(lp)):
             return -np.inf, np.nan, np.nan
-        # kinematic_age, min_sep = self.log_likelihood(theta, cluster_params, cluster_radius,int_time,star_params['l'], star_params['b'])
-        
+
         kinematic_age, min_sep = self.log_likelihood(theta, cluster_params, cluster_radius,int_time,star_params['ra'], star_params['dec'])
         return lp + kinematic_age, np.array([kinematic_age, min_sep], dtype=np.float64)
     
@@ -321,9 +286,7 @@ class galactic_path_MCMC:
         initial_pos = np.hstack([
         np.random.normal(theta[0:ndim], star_stds[0:ndim], size=(nwalkers, ndim)),  # Sample the remaining 4 parameters
     ])
-    #     initial_pos = np.hstack([
-    # np.random.normal(theta[0:3], star_stds[0:3], size=(nwalkers, 3)),
-    # np.random.normal(theta[3:6], star_stds[3:6], size=(nwalkers, 3)),])  
+
         backend.reset(nwalkers, ndim)
         print(f'Compling MCMC for {star_name} and {cluster_name}')
         with Pool() as pool:
@@ -334,7 +297,7 @@ class galactic_path_MCMC:
         return sampler, state
        
         
-    def compute_full_separations_and_plot(self,flat_chain, cluster_params, int_time, star_ra, star_dec,cluster_radius, title, n_samples=100):
+    def compute_full_separations_and_plot(self,flat_chain, cluster_params, int_time, star_ra, star_dec,cluster_radius, title, cluster_age=None, n_samples=100,savefig=False,ylim=1000):
         '''
         
 
@@ -353,14 +316,19 @@ class galactic_path_MCMC:
     cluster_radius : float or None, optional
         Radius of the cluster in parsecs to plot on the graph.
         -------
-        None.
+        Separtion over time plot
+        with age of cluster
+        radius of cluster
+        1 sigma, 2 sigma confidence intervals.
 
         '''
+        
         total_samples = len(flat_chain)
         n_samples = min(n_samples, total_samples)
         
         indices = np.random.choice(total_samples, size=n_samples, replace=False)
         chosen_samples = flat_chain[indices]
+        
         
         separation_curves = []
         for theta in chosen_samples:
@@ -395,19 +363,52 @@ class galactic_path_MCMC:
         p2 = np.percentile(separation_curves,2.5,axis=0)
         p98 = np.percentile(separation_curves, 97.5, axis=0)
         
+        where_min_index = np.argmin(p50) -1 
+        time_where_min = time_array[where_min_index]
+        sep_where_min = np.min(p50[where_min_index])
+        
         # Plot all individual samples (faint)
         plt.figure(figsize=(10,6))
-        for sep in separation_curves:
-            plt.plot(time_array, sep, color='gray', alpha=0.1)
-        
+        if cluster_age[0]:
+            age_median = cluster_age[0] 
+            age_std =cluster_age[1]
+            plt.vlines(x=-age_median,ymin=0,ymax=5000,color='xkcd:grey', 
+                       linestyle='--',linewidth=3.0,label=f'Cluster age {age_median:.2f} $\pm$ {age_std:.2f} Myr')
+            if age_std:
+                age_min = -age_median - age_std
+                age_max = -age_median + age_std
+                print(age_min, age_max)
+                plt.axvspan(age_min, age_max,  color='xkcd:grey',alpha=0.4)
+        # for sep in separation_curves[0:100]:
+        #     plt.plot(time_array, sep, color='gray', alpha=0.1)
+            
         # Plot median and confidence interval
         plt.plot(time_array, p50, color='xkcd:purple',lw=2,label='Median')
-        plt.fill_between(time_array, p16, p84, color='xkcd:emerald', alpha=0.3, label='68% confidence interval')
-        plt.fill_between(time_array, p2, p98, color='xkcd:orange', alpha=0.3, label='95% confidence interval',zorder=-1)
+        #'xkcd:neon green' xkcd:orangee
+        plt.fill_between(time_array, p16, p84, color='xkcd:neon green', alpha=0.5, label='68% confidence interval')
+        plt.fill_between(time_array, p2, p98, color='xkcd:orange', alpha=0.5, label='95% confidence interval',zorder=-1)
         
+        where_color = 'xkcd:black'
+        plt.scatter(time_where_min,sep_where_min,color=where_color, 
+                    label=f'Min {time_where_min:.2f} Myr, {sep_where_min:.2f} pc')
+        plt.hlines(sep_where_min, xmin=time_array[0], xmax=time_array[-1], ls=':', color=where_color,zorder=2)
+        plt.axvline(time_where_min, ymax=max(separation_curves[where_min_index]),  ls=':', color=where_color)
+        plt.xlim(time_array[0],time_array[-1])
+        plt.ylim(0,ylim) #pc
+        
+        #plot radius interval
+
+
+
         # Cluster radius reference line
         if cluster_radius is not None:
-            plt.axhline(cluster_radius, color='red', ls='--', label=f'Cluster radius = {cluster_radius:.2f} pc')
+            cl_radi = np.max(cluster_radius)*1000
+            cl_radi_std = np.std(cluster_radius)*1000
+            radi_upper = cl_radi+ cl_radi_std
+            radi_lower = cl_radi - cl_radi_std
+            plt.axhline(cl_radi, color='xkcd:hot pink', ls='--', label=f'Cluster radius = {cl_radi:.2f} pc')
+            plt.fill_between(time_array, radi_lower,radi_upper,color='xkcd:pink',alpha=0.5)
+
         if title:
             plt.title(title)
         else:
@@ -415,12 +416,24 @@ class galactic_path_MCMC:
         
         plt.xlabel('Time (Myr)')
         plt.ylabel('Separation (pc)')
-      
-        plt.grid(alpha=0.3, linestyle='--')
+  
+        plt.gca().invert_xaxis()
         plt.legend()
         plt.tight_layout()
+        if savefig ==True:
+            mydir = os.path.dirname(os.path.realpath(__file__))
+            parentdir = os.path.dirname(mydir)
+            today = datetime.now().strftime("%Y%m%d")
+            save_path = os.path.join(parentdir, 'Figures', 'MCMC',
+                                     f"MCMCsep_{title}_{today}.png")
+            plt.savefig(save_path,dpi=300)
         plt.show()
         return None
+
+
+
+  
+
 
            
               
