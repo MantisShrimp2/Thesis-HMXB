@@ -3,7 +3,7 @@
 """
 Created on Thu Mar  6 11:21:00 2025
 
-@author: karan
+@author: Karan Kumar
 """
 
 import numpy as np
@@ -228,15 +228,16 @@ class calc_errors:
         W_sun = 7.6
         # galactic constants
         R0 =8.15
-        omega0 =236.0/R0 #km/s
+        sun_curve= 236.0
+        omega0 = sun_curve/R0 #km/s
         #variables
         dist = table['distance_bj']
         dist_high = table['distance_bj_high']
         dist_low = table['distance_bj_low']
         
         
-        long = table['l']
-        lat = table['b']
+        long = table['l'][0]
+        lat = table['b'][0]
         long_rad = np.radians(long)
         lat_rad = np.radians(lat)
         sigma_l = table['l_err'] # one sigma
@@ -262,10 +263,10 @@ class calc_errors:
      
         #this is where the fun begins
         #solar errors 
-        dmu_l_sol_dd = -(U_sun*np.sin(long_rad) - V_sun*np.cos(long_rad)/dist)
+        dmu_l_sol_dd = -(U_sun*np.sin(long_rad) - V_sun*np.cos(long_rad))/(dist**2)
         dmu_l_sol_dl = (U_sun*np.cos(long_rad) + V_sun*np.sin(long_rad))
         
-        sigma_mu_sol_l = np.sqrt((1/dist**2) *(dmu_l_sol_dd**2 * sigma_d**2) + (dmu_l_sol_dl**2 * sigma_l**2))
+        sigma_mu_sol_l = np.sqrt((dmu_l_sol_dd**2 * sigma_d**2) + (dmu_l_sol_dl**2 * sigma_l**2))
         #sigma_mu_sol_b
         dmu_b_sol_dd = (U_sun*np.cos(long_rad)*np.sin(lat_rad) + V_sun*np.sin(long_rad)*np.sin(lat_rad) + W_sun*np.cos(lat_rad))/dist
         
@@ -345,7 +346,7 @@ class calc_errors:
         dv_rot_dl = R0*(omega - omega0)*np.cos(lat_rad)*np.cos(long_rad)
         
         dv_rot_db = -R0*(omega-omega0)*np.sin(long_rad)*np.sin(lat_rad)
-    
+        
         
         sigma_dvr_rot = np.sqrt((dv_rot_db**2 *sigma_b**2) + (dv_rot_dl**2 *sigma_l**2) + (dv_rot_domega**2 *sigma_omega**2))
         
@@ -372,21 +373,21 @@ today = datetime.now().strftime("%Y%m%d")
 
 test_table = ascii.read(csv_files+'HMXB_pm_errs-result.ecsv',format='ecsv')
 hd7636 = ascii.read(csv_files+'hd7636_complete_analysis.ecsv',format='ecsv')
-HMXB_table = ascii.read(csv_files+'HMXB_20250326_.ecsv',format='ecsv')
+HMXB_table = ascii.read(csv_files+'HMXB_20250602_.ecsv',format='ecsv')
 orion_table = ascii.read(csv_files+'ori_table_20250417.ecsv', format='ecsv')
 
 iota_table = ascii.read(csv_files+'iota_table_20250417.ecsv', format='ecsv')
 if __name__ == "__main__":
-    #test_table = calc_errors().gaia_jacobian(test_table)
-    #test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
-    # v_pec_errors = calc_errors().calc_V_pec_errors(HMXB_table)
-    # v_pec_errors.write(csv_files+f"HMXB_vpec_errs_{today}.ecsv",format='ascii.ecsv',overwrite=True)
+    test_table = calc_errors().gaia_jacobian(test_table)
+    test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
+    v_pec_errors = calc_errors().calc_V_pec_errors(HMXB_table)
+    v_pec_errors.write(csv_files+f"HMXB_vpec_errs_{today}.ecsv",format='ascii.ecsv',overwrite=True)
     
-    hd7636_jacobian = calc_errors().gaia_jacobian(hd7636)
-    hd7636_jacobian.write(csv_files+'hd7636_jacobian.ecsv',format='ascii.ecsv',overwrite=True)
-    hd7636_vpec_errors = calc_errors().calc_V_pec_errors(hd7636)
-    hd7636_vpec_errors.write(csv_files+'hd7636_vpec_errs.ecsv',format='ascii.ecsv',overwrite=True)
-    # orion_jacobian = calc_errors().gaia_jacobian(orion_table)
+    # hd7636_jacobian = calc_errors().gaia_jacobian(hd7636)
+    # hd7636_jacobian.write(csv_files+'hd7636_jacobian.ecsv',format='ascii.ecsv',overwrite=True)
+    # hd7636_vpec_errors = calc_errors().calc_V_pec_errors(hd7636)
+    # hd7636_vpec_errors.write(csv_files+'hd7636_vpec_errs.ecsv',format='ascii.ecsv',overwrite=True)
+    # # orion_jacobian = calc_errors().gaia_jacobian(orion_table)
     # orion_jacobian.write(csv_files+'orion_jacobian.ecsv',format='ascii.ecsv',overwrite=True)
     # orion_v_pec_errors = calc_errors().calc_V_pec_errors(orion_jacobian)
     # orion_v_pec_errors.write(csv_files+'orion_v_pec_errors.ecsv',format='ascii.ecsv',overwrite=True)
