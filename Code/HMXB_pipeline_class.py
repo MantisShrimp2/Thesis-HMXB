@@ -4,7 +4,7 @@
 Created on Thu Oct 24 14:39:14 2024
 
 @author: Karan Kumar 
-14906619
+
 """
 
 import numpy as np
@@ -361,7 +361,7 @@ class pipeline:
         return table
         
         
-    def lay_pipe(self,filename,filetype):
+    def complie_table(self,filename,filetype):
         '''Combine everything'''
         table = self.make_table()
         table = self.modify_parllax_add_distance(table)
@@ -377,12 +377,13 @@ class pipeline:
         table= self.calculate_errors(table)
         table.write(filename, format=filetype,overwrite=True)
         return table
-cwd = os.getcwd()
-home_files = os.path.dirname(cwd)
-csv_files  = home_files + '/DATA/'
-test_table = csv_files+"/HMXB_with_analysis.ecsv"
-if __name__ == "__main__":
-    test_massive = pipeline(test_table,fmt='ecsv')
-    my_table = test_massive.make_table()
-    x = test_massive.lay_pipe(filename=test_table,filetype='ascii.ecsv')
-    x.write(csv_files+"HMXB_with_analysis_and_radial.ecsv",format='ascii.ecsv',overwrite=True)
+    
+# cwd = os.getcwd()
+# home_files = os.path.dirname(cwd)
+# csv_files  = home_files + '/DATA/'
+# test_table = csv_files+"/HMXB_with_analysis.ecsv"
+# if __name__ == "__main__":
+#     test_massive = pipeline(test_table,fmt='ecsv')
+#     my_table = test_massive.make_table()
+#     x = test_massive.complie_table(filename=test_table,filetype='ascii.ecsv')
+#     x.write(csv_files+"HMXB_with_analysis_and_radial.ecsv",format='ascii.ecsv',overwrite=True)
