@@ -372,29 +372,11 @@ csv_files  = cwd+ '/Documents/UvA/Thesis/DATA/'
 today = datetime.now().strftime("%Y%m%d")
 
 test_table = ascii.read(csv_files+'HMXB_pm_errs-result.ecsv',format='ecsv')
-hd7636 = ascii.read(csv_files+'hd7636_complete_analysis.ecsv',format='ecsv')
-HMXB_table = ascii.read(csv_files+'HMXB_20250602_.ecsv',format='ecsv')
-orion_table = ascii.read(csv_files+'ori_table_20250417.ecsv', format='ecsv')
 
-iota_table = ascii.read(csv_files+'iota_table_20250417.ecsv', format='ecsv')
 if __name__ == "__main__":
     test_table = calc_errors().gaia_jacobian(test_table)
     test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
-    v_pec_errors = calc_errors().calc_V_pec_errors(HMXB_table)
-    v_pec_errors.write(csv_files+f"HMXB_vpec_errs_{today}.ecsv",format='ascii.ecsv',overwrite=True)
-    
-    # hd7636_jacobian = calc_errors().gaia_jacobian(hd7636)
-    # hd7636_jacobian.write(csv_files+'hd7636_jacobian.ecsv',format='ascii.ecsv',overwrite=True)
-    # hd7636_vpec_errors = calc_errors().calc_V_pec_errors(hd7636)
-    # hd7636_vpec_errors.write(csv_files+'hd7636_vpec_errs.ecsv',format='ascii.ecsv',overwrite=True)
-    # # orion_jacobian = calc_errors().gaia_jacobian(orion_table)
-    # orion_jacobian.write(csv_files+'orion_jacobian.ecsv',format='ascii.ecsv',overwrite=True)
-    # orion_v_pec_errors = calc_errors().calc_V_pec_errors(orion_jacobian)
-    # orion_v_pec_errors.write(csv_files+'orion_v_pec_errors.ecsv',format='ascii.ecsv',overwrite=True)
-    
-    # iota_jacobian = calc_errors().gaia_jacobian(iota_table)
-    # iota_jacobian.write(csv_files+'iota_jacobian.ecsv',format='ascii.ecsv',overwrite=True)
-    # iota_v_pec_errors = calc_errors().calc_V_pec_errors(iota_jacobian)
-    # iota_v_pec_errors.write(csv_files+'iota_v_pec_errors.ecsv',format='ascii.ecsv',overwrite=True)
+
+
     
     
