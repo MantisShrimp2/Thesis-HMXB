@@ -6,15 +6,11 @@ Created on Wed Mar 12 19:51:02 2025
 @author: Karan Kumar
 """
 import numpy as np
-import pandas as pd
 from datetime import datetime
-from astroquery.gaia import Gaia
-from astropy.io import ascii
 import emcee
 import gala.potential as gp
 import gala.dynamics as gd
 import gala.integrate as gi
-from gala.coordinates import reflex_correct
 import astropy.coordinates as coord
 import os
 import astropy.units as u
@@ -22,7 +18,6 @@ from multiprocessing import Pool
 import h5py
 import matplotlib.pyplot as plt
 from astropy.table import Table
-import matplotlib.animation as animation
 class galactic_path_MCMC:
     def __init__(self):
         self.frac_of_light = 0.1
