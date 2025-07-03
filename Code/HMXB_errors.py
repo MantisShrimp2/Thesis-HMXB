@@ -187,6 +187,11 @@ class calc_errors:
         table['b_err'] = b_err_list
         table['pm_l_err'] = pm_l_err_list
         table['pm_b_err'] = pm_b_err_list
+        
+        table['l_err'].unit = u.rad
+        table['b_err'].unit = u.rad
+        table['pm_l_err'].unit = u.mas/u.yr
+        table['pm_b_err'].unit = u.mas/u.yr
     
         
         return table
