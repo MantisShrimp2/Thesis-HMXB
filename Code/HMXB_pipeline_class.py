@@ -52,7 +52,7 @@ class pipeline:
         P_offset = Gaia parallax bias offset see
         '''
         #offset Parallax
-        p_offset = 0.00 # from GAIA DR3
+        p_offset = 0.017 # from GAIA DR3
         table['parallax'] = (table['parallax'] - p_offset)
         table['parallax'].unit = u.mas# from GAIA EDR3
         #add parallax units
@@ -119,7 +119,7 @@ class pipeline:
         long_rad = np.radians(long)
         lat_rad = np.radians(lat)
         V_lsr = (theta * (self.R0/gal_dist) - self.sun_curve)*np.sin(long_rad)*np.cos(lat_rad)
-        #table.add_column(V_lsr, name='LSR velocity')
+
         table['LSR velocity']=  V_lsr
         table['LSR velocity'].unit = u.km/u.s
         return table
@@ -343,6 +343,7 @@ class pipeline:
         table["Peculiar Velocity 3D"] = V_pec_3d
         table['Peculiar Velocity 3D'].unit = u.km/u.s
         return table
+
     def calculate_errors(self,table):
         '''I probably need to calculate errors for a bunch of my calculations
         this is where i do it
