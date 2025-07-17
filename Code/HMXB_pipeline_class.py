@@ -52,7 +52,7 @@ class pipeline:
         P_offset = Gaia parallax bias offset see
         '''
         #offset Parallax
-        p_offset = 0.017 # from GAIA DR3
+        p_offset = -0.017 # from GAIA DR3
         table['parallax'] = (table['parallax'] - p_offset)
         table['parallax'].unit = u.mas# from GAIA EDR3
         #add parallax units
