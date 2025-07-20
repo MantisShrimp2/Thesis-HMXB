@@ -236,17 +236,18 @@ class calc_errors:
         sun_curve= 236.0
         omega0 = sun_curve/R0 #km/s
         #variables
-        dist = table['distance_bj']
-        dist_high = table['distance_bj_high']
-        dist_low = table['distance_bj_low']
+        dist = table['distance_bj'].data
+        dist_high = table['distance_bj_high'].data
+        dist_low = table['distance_bj_low'].data
         
         
-        long = table['l'][0]
-        lat = table['b'][0]
+        long = table['l'].data
+        lat = table['b'].data
         long_rad = np.radians(long)
         lat_rad = np.radians(lat)
-        sigma_l = table['l_err'] # one sigma
-        sigma_b = table['b_err']
+        sigma_l = table['l_err'].data
+        sigma_b = table['b_err'].data
+
         #symetric sigma_d
         #have 1 sigma confidence interval for distances, convert to  symmetric error
         sigma_d= 0.5*((dist_high - dist) + (dist - dist_low)) # one sigma
@@ -298,18 +299,16 @@ class calc_errors:
                                                  (dmu_rot_b_dl**2  * sigma_l**2)+
                                                  (dmu_rot_b_domega**2 * sigma_omega**2)))
         #sgima mu_rot_l
-        dmu_rot_l_dd = (omega - omega0)*np.cos(long_rad)/dist 
+        dmu_rot_l_dd = (-1/dist**2)*(R0/self.k)*(omega-omega0)*(np.cos(lat_rad)/(np.cos(long_rad)))
         
-        dmu_rot_l_dl = -(omega-omega0)*np.sin(long_rad)
+        dmu_rot_l_dl = -(R0/(self.k*dist*np.cos(lat_rad)))*(omega-omega0)*np.sin(long_rad)
         
-        dmu_rot_l_domega = (np.cos(long_rad) - (dist*np.cos(lat_rad)/R0))
+        dmu_rot_l_domega = (1/self.k)*(R0*(np.cos(long_rad)/(dist*np.cos(lat_rad) - 1)))
         
-        dmu_rot_l_db = ((omega - omega0)*np.cos(long_rad)*np.sin(lat_rad))/np.cos(lat_rad)
+        dmu_rot_l_db = (R0*(omega-omega0)/(self.k*dist*np.cos(lat_rad)))*np.cos(long_rad)*np.tan(long_rad)*(1/np.cos(long_rad))
         
-        sigma_mu_rot_l =np.sqrt((R0 / (dist * np.cos(lat_rad)))**2 * ((dmu_rot_l_dd**2 *sigma_d**2) + 
-                                                                (dmu_rot_l_db**2 *sigma_b**2) +
-                                                                (dmu_rot_l_dl**2 * sigma_l**2) +
-                                                                (dmu_rot_l_domega**2 * sigma_omega**2)))
+        
+        sigma_mu_rot_l = np.sqrt((dmu_rot_l_db*sigma_b)**2 + (dmu_rot_l_dd*sigma_d)**2 + (dmu_rot_l_dl*sigma_l)**2 + (dmu_rot_l_domega*sigma_omega)**2)
         
     
         #now calaculate mu_pec_errors
@@ -321,18 +320,24 @@ class calc_errors:
         
         mu_pec = np.sqrt(mu_pec_l**2 + mu_pec_b**2)
         
+
         #errors in peculair proper motion
+
         sigma_mu_l_pec = np.sqrt(sigma_mu_obs_l**2 + sigma_mu_rot_l**2 + sigma_mu_sol_l**2)
         sigma_mu_b_pec = np.sqrt(sigma_mu_obs_b**2 + sigma_mu_rot_b**2 + sigma_mu_sol_b**2)
         
-        sigma_mu_pec = np.sqrt((mu_pec_l/mu_pec)**2 * sigma_mu_l_pec**2 + (mu_pec_b/mu_pec)**2 * sigma_mu_b_pec**2)
+        
+        sigma_mu_pec = np.sqrt((mu_pec_l*sigma_mu_l_pec/mu_pec)**2 + (mu_pec_b*sigma_mu_b_pec/mu_pec)**2)
         
         #sigma_tan_pec 
         V_pec_tan = table['Peculiar Velocity']
         V_pec_rad = table['Peculiar Radial Velocity']
+        
         sigma_v_pec_tan = V_pec_tan*np.sqrt((sigma_d/dist)**2 + (sigma_mu_pec/mu_pec)**2)
+ 
+
         results['V_pec_tan_err'] = sigma_v_pec_tan
-        results['V_pec_tan_err'].unit = u.km/u.s
+       # results['V_pec_tan_err'].unit = u.km/u.s
         
         #again for radial peculiar
         rv = table['RV']
@@ -356,12 +361,17 @@ class calc_errors:
         sigma_dvr_rot = np.sqrt((dv_rot_db**2 *sigma_b**2) + (dv_rot_dl**2 *sigma_l**2) + (dv_rot_domega**2 *sigma_omega**2))
         
         sigma_rv_pec = np.sqrt(rv_err**2 + sigma_dvr_rot**2 + sigma_dvr_sol**2)
+        sigma_vpec_3d = v_pec_3d * np.sqrt((sigma_v_pec_tan / V_pec_tan)**2 + (sigma_rv_pec / V_pec_rad)**2)
+
         
         
         #total peculair error
-        sigma_vpec_3d = v_pec_3d*np.sqrt((sigma_v_pec_tan/V_pec_tan)**2 + (sigma_rv_pec/V_pec_rad)**2)
+       # sigma_vpec_3d = v_pec_3d*np.sqrt((sigma_v_pec_tan/V_pec_tan)**2 + (sigma_rv_pec/V_pec_rad)**2)
+
+
+
         results['V_pec_3d_err'] = sigma_vpec_3d
-        results['V_pec_3d_err'].unit = u.km/u.s        
+        #results['V_pec_3d_err'].unit = u.km/u.s        
         
         return results
         
@@ -371,16 +381,16 @@ class calc_errors:
         table = self.galactic_coord_errs(self.proper_motion_errors(table))
         return table
         
-cwd = os.getcwd()
-home_files = os.path.dirname(cwd)
-csv_files  = cwd+ '/Documents/UvA/Thesis/DATA/'
-today = datetime.now().strftime("%Y%m%d")
+# cwd = os.getcwd()
+# home_files = os.path.dirname(cwd)
+# csv_files  = cwd+ '/Documents/UvA/Thesis/DATA/'
+# today = datetime.now().strftime("%Y%m%d")
 
-test_table = ascii.read(csv_files+'HMXB_pm_errs-result.ecsv',format='ecsv')
+# test_table = ascii.read(csv_files+'HMXB_pm_errs-result.ecsv',format='ecsv')
 
-if __name__ == "__main__":
-    test_table = calc_errors().gaia_jacobian(test_table)
-    test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
+# if __name__ == "__main__":
+#     test_table = calc_errors().gaia_jacobian(test_table)
+#     test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
 
 
     
