@@ -1,0 +1,10 @@
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.7
+astropy>=5.3
+pandas>=2.0
+galpy>=1.8
+astroquery>=0.4
+tqdm
+emcee
+
