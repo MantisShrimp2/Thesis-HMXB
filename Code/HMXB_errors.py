@@ -7,10 +7,7 @@ Created on Thu Mar  6 11:21:00 2025
 """
 
 import numpy as np
-import os 
-from astropy.io import ascii
 import astropy.units as u
-from datetime import datetime
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
@@ -337,7 +334,7 @@ class calc_errors:
  
 
         results['V_pec_tan_err'] = sigma_v_pec_tan
-       # results['V_pec_tan_err'].unit = u.km/u.s
+        results['V_pec_tan_err'].unit = u.km/u.s
         
         #again for radial peculiar
         rv = table['RV']
@@ -361,17 +358,17 @@ class calc_errors:
         sigma_dvr_rot = np.sqrt((dv_rot_db**2 *sigma_b**2) + (dv_rot_dl**2 *sigma_l**2) + (dv_rot_domega**2 *sigma_omega**2))
         
         sigma_rv_pec = np.sqrt(rv_err**2 + sigma_dvr_rot**2 + sigma_dvr_sol**2)
+        
         sigma_vpec_3d = v_pec_3d * np.sqrt((sigma_v_pec_tan / V_pec_tan)**2 + (sigma_rv_pec / V_pec_rad)**2)
 
         
         
         #total peculair error
-       # sigma_vpec_3d = v_pec_3d*np.sqrt((sigma_v_pec_tan/V_pec_tan)**2 + (sigma_rv_pec/V_pec_rad)**2)
-
+      
 
 
         results['V_pec_3d_err'] = sigma_vpec_3d
-        #results['V_pec_3d_err'].unit = u.km/u.s        
+        results['V_pec_3d_err'].unit = u.km/u.s        
         
         return results
         
@@ -381,16 +378,6 @@ class calc_errors:
         table = self.galactic_coord_errs(self.proper_motion_errors(table))
         return table
         
-# cwd = os.getcwd()
-# home_files = os.path.dirname(cwd)
-# csv_files  = cwd+ '/Documents/UvA/Thesis/DATA/'
-# today = datetime.now().strftime("%Y%m%d")
-
-# test_table = ascii.read(csv_files+'HMXB_pm_errs-result.ecsv',format='ecsv')
-
-# if __name__ == "__main__":
-#     test_table = calc_errors().gaia_jacobian(test_table)
-#     test_table.write(csv_files+f'HMXB_all_errors_{today}.ecsv',format='ascii.ecsv',overwrite=True)
 
 
     
