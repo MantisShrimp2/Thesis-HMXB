@@ -330,7 +330,8 @@ class calc_errors:
         V_pec_tan = table['Peculiar Velocity']
         V_pec_rad = table['Peculiar Radial Velocity']
         
-        sigma_v_pec_tan = V_pec_tan*np.sqrt((sigma_d/dist)**2 + (sigma_mu_pec/mu_pec)**2)
+        sigma_v_pec_tan = self.k*np.sqrt((dist*sigma_mu_pec)**2 + (mu_pec*sigma_d)**2)
+
  
 
         results['V_pec_tan_err'] = sigma_v_pec_tan
